@@ -1,6 +1,6 @@
 {
   "compatibilityLevel": "JAVA_8",
-  "package": "de.tomjuri.swiftslayer.mixin",
+  "package": "dev.macrohq.swiftslayer.mixin",
   "client": [
     "MinecraftInvoker"
   ],

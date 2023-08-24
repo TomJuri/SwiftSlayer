@@ -1,4 +1,4 @@
-package de.tomjuri.swiftslayer.mixin;
+package dev.macrohq.swiftslayer.mixin;
 
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
