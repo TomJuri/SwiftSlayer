@@ -6,7 +6,7 @@ plugins {
     id("net.kyori.blossom") version "1.3.1"
 }
 
-group = "de.tomjuri"
+group = "dev.macrohq"
 version = "1.0.0"
 
 repositories {
