@@ -9,7 +9,6 @@
 </div>
 
 ## Introducing SwiftSlayer: Revolutionizing Your Hypixel Skyblock Adventure!
-
 Get ready to level up your Hypixel Skyblock game with SwiftSlayer – the ultimate macro designed to transform the way you conquer slayer quests. Say goodbye to the grind of manual inputs and say hello to a new era of effortless automation.
 
 Unleash Ultimate Automation:
