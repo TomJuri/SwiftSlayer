@@ -1,8 +1,8 @@
 {
   "compatibilityLevel": "JAVA_8",
-  "package": "de.tomjuri.examplemod.mixin",
+  "package": "de.tomjuri.swiftslayer.mixin",
   "client": [
-    "MinecraftInvoker",
+    "MinecraftInvoker"
   ],
   "verbose": true
 }

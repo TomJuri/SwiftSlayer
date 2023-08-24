@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.9.0"
+    id("java")
     id("cc.polyfrost.loom") version "0.10.0.5"
     id("dev.architectury.architectury-pack200") version "0.1.3"
     id("com.github.johnrengelman.shadow") version "8.1.1"
@@ -10,7 +10,6 @@ group = "de.tomjuri"
 version = "1.0.0"
 
 repositories {
-    mavenCentral()
     maven("https://repo.polyfrost.cc/releases")
     maven("https://repo.spongepowered.org/repository/maven-public")
     maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
@@ -31,8 +30,6 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
 
     modRuntimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.1.2")
-
-    embed("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
 }
 
 blossom {
@@ -55,7 +52,7 @@ loom {
 
     forge {
         pack200Provider.set(dev.architectury.pack200.java.Pack200Adapter())
-        mixinConfig("mixins.examplemod.json")
+        mixinConfig("mixins.swiftslayer.json")
     }
 }
 
@@ -67,7 +64,7 @@ tasks {
                         "TweakOrder" to "0",
                         "ForceLoadAsMod" to true,
                         "TweakClass" to "cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker",
-                        "MixinConfigs" to "mixins.examplemod.json"
+                        "MixinConfigs" to "mixins.swiftslayer.json"
                 )
         )
         dependsOn(shadowJar)
@@ -79,7 +76,6 @@ tasks {
     }
 
     shadowJar {
-        relocate("kotlin", "de.tomjuri.examplemod.relocate.kotlin")
         configurations = listOf(embed)
     }
 
@@ -97,4 +93,3 @@ java {
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
-kotlin.jvmToolchain(8)

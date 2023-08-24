@@ -1,8 +1,8 @@
 [
   {
-    "modid": "examplemod",
-    "name": "ExampleMod",
-    "description": "Exmaple Mod!",
+    "modid": "swiftslayer",
+    "name": "SwiftSlayer",
+    "description": "Slayer Macro!",
     "version": "${version}",
     "mcversion": "1.8.9",
     "url": "",
