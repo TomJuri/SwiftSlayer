@@ -30,5 +30,5 @@ SwiftSlayer is more than a tool – it's a statement of innovation. It embodies 
 In a world where time is the ultimate currency and adventure knows no bounds, SwiftSlayer emerges as the must-have for Hypixel Skyblock devotees. Elevate your gameplay, rack up victories, and embrace the future with SwiftSlayer – where slayer quest domination is effortless, and human inputs are a thing of the past!
 
 
-## To do
+## To-do
 fucking everything
