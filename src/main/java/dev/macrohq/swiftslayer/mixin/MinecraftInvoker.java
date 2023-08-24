@@ -8,4 +8,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface MinecraftInvoker {
     @Invoker("clickMouse")
     void invokeClickMouse();
+    @Invoker("rightClickMouse")
+    void invokeRightClickMouse();
 }
