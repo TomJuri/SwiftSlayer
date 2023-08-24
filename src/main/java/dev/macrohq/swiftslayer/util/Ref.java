@@ -1,5 +1,6 @@
 package dev.macrohq.swiftslayer.util;
 
+import dev.macrohq.swiftslayer.config.SwiftSlayerConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.GameSettings;
