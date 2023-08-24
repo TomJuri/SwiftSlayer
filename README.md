@@ -1,7 +1,7 @@
 <br/>
 <div align="center">
   <a href="https://github.com/Macro-HQ/SwiftSlayer">
-    <img src="https://cdn.discordapp.com/attachments/1133774789388013651/1144324591620198461/scythe.png" alt="Logo" width="80" height="80">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">SwiftSlayer</h3>
