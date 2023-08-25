@@ -17,9 +17,11 @@ public class PathfindTest {
 
     @Main
     private void main() {
+        RenderUtil.filledBox.clear();
         AStarPathfinder a = new AStarPathfinder(Ref.removeLater1, Ref.removeLater2);
         List<BlockPos> path = a.findPath(2000);
         RenderUtil.filledBox.addAll(path);
+        System.out.println("dist: " + Math.sqrt(Ref.removeLater1.distanceSq(Ref.removeLater2)));
     }
 
     @SubCommand
@@ -32,6 +34,14 @@ public class PathfindTest {
     private void setend() {
         RenderUtil.filledBox.add(PlayerUtil.getPosition());
         Ref.removeLater2 = PlayerUtil.getPosition();
+    }
+
+    @SubCommand
+    private void clear(){
+        RenderUtil.filledBox.clear();
+        RenderUtil.markers.clear();
+        Ref.removeLater1 = null;
+        Ref.removeLater2 = null;
     }
 
 }

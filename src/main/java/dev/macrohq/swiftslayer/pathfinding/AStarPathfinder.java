@@ -33,7 +33,7 @@ public class AStarPathfinder {
             closedNodes.add(currentNode);
             for (Node node : currentNode.getNeighbours()) {
                 node.calculateCost(startNode, endNode);
-                if (!openNodes.contains(node) && !closedNodes.contains(node)) openNodes.add(node);
+                if (!node.isIn(openNodes) && !node.isIn(closedNodes)) openNodes.add(node);
             }
         }
         return new ArrayList<>();
@@ -99,6 +99,10 @@ public class AStarPathfinder {
             return Ref.world().isAirBlock(this.position.add(0, 2, 0))
                     && Ref.world().isAirBlock(this.position.add(0, 1, 0))
                     && Ref.world().getBlockState(this.position).getBlock().getMaterial().isSolid();
+        }
+
+        public boolean isIn(List<Node> nodes){
+            return nodes.stream().anyMatch(node -> this.position.equals(node.position));
         }
     }
 
