@@ -18,6 +18,7 @@ import java.util.List;
 public class RenderUtil {
     public static List<BlockPos> markers = new ArrayList<>();
     public static List<BlockPos> filledBox = new ArrayList<>();
+    public static List<BlockPos> lines = new ArrayList<>();
     Color green = new Color(0,255,0,255);
 
     @SubscribeEvent
@@ -30,6 +31,11 @@ public class RenderUtil {
         for(BlockPos block: markers){
             drawBox(event, block, green, true);
         }
+        for(BlockPos block: lines){
+            if(lines.indexOf(block) == lines.size()-1) continue;
+            drawLine(event, block, lines.get(lines.indexOf(block)+1), chroma);
+        }
+
     }
 
     public void drawFilledBox(RenderWorldLastEvent event, BlockPos blockPos, Color color, boolean esp){
@@ -40,6 +46,12 @@ public class RenderUtil {
     public void drawBox(RenderWorldLastEvent event, BlockPos blockPos, Color color, boolean esp){
         AxisAlignedBB aabb = new AxisAlignedBB(blockPos.getX(), blockPos.getY(), blockPos.getZ(), blockPos.getX()+1, blockPos.getY()+1,blockPos.getZ()+1);
         drawBox(event, aabb, color, esp);
+    }
+
+    public void drawLine(RenderWorldLastEvent event, BlockPos b1, BlockPos b2, Color color){
+        Vec3 v1 = new Vec3(b1.getX()+0.5, b1.getY()+1.1, b1.getZ()+0.5);
+        Vec3 v2 = new Vec3(b2.getX()+0.5, b2.getY()+1.1, b2.getZ()+0.5);
+        drawLine(event, v1, v2, color);
     }
 
     public void drawBox(RenderWorldLastEvent event, AxisAlignedBB aabb, Color color, boolean esp) {
@@ -228,7 +240,6 @@ public class RenderUtil {
         GlStateManager.disableLighting();
         GL11.glDisable(3553);
         GL11.glLineWidth(3f);
-//        GlStateManager.enableBlend();
         GlStateManager.disableDepth();
         GlStateManager.disableAlpha();
         GlStateManager.depthMask(false);

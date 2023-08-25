@@ -88,7 +88,7 @@ public class AStarPathfinder {
                     for (int z1 = 0; z1 < 3; z1++) {
                         BlockPos position = new BlockPos(x + x1, y + y1, z + z1);
                         Node newNode = new Node(position, this);
-                        if (isWalkable()) neighbourNodes.add(newNode);
+                        if (newNode.isWalkable()) neighbourNodes.add(newNode);
                     }
                 }
             }
@@ -96,9 +96,19 @@ public class AStarPathfinder {
         }
 
         public boolean isWalkable() {
-            return Ref.world().isAirBlock(this.position.add(0, 2, 0))
-                    && Ref.world().isAirBlock(this.position.add(0, 1, 0))
-                    && Ref.world().getBlockState(this.position).getBlock().getMaterial().isSolid();
+            boolean collision = false;
+
+            if (this.parent != null && (this.parent.position.getX() != position.getX() && this.parent.position.getZ() != position.getZ())) {
+                collision = !(Ref.world().isAirBlock(position.add(1, 1, 0))
+                        && Ref.world().isAirBlock(position.add(-1, 1, 0))
+                        && Ref.world().isAirBlock(position.add(0, 1, 1))
+                        && Ref.world().isAirBlock(position.add(0, 1, -1)));
+            }
+
+            return Ref.world().isAirBlock(position.up().up())
+                    && Ref.world().isAirBlock(position.up())
+                    && Ref.world().getBlockState(position).getBlock().getMaterial().isSolid()
+                    && !collision;
         }
 
         public boolean isIn(List<Node> nodes){
