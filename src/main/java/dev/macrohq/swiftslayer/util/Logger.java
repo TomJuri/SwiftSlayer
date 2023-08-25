@@ -12,6 +12,6 @@ public class Logger {
     }
 
     private static void send(String message) {
-        Ref.player().addChatMessage(new ChatComponentText("§" + message));
+        Ref.player().addChatMessage(new ChatComponentText("§aSwift§bSlayer §8» §" + message));
     }
 }

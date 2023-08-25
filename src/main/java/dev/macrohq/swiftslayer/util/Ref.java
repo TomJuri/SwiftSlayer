@@ -4,6 +4,7 @@ import dev.macrohq.swiftslayer.config.SwiftSlayerConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 public class Ref {
@@ -11,4 +12,7 @@ public class Ref {
     public static EntityPlayerSP player() { return mc().thePlayer; }
     public static World world() { return mc().theWorld; }
     public static GameSettings gameSettings() { return mc().gameSettings; }
+
+    public static BlockPos removeLater1 = null;
+    public static BlockPos removeLater2 = null;
 }

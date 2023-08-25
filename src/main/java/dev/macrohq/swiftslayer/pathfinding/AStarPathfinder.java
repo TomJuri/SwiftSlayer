@@ -1,5 +1,6 @@
 package dev.macrohq.swiftslayer.pathfinding;
 
+import dev.macrohq.swiftslayer.util.Logger;
 import dev.macrohq.swiftslayer.util.Ref;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
