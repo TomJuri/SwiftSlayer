@@ -1,4 +1,4 @@
-package dev.macrohq.swiftslayer.commands;
+package dev.macrohq.swiftslayer.command;
 
 import dev.macrohq.swiftslayer.util.PlayerUtil;
 import dev.macrohq.swiftslayer.util.Ref;
@@ -48,7 +48,7 @@ public class Set extends CommandBase {
             log("hello");
             say("This is write.");
             error("This is error.");
-            Ref.mc().thePlayer.addChatMessage(new ChatComponentText("§c" + "hello"));
+            Ref.player().addChatMessage(new ChatComponentText("§c" + "hello"));
         }
     }
 }

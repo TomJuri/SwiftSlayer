@@ -1,9 +1,8 @@
 package dev.macrohq.swiftslayer;
 
-import dev.macrohq.swiftslayer.commands.Set;
+import dev.macrohq.swiftslayer.command.Set;
 import dev.macrohq.swiftslayer.config.SwiftSlayerConfig;
 import dev.macrohq.swiftslayer.util.RenderUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;

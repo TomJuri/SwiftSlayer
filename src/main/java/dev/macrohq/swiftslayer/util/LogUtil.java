@@ -7,7 +7,7 @@ import net.minecraft.util.EnumChatFormatting;
 public class LogUtil {
     public static void log(String message){
         if(!SwiftSlayerConfig.debug) return;
-        Ref.mc().thePlayer.addChatMessage(new ChatComponentText(
+        Ref.player().addChatMessage(new ChatComponentText(
                 EnumChatFormatting.GOLD + "Log" + EnumChatFormatting.RESET +
                 EnumChatFormatting.DARK_GRAY + ": " + EnumChatFormatting.GRAY + message));
     }
@@ -21,7 +21,7 @@ public class LogUtil {
     }
 
     static void write(String message, EnumChatFormatting color){
-        Ref.mc().thePlayer.addChatMessage(
+        Ref.player().addChatMessage(
                 new ChatComponentText(
                         EnumChatFormatting.DARK_GRAY + "[" + EnumChatFormatting.DARK_RED +
                                 "Swift" + EnumChatFormatting.DARK_GRAY + "]"

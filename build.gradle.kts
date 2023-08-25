@@ -4,6 +4,7 @@ plugins {
     id("dev.architectury.architectury-pack200") version "0.1.3"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("net.kyori.blossom") version "1.3.1"
+    id("io.freefair.lombok") version "8.2.2"
 }
 
 group = "dev.macrohq"
