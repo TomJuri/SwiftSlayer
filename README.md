@@ -9,7 +9,7 @@
 </div>
 
 ## Introducing SwiftSlayer: Revolutionizing Your Hypixel Skyblock Adventure!
-Get ready to level up your Hypixel Skyblock game with SwiftSlayer – the ultimate macro designed to transform the way you conquer slayer quests. Say goodbye to the grind of manual inputs and say hello to a new era of effortless automation.
+Get ready to level up your Hypixel Skyblock gameplay with SwiftSlayer – the ultimate macro designed to transform the way you conquer slayer quests. Say goodbye to the grind of manual inputs and say hello to a new era of effortless automation.
 
 Unleash Ultimate Automation:
 SwiftSlayer isn't your typical macro – it's your virtual sidekick in the Hypixel Skyblock universe. Its mission? To handle slayer quests automatically, giving you the freedom to kick back while SwiftSlayer fearlessly battles, and dominates the game.
@@ -24,7 +24,7 @@ Reclaim Your Time, Unlock New Opportunities:
 SwiftSlayer isn't just a tool – it's a time liberator. Reclaim those hours spent on repetitive tasks and redirect them towards getting some bitches on yo dick or perhaps learning a new skill!
 
 Elevating Macro Innovation:
-SwiftSlayer is more than a tool – it's a statement of innovation. It embodies the fusion of cutting-edge tech and gaming brilliance, seamlessly completing slayer quests and shattering the limitations of traditional macros. It sets the new standard for convenience, efficiency, and gameplay enhancement.
+SwiftSlayer is more than a tool – it's a statement of innovation, like a dick. It embodies the fusion of cutting-edge tech and gaming brilliance, seamlessly completing slayer quests and shattering the limitations of traditional macros. It sets the new standard for convenience, efficiency, and gameplay enhancement.
 
 In a world where time is the ultimate currency and adventure knows no bounds, SwiftSlayer emerges as the must-have for Hypixel Skyblock devotees. Elevate your gameplay, rack up victories, and embrace the future with SwiftSlayer – where slayer quest domination is effortless, and human inputs are a thing of the past!
 
