@@ -13,6 +13,10 @@ public class AngleUtil {
         return new RotationUtil.Rotation(yaw, pitch);
     }
 
+    public static float getDiffBetweenBlockPos(BlockPos first, BlockPos second) {
+        return getYawPitch(BlockUtil.blockPosToVec3(first)).getYaw() - getYawPitch(BlockUtil.blockPosToVec3(second)).getYaw();
+    }
+
     public static RotationUtil.Rotation getYawPitch(BlockPos block) {
         return getYawPitch(BlockUtil.blockPosToVec3(block));
     }
