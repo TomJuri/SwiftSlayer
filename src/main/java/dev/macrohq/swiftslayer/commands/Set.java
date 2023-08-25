@@ -1,12 +1,15 @@
 package dev.macrohq.swiftslayer.commands;
 
-import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder;
 import dev.macrohq.swiftslayer.util.PlayerUtil;
+import dev.macrohq.swiftslayer.util.Ref;
 import dev.macrohq.swiftslayer.util.RenderUtil;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
+
+import static dev.macrohq.swiftslayer.util.LogUtil.*;
 
 public class Set extends CommandBase {
     BlockPos startPos = null;
@@ -42,9 +45,10 @@ public class Set extends CommandBase {
             }
         }
         if(startPos!=null && endPos != null){
-            AStarPathfinder algo = new AStarPathfinder();
-            RenderUtil.markers.clear();
-            RenderUtil.markers.addAll(algo.findPath(startPos, endPos, 2000));
+            log("hello");
+            say("This is write.");
+            error("This is error.");
+            Ref.mc().thePlayer.addChatMessage(new ChatComponentText("§c" + "hello"));
         }
     }
 }
