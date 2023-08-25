@@ -12,8 +12,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 @Mod(modid = "swiftslayer", name = "SwiftSlayer", version = "%%VERSION%%")
 public class SwiftSlayer {
 
-    public static final Minecraft mc = Minecraft.getMinecraft();
-
     @Mod.Instance("swiftslayer")
     private static SwiftSlayer instance;
 

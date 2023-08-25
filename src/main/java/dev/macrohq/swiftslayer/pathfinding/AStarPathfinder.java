@@ -1,14 +1,13 @@
 package dev.macrohq.swiftslayer.pathfinding;
 
 import dev.macrohq.swiftslayer.util.AngleUtil;
+import dev.macrohq.swiftslayer.util.Ref;
 import dev.macrohq.swiftslayer.util.WorldUtil;
 import net.minecraft.util.BlockPos;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
-import static dev.macrohq.swiftslayer.SwiftSlayer.mc;
 
 public class AStarPathfinder {
     List<Node> openNodes = new ArrayList<>();
@@ -127,8 +126,8 @@ class Node{
     }
 
     public boolean isValid(){
-        return mc.theWorld.isAirBlock(this.position.add(0,2,0))
-                && mc.theWorld.isAirBlock(this.position.add(0,1,0))
-                && mc.theWorld.getBlockState(this.position).getBlock().getMaterial().isSolid();
+        return Ref.mc().theWorld.isAirBlock(this.position.add(0,2,0))
+                && Ref.mc().theWorld.isAirBlock(this.position.add(0,1,0))
+                && Ref.mc().theWorld.getBlockState(this.position).getBlock().getMaterial().isSolid();
     }
 }

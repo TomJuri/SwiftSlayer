@@ -15,8 +15,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.macrohq.swiftslayer.SwiftSlayer.mc;
-
 public class RenderUtil {
     public static List<BlockPos> markers = new ArrayList<>();
     public static List<BlockPos> filledBox = new ArrayList<>();
@@ -47,7 +45,7 @@ public class RenderUtil {
     public void drawBox(RenderWorldLastEvent event, AxisAlignedBB aabb, Color color, boolean esp) {
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer bufferBuilder = tessellator.getWorldRenderer();
-        final Entity render = mc.getRenderViewEntity();
+        final Entity render = Ref.mc().getRenderViewEntity();
 
         final double realX = render.lastTickPosX + (render.posX - render.lastTickPosX) * event.partialTicks;
         final double realY = render.lastTickPosY + (render.posY - render.lastTickPosY) * event.partialTicks;
@@ -125,7 +123,7 @@ public class RenderUtil {
     }
 
     public void drawFilledBox(RenderWorldLastEvent event, AxisAlignedBB aabb, Color color, boolean esp) {
-        final Entity render = mc.getRenderViewEntity();
+        final Entity render = Ref.mc().getRenderViewEntity();
 
         final double realX = render.lastTickPosX + (render.posX - render.lastTickPosX) * event.partialTicks;
         final double realY = render.lastTickPosY + (render.posY - render.lastTickPosY) * event.partialTicks;
@@ -212,7 +210,7 @@ public class RenderUtil {
     public void drawLine(RenderWorldLastEvent event, Vec3 blockPos1, Vec3 blockPos2, Color color) {
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer bufferBuilder = tessellator.getWorldRenderer();
-        final Entity render = mc.getRenderViewEntity();
+        final Entity render = Ref.mc().getRenderViewEntity();
 
         final double realX = render.lastTickPosX + (render.posX - render.lastTickPosX) * event.partialTicks;
         final double realY = render.lastTickPosY + (render.posY - render.lastTickPosY) * event.partialTicks;

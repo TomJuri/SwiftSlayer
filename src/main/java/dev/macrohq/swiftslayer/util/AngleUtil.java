@@ -4,7 +4,6 @@ import dev.macrohq.swiftslayer.classes.Angle;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 
-import static dev.macrohq.swiftslayer.SwiftSlayer.mc;
 
 public class AngleUtil {
     // Converts minecraft's yaw to 360 yaw (but inverse)
@@ -14,9 +13,9 @@ public class AngleUtil {
 
     // Returns Minecraft Angle (Yaw, Pitch) To Vec3 Coordinates
     public static Angle getYawPitch(Vec3 vec){
-        float dx = (float) (vec.xCoord - mc.thePlayer.posX);
-        float dy = (float) (vec.yCoord - (mc.thePlayer.posY + mc.thePlayer.eyeHeight));
-        float dz = (float) (vec.zCoord - mc.thePlayer.posZ);
+        float dx = (float) (vec.xCoord - Ref.mc().thePlayer.posX);
+        float dy = (float) (vec.yCoord - (Ref.mc().thePlayer.posY + Ref.mc().thePlayer.eyeHeight));
+        float dz = (float) (vec.zCoord - Ref.mc().thePlayer.posZ);
 
         float yaw = (float) -Math.toDegrees(Math.atan2(dx,dz));
         float pitch = (float) -Math.toDegrees(Math.atan2(dy, Math.sqrt(dx*dx + dz*dz)));
