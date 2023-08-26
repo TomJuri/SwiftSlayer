@@ -5,6 +5,7 @@ import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand;
 import dev.macrohq.swiftslayer.SwiftSlayer;
 import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder;
+import dev.macrohq.swiftslayer.util.Logger;
 import dev.macrohq.swiftslayer.util.PlayerUtil;
 import dev.macrohq.swiftslayer.util.Ref;
 import dev.macrohq.swiftslayer.util.RenderUtil;
@@ -19,7 +20,11 @@ public class PathfindTest {
     private void main() {
         RenderUtil.lines.clear();
         AStarPathfinder astar = new AStarPathfinder(Ref.removeLater1, Ref.removeLater2);
-        List<BlockPos> path = astar.findPath(2000);
+        List<BlockPos> path = astar.findPath(10000);
+       if(path.isEmpty()) {
+           Logger.error("No path found!");
+           return;
+       }
         RenderUtil.lines.addAll(path);
         SwiftSlayer.getInstance().pathExecutor.executePath(path);
     }
