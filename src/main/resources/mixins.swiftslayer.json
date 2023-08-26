@@ -2,6 +2,8 @@
   "compatibilityLevel": "JAVA_8",
   "package": "dev.macrohq.swiftslayer.mixin",
   "client": [
+    "EMixin",
+    "EntityPlayerSPInvoker",
     "MinecraftInvoker"
   ],
   "verbose": true
