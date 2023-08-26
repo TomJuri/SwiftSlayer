@@ -3,7 +3,6 @@
   <a href="https://github.com/Macro-HQ/SwiftSlayer">
     <img src="https://cdn.discordapp.com/attachments/1118265842824646776/1144337898817196043/logo_upscaled.png" alt="Logo" width="80" height="80">
   </a>
-
 <h3 align="center">SwiftSlayer</h3>
   </p>
 </div>
