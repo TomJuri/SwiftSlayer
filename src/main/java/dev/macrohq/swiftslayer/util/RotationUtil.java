@@ -1,13 +1,14 @@
 package dev.macrohq.swiftslayer.util;
 
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 
 public class RotationUtil {
     private static Rotation startRotation = new Rotation(0f, 0f);
     private static Rotation endRotation = new Rotation(0f, 0f);
     private static long startTime = 0L;
     private static long endTime = 0L;
-    private static boolean done = true;
+    public static boolean done = true;
 
     public static void ease(Rotation rotation, long durationMillis) {
         if (!done) return;
@@ -57,6 +58,19 @@ public class RotationUtil {
         if (yawChange <= -180.0f) yawChange += 360.0f;
         else if (yawChange > 180.0f) yawChange += -360.0f;
         return new Rotation(yawChange, endRot.getPitch() - startRot.getPitch());
+    }
+
+    public static Rotation getAngles(Vec3 vec) {
+        double diffX = vec.xCoord - Ref.player().posX;
+        double diffY = vec.yCoord - (Ref.player().posY + Ref.player().getEyeHeight());
+        double diffZ = vec.zCoord - Ref.player().posZ;
+        double dist = Math.sqrt(diffX * diffX + diffZ * diffZ);
+        float yaw = (float) (Math.atan2(diffZ, diffX) * 180.0 / Math.PI) - 90f;
+        float pitch = (float) (-(Math.atan2(diffY, dist) * 180.0 / Math.PI));
+        return new Rotation(
+                Ref.player().rotationYaw + MathHelper.wrapAngleTo180_float(yaw - Ref.player().rotationYaw),
+                Ref.player().rotationPitch + MathHelper.wrapAngleTo180_float(pitch - Ref.player().rotationPitch)
+        );
     }
 
     public static class Rotation {

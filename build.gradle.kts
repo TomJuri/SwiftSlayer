@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "dev.macrohq"
-version = "1.0.0"
+version = "1.1.0"
 
 repositories {
     maven("https://repo.polyfrost.cc/releases")
@@ -31,7 +31,7 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
 
     modRuntimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.1.2")
-    runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2")
+    runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2") // what :skull:
 }
 
 blossom {

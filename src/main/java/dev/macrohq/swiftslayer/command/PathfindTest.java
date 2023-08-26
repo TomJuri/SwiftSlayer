@@ -8,7 +8,6 @@ import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder;
 import dev.macrohq.swiftslayer.util.PlayerUtil;
 import dev.macrohq.swiftslayer.util.Ref;
 import dev.macrohq.swiftslayer.util.RenderUtil;
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.util.BlockPos;
 
 import java.util.List;
@@ -27,14 +26,14 @@ public class PathfindTest {
 
     @SubCommand
     private void setstart() {
-        RenderUtil.filledBox.add(PlayerUtil.getPosition());
-        Ref.removeLater1 = PlayerUtil.getPosition();
+        RenderUtil.filledBox.add(PlayerUtil.getStandingPosition());
+        Ref.removeLater1 = PlayerUtil.getStandingPosition();
     }
 
     @SubCommand
     private void setend() {
-        RenderUtil.filledBox.add(PlayerUtil.getPosition());
-        Ref.removeLater2 = PlayerUtil.getPosition();
+        RenderUtil.filledBox.add(PlayerUtil.getStandingPosition());
+        Ref.removeLater2 = PlayerUtil.getStandingPosition();
     }
 
     @SubCommand
