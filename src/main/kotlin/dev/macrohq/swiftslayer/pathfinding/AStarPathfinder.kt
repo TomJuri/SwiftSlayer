@@ -2,6 +2,7 @@ package dev.macrohq.swiftslayer.pathfinding
 
 import dev.macrohq.swiftslayer.util.BlockUtil
 import dev.macrohq.swiftslayer.util.world
+import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
 import net.minecraft.util.MathHelper
 import kotlin.math.abs
@@ -45,7 +46,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
         return path
     }
 
-    private class Node(val position: BlockPos, val parent: Node?) {
+    public class Node(val position: BlockPos, val parent: Node?) {
         private var gCost = Float.MAX_VALUE
         private var hCost = Float.MAX_VALUE
 
@@ -78,7 +79,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
             return neighbours
         }
 
-        fun isWalkable(): Boolean {
+        private fun isWalkable(): Boolean {
             var collision = false
             if (parent != null && parent.position.x != position.x && parent.position.z != position.z) {
                 collision = !(world.isAirBlock(position.add(1, 1, 0))
@@ -86,14 +87,45 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
                         && world.isAirBlock(position.add(0, 1, 1))
                         && world.isAirBlock(position.add(0, 1, -1)))
             }
-            return (world.getBlockState(position.up()).block.isCollidable
-                    && world.getBlockState(position.up().up()).block.isCollidable
+            return allowedBlocks.contains(world.getBlockState(position.up()).block)
+                    && allowedBlocks.contains(world.getBlockState(position.up().up()).block)
                     && world.getBlockState(position).block.material.isSolid
-                    && !collision)
+                    && !collision
         }
 
         fun isIn(nodes: List<Node>): Boolean {
             return nodes.stream().anyMatch { node: Node -> position == node.position }
         }
+
+
+        private val allowedBlocks = listOf(
+            Blocks.air,
+            Blocks.tallgrass,
+            Blocks.double_plant,
+            Blocks.yellow_flower,
+            Blocks.red_flower,
+            Blocks.vine,
+            Blocks.redstone_wire,
+            Blocks.snow_layer,
+            Blocks.cocoa,
+            Blocks.end_portal,
+            Blocks.tripwire,
+            Blocks.web,
+            Blocks.leaves,
+            Blocks.flower_pot,
+            Blocks.wooden_pressure_plate,
+            Blocks.stone_pressure_plate,
+            Blocks.redstone_torch,
+            Blocks.lever,
+            Blocks.stone_button,
+            Blocks.wooden_button,
+            Blocks.carpet,
+            Blocks.standing_sign,
+            Blocks.wall_sign,
+            Blocks.rail,
+            Blocks.detector_rail,
+            Blocks.activator_rail,
+            Blocks.golden_rail
+        )
     }
 }
