@@ -45,6 +45,7 @@ public class PathfindTest {
     private void clear(){
         RenderUtil.filledBox.clear();
         RenderUtil.markers.clear();
+        RenderUtil.lines.clear();
         Ref.removeLater1 = null;
         Ref.removeLater2 = null;
     }

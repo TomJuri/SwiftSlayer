@@ -27,6 +27,7 @@ public class PathExecutor {
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
+        if(Ref.world()==null || Ref.player()==null) return; // :angiest:
         if (!running) return;
 
         BlockPos current = path.get(index);
@@ -42,6 +43,10 @@ public class PathExecutor {
         }
 
         movePlayer(current);
+    }
+
+    public void disable(){
+        running = false;
     }
 
     private void movePlayer(BlockPos current) {

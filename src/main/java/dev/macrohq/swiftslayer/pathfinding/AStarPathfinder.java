@@ -4,6 +4,9 @@ import dev.macrohq.swiftslayer.util.Logger;
 import dev.macrohq.swiftslayer.util.Ref;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 
@@ -105,8 +108,8 @@ public class AStarPathfinder {
                         && Ref.world().isAirBlock(position.add(0, 1, -1)));
             }
 
-            return Ref.world().isAirBlock(position.up().up())
-                    && Ref.world().isAirBlock(position.up())
+            return allowedBlocks.contains(Ref.world().getBlockState(position.up().up()).getBlock())
+                    && allowedBlocks.contains(Ref.world().getBlockState(position.up().up()).getBlock())
                     && Ref.world().getBlockState(position).getBlock().getMaterial().isSolid()
                     && !collision;
         }
@@ -116,4 +119,33 @@ public class AStarPathfinder {
         }
     }
 
+    private static List<Block> allowedBlocks = new ArrayList<Block>() {{
+            add(Blocks.air);
+            add(Blocks.tallgrass);
+            add(Blocks.double_plant);
+            add(Blocks.yellow_flower);
+            add(Blocks.red_flower);
+            add(Blocks.vine);
+            add(Blocks.redstone_wire);
+            add(Blocks.snow_layer);
+            add(Blocks.cocoa);
+            add(Blocks.end_portal);
+            add(Blocks.tripwire);
+            add(Blocks.web);
+            add(Blocks.leaves);
+            add(Blocks.flower_pot);
+            add(Blocks.wooden_pressure_plate);
+            add(Blocks.stone_pressure_plate);
+            add(Blocks.redstone_torch);
+            add(Blocks.lever);
+            add(Blocks.stone_button);
+            add(Blocks.wooden_button);
+            add(Blocks.carpet);
+            add(Blocks.standing_sign);
+            add(Blocks.wall_sign);
+            add(Blocks.rail);
+            add(Blocks.detector_rail);
+            add(Blocks.activator_rail);
+            add(Blocks.golden_rail);
+        }};
 }
