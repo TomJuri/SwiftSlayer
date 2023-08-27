@@ -110,7 +110,6 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
             Blocks.end_portal,
             Blocks.tripwire,
             Blocks.web,
-            Blocks.leaves,
             Blocks.flower_pot,
             Blocks.wooden_pressure_plate,
             Blocks.stone_pressure_plate,
