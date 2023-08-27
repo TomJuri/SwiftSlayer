@@ -13,14 +13,14 @@ import java.util.List;
 
 public class PathExecutor {
     private List<BlockPos> path;
-    private int index = 0;
     public boolean running = false;
+    private BlockPos current = null;
     public float directionYaw = 0f;
 
     public void executePath(List<BlockPos> inputPath) {
         if (running) return;
-        path = inputPath;
-        index = 1;
+        path = new ArrayList<>(inputPath);
+        current = path.get(0);
         running = true;
         directionYaw = Ref.player().rotationYaw;
     }
@@ -30,18 +30,16 @@ public class PathExecutor {
         if(Ref.world()==null || Ref.player()==null) return; // :angiest:
         if (!running) return;
 
-        BlockPos current = path.get(index);
-        if (PlayerUtil.getStandingPosition().distanceSqToCenter(current.getX() + 0.5, current.getY(), current.getZ() + 0.5) <= 1) {
-            if (++index >= path.size()) {
+        if(path.contains(PlayerUtil.getStandingPosition())){
+            if(path.indexOf(PlayerUtil.getStandingPosition()) == path.size()-1){
                 running = false;
                 KeyBindUtil.setPressed(Ref.gameSettings().keyBindSprint, false);
                 KeyBindUtil.setPressed(Ref.gameSettings().keyBindForward, false);
                 KeyBindUtil.setPressed(Ref.gameSettings().keyBindJump, false);
                 return;
             }
-            current = path.get(index);
+            current = path.get(path.indexOf(PlayerUtil.getStandingPosition())+1);
         }
-
         movePlayer(current);
     }
 
