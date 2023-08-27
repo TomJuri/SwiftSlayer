@@ -3,11 +3,11 @@ package dev.macrohq.swiftslayer.util
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
+import net.minecraft.entity.Entity
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.util.BlockPos
 import net.minecraft.util.Vec3
 import net.minecraftforge.client.event.RenderWorldLastEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 
@@ -26,6 +26,14 @@ object RenderUtil {
         for (block in lines) {
             if (lines.indexOf(block) == lines.size - 1) continue
             drawLine(event, block, lines[lines.indexOf(block) + 1], chroma)
+        }
+        for(entity in entites) {
+            if(!entity.isEntityAlive) {
+                entites.remove(entity)
+
+                return
+            }
+            drawEntity(event, entity, chroma, true)
         }
     }
 
@@ -57,6 +65,14 @@ object RenderUtil {
         val v1 = Vec3(b1.x + 0.5, b1.y + 1.1, b1.z + 0.5)
         val v2 = Vec3(b2.x + 0.5, b2.y + 1.1, b2.z + 0.5)
         drawLine(event, v1, v2, color)
+    }
+
+    fun drawEntity(event: RenderWorldLastEvent?, entity: Entity, color: Color, esp: Boolean) {
+        val aabb = AxisAlignedBB(
+            entity.posX - 0.5, entity.posY + 0.1, entity.posZ - 0.5,
+            entity.posX + 0.5, entity.posY + 2, entity.posZ + 0.5
+        )
+        drawFilledBox(event!!, aabb, color, esp)
     }
 
     fun drawBox(event: RenderWorldLastEvent, aabb: AxisAlignedBB, color: Color, esp: Boolean) {
@@ -236,5 +252,6 @@ object RenderUtil {
         var markers = mutableListOf<BlockPos>()
         var filledBox = mutableListOf<BlockPos>()
         var lines = mutableListOf<BlockPos>()
+    var entites = mutableListOf<Entity>()
 
 }

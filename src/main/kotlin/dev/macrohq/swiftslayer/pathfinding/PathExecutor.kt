@@ -1,8 +1,6 @@
 package dev.macrohq.swiftslayer.pathfinding
 
 import dev.macrohq.swiftslayer.util.*
-import dev.macrohq.swiftslayer.util.Logger.info
-import dev.macrohq.swiftslayer.util.RotationUtil
 import net.minecraft.block.BlockSlab
 import net.minecraft.block.BlockStairs
 import net.minecraft.util.BlockPos
@@ -15,10 +13,13 @@ class PathExecutor {
     private var path = listOf<BlockPos>()
     private var current: BlockPos? = null
     var running = false
+        private set
     var directionYaw = 0f
+        private set
 
     fun executePath(inputPath: List<BlockPos>) {
         path = inputPath
+        Logger.info(path)
         if (running || path.isEmpty()) return
         current = path[0]
         running = true
@@ -29,9 +30,7 @@ class PathExecutor {
     fun onTick(event: ClientTickEvent) {
         if (!running) return
         if(path.any{it.x == player.getStandingOn().x && it.z == player.getStandingOn().z && abs(it.y-player.getStandingOn().y) < 10}){
-            info("player is on a block in the list")
             if (player.getStandingOn().x == path[path.size-1].x && player.getStandingOn().z == path[path.size-1].z){
-                info("player is on the end block")
                 running = false
                 gameSettings.keyBindSprint.setPressed(false)
                 gameSettings.keyBindForward.setPressed(false)
