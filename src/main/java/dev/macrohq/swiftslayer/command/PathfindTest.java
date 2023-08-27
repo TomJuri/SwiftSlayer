@@ -13,7 +13,7 @@ import net.minecraft.util.BlockPos;
 
 import java.util.List;
 
-@Command(value = "pathfindtest")
+@Command(value = "pathfindtest", aliases = {"pft"})
 public class PathfindTest {
 
     @Main

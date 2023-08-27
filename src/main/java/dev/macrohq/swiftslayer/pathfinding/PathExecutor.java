@@ -33,6 +33,7 @@ public class PathExecutor {
         if (PlayerUtil.getStandingPosition().distanceSqToCenter(current.getX() + 0.5, current.getY(), current.getZ() + 0.5) <= 1) {
             if (++index >= path.size()) {
                 running = false;
+                KeyBindUtil.setPressed(Ref.gameSettings().keyBindSprint, false);
                 KeyBindUtil.setPressed(Ref.gameSettings().keyBindForward, false);
                 KeyBindUtil.setPressed(Ref.gameSettings().keyBindJump, false);
                 return;
@@ -47,6 +48,7 @@ public class PathExecutor {
         RotationUtil.Rotation rotation = RotationUtil.getAngles(new Vec3(current.getX() + 0.5, current.getY() + 2.0, current.getZ() + 0.5));
         RotationUtil.ease(rotation, 500);
         directionYaw = rotation.getYaw();
+        KeyBindUtil.setPressed(Ref.gameSettings().keyBindSprint, true);
         KeyBindUtil.setPressed(Ref.gameSettings().keyBindForward, true);
         KeyBindUtil.setPressed(Ref.gameSettings().keyBindJump, current.getY() > Ref.player().posY - 1);
     }
