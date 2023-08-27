@@ -15,9 +15,8 @@ class PathExecutor {
     var directionYaw = 0f
 
     fun executePath(inputPath: List<BlockPos>) {
-        Logger.info(path.isEmpty())
-        if (running || path.isEmpty()) return
         path = ArrayList(inputPath)
+        if (running || path.isEmpty()) return
         current = path[0]
         running = true
         directionYaw = player.rotationYaw
@@ -45,10 +44,7 @@ class PathExecutor {
 
     private fun movePlayer(current: BlockPos) {
         Logger.info("Move")
-        val jump =
-            (current.y > player.posY - 1 && world.getBlockState(current).block !is BlockSlab && world.getBlockState(
-                current
-            ).block !is BlockStairs)
+        val jump = (current.y > player.posY - 1 && world.getBlockState(current).block !is BlockSlab && world.getBlockState(current).block !is BlockStairs)
         val rotation = AngleUtil.getAngles(current.toVec3())
         RotationUtil.ease(rotation, 1500)
         directionYaw = rotation.yaw
