@@ -97,7 +97,6 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
             return nodes.stream().anyMatch { node: Node -> position == node.position }
         }
 
-
         private val allowedBlocks = listOf(
             Blocks.air,
             Blocks.tallgrass,
