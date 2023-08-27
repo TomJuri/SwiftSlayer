@@ -1,5 +1,6 @@
 package dev.macrohq.swiftslayer.pathfinding;
 
+import dev.macrohq.swiftslayer.util.BlockUtil;
 import dev.macrohq.swiftslayer.util.Logger;
 import dev.macrohq.swiftslayer.util.Ref;
 import lombok.Getter;
@@ -73,7 +74,9 @@ public class AStarPathfinder {
         }
 
         public void calculateCost(Node start, Node end) {
-            gCost = (float) start.getPosition().distanceSq(position) + (parent != null ? Math.abs(calculateYaw() - parent.calculateYaw()) / 360 : 0);
+            float cost = (parent != null ? Math.abs(calculateYaw() - parent.calculateYaw()) / 360 : 0);
+            cost += 4*BlockUtil.neighbourGenerator(position.up(), 1, 0, 1).stream().filter(pos -> Ref.world().isBlockFullCube(pos)).count();
+            gCost = (float) start.getPosition().distanceSq(position) + cost;
             hCost = (float) position.distanceSq(end.getPosition());
         }
 
@@ -83,18 +86,10 @@ public class AStarPathfinder {
 
         public List<Node> getNeighbours() {
             List<Node> neighbourNodes = new ArrayList<>();
-            int x = position.getX() - 1;
-            int y = position.getY() - 1;
-            int z = position.getZ() - 1;
-            for (int x1 = 0; x1 < 3; x1++) {
-                for (int y1 = 0; y1 < 3; y1++) {
-                    for (int z1 = 0; z1 < 3; z1++) {
-                        BlockPos position = new BlockPos(x + x1, y + y1, z + z1);
-                        Node newNode = new Node(position, this);
-                        if (newNode.isWalkable()) neighbourNodes.add(newNode);
-                    }
-                }
-            }
+            BlockUtil.neighbourGenerator(position, 1).forEach(blockPos -> {
+                Node newNode = new Node(blockPos, this);
+                if(newNode.isWalkable()) neighbourNodes.add(newNode);
+            });
             return neighbourNodes;
         }
 

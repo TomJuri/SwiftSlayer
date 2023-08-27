@@ -5,10 +5,7 @@ import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand;
 import dev.macrohq.swiftslayer.SwiftSlayer;
 import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder;
-import dev.macrohq.swiftslayer.util.Logger;
-import dev.macrohq.swiftslayer.util.PlayerUtil;
-import dev.macrohq.swiftslayer.util.Ref;
-import dev.macrohq.swiftslayer.util.RenderUtil;
+import dev.macrohq.swiftslayer.util.*;
 import net.minecraft.util.BlockPos;
 
 import java.util.List;
@@ -26,17 +23,17 @@ public class PathfindTest {
            return;
        }
         RenderUtil.lines.addAll(path);
-        SwiftSlayer.getInstance().pathExecutor.executePath(path);
+//        SwiftSlayer.getInstance().pathExecutor.executePath(path);
     }
 
     @SubCommand
-    private void setstart() {
+    private void start() {
         RenderUtil.filledBox.add(PlayerUtil.getStandingPosition());
         Ref.removeLater1 = PlayerUtil.getStandingPosition();
     }
 
     @SubCommand
-    private void setend() {
+    private void end() {
         RenderUtil.filledBox.add(PlayerUtil.getStandingPosition());
         Ref.removeLater2 = PlayerUtil.getStandingPosition();
     }
