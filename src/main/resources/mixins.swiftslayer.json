@@ -2,9 +2,8 @@
   "compatibilityLevel": "JAVA_8",
   "package": "dev.macrohq.swiftslayer.mixin",
   "client": [
-    "EntityPlayerSPInvoker",
     "MinecraftInvoker",
-    "ModidHider"
+    "FMLHandshakeMessageMixin"
   ],
   "verbose": true,
   "mixins": [

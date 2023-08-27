@@ -1,4 +1,4 @@
-package de.tomjuri.armageddon.mixin;
+package dev.macrohq.swiftslayer.mixin;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.ModContainer;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Mixin(FMLHandshakeMessage.ModList.class)
-public abstract class ModidHider {
+public abstract class FMLHandshakeMessageMixin {
     @Shadow
     private Map<String, String> modTags;
 

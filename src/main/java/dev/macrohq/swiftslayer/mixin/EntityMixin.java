@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class EntityMixin {
     @Redirect(method = "moveFlying", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/Entity;rotationYaw:F"))
     private float moveFlying(Entity instance) {
-        return SwiftSlayer.getInstance().pathExecutor.running ?
-                SwiftSlayer.getInstance().pathExecutor.directionYaw :
+        return SwiftSlayer.Companion.getInstance().getPathExecutor().getRunning() ?
+                SwiftSlayer.Companion.getInstance().getPathExecutor().getDirectionYaw() :
                 instance.rotationYaw;
     }
 }
