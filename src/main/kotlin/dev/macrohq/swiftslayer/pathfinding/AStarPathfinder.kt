@@ -124,7 +124,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
             Blocks.rail,
             Blocks.detector_rail,
             Blocks.activator_rail,
-            Blocks.golden_rail
+            Blocks.golden_rail,
         )
     }
 }

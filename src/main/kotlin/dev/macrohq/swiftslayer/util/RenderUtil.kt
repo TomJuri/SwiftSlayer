@@ -43,12 +43,12 @@ object RenderUtil {
 
     fun drawBox(event: RenderWorldLastEvent, blockPos: BlockPos, color: Color, esp: Boolean) {
         val aabb = AxisAlignedBB(
-            blockPos.x.toDouble(),
-            blockPos.y.toDouble(),
-            blockPos.z.toDouble(),
-            (blockPos.x + 1).toDouble(),
-            (blockPos.y + 1).toDouble(),
-            (blockPos.z + 1).toDouble()
+            blockPos.x.toDouble()-0.05,
+            blockPos.y.toDouble()-0.05,
+            blockPos.z.toDouble()-0.05,
+            (blockPos.x + 1).toDouble()+0.05,
+            (blockPos.y + 1).toDouble()+0.05,
+            (blockPos.z + 1).toDouble()+0.05
         )
         drawBox(event, aabb, color, esp)
     }
