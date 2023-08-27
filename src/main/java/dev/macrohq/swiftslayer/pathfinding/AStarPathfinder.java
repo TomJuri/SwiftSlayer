@@ -109,7 +109,7 @@ public class AStarPathfinder {
             }
 
             return allowedBlocks.contains(Ref.world().getBlockState(position.up().up()).getBlock())
-                    && allowedBlocks.contains(Ref.world().getBlockState(position.up().up()).getBlock())
+                    && allowedBlocks.contains(Ref.world().getBlockState(position.up()).getBlock())
                     && Ref.world().getBlockState(position).getBlock().getMaterial().isSolid()
                     && !collision;
         }
