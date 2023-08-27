@@ -25,16 +25,14 @@ class PathExecutor {
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
         if (!running) return
-        Logger.info("Tick")
-        if (path.indexOf(getStandingOn()) == path.size - 1) {
-            Logger.info("Done")
+        if (path.indexOf(player.getStandingOn()) == path.size - 1) {
             running = false
             gameSettings.keyBindSprint.setPressed(false)
             gameSettings.keyBindForward.setPressed(false)
             gameSettings.keyBindJump.setPressed(false)
             return
         }
-        current = path[path.indexOf(getStandingOn()) + 1]
+        current = path[path.indexOf(player.getStandingOn()) + 1]
         movePlayer(current!!)
     }
 
@@ -43,9 +41,8 @@ class PathExecutor {
     }
 
     private fun movePlayer(current: BlockPos) {
-        Logger.info("Move")
         val jump = (current.y > player.posY - 1 && world.getBlockState(current).block !is BlockSlab && world.getBlockState(current).block !is BlockStairs)
-        val rotation = AngleUtil.getAngles(current.toVec3())
+        val rotation = RotationUtil.Rotation(AngleUtil.getAngles(current.toVec3()).yaw, 0f)
         RotationUtil.ease(rotation, 1500)
         directionYaw = rotation.yaw
         gameSettings.keyBindSprint.setPressed(true)

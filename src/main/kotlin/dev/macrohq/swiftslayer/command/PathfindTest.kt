@@ -19,20 +19,20 @@ class PathfindTest {
             error("No path found!")
             return
         }
-        swiftSlayer.pathExecutor.executePath(path)
         path.forEach { RenderUtil.lines.add(it) }
+        swiftSlayer.pathExecutor.executePath(path)
     }
 
     @SubCommand
     private fun start() {
-        RenderUtil.filledBox.add(getStandingOn())
-        swiftSlayer.removeLater = getStandingOn()
+        RenderUtil.filledBox.add(player.getStandingOn())
+        swiftSlayer.removeLater = player.getStandingOn()
     }
 
     @SubCommand
     private fun end() {
-        RenderUtil.filledBox.add(getStandingOn())
-        swiftSlayer.removeLater0 = getStandingOn()
+        RenderUtil.filledBox.add(player.getStandingOn())
+        swiftSlayer.removeLater0 = player.getStandingOn()
     }
 
     @SubCommand
