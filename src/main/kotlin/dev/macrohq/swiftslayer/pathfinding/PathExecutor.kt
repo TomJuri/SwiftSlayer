@@ -15,7 +15,7 @@ class PathExecutor {
     var directionYaw = 0f
 
     fun executePath(inputPath: List<BlockPos>) {
-        path = ArrayList(inputPath)
+        path = inputPath
         if (running || path.isEmpty()) return
         current = path[0]
         running = true
@@ -25,14 +25,16 @@ class PathExecutor {
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
         if (!running) return
-        if (path.indexOf(player.getStandingOn()) == path.size - 1) {
-            running = false
-            gameSettings.keyBindSprint.setPressed(false)
-            gameSettings.keyBindForward.setPressed(false)
-            gameSettings.keyBindJump.setPressed(false)
-            return
+        if(path.contains(player.getStandingOn())) {
+            if (path.indexOf(player.getStandingOn()) == path.size - 1) {
+                running = false
+                gameSettings.keyBindSprint.setPressed(false)
+                gameSettings.keyBindForward.setPressed(false)
+                gameSettings.keyBindJump.setPressed(false)
+                return
+            }
+            current = path[path.indexOf(player.getStandingOn()) + 1]
         }
-        current = path[path.indexOf(player.getStandingOn()) + 1]
         movePlayer(current!!)
     }
 
