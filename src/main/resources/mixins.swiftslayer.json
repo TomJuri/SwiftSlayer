@@ -3,7 +3,8 @@
   "package": "dev.macrohq.swiftslayer.mixin",
   "client": [
     "EntityPlayerSPInvoker",
-    "MinecraftInvoker"
+    "MinecraftInvoker",
+    "ModidHider"
   ],
   "verbose": true,
   "mixins": [

@@ -2,6 +2,8 @@ package dev.macrohq.swiftslayer.pathfinding;
 
 import cc.polyfrost.oneconfig.config.annotations.KeyBind;
 import dev.macrohq.swiftslayer.util.*;
+import net.minecraft.block.BlockSlab;
+import net.minecraft.block.BlockStairs;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.*;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -48,12 +50,15 @@ public class PathExecutor {
     }
 
     private void movePlayer(BlockPos current) {
+        boolean jump = current.getY() > (Ref.player().posY - 1) &&
+                !(Ref.world().getBlockState(current).getBlock() instanceof BlockSlab)
+                && !(Ref.world().getBlockState(current).getBlock() instanceof BlockStairs);
         RotationUtil.Rotation rotation = RotationUtil.getAngles(new Vec3(current.getX() + 0.5, current.getY() + 2.0, current.getZ() + 0.5));
-        RotationUtil.ease(rotation, 500);
+        RotationUtil.ease(rotation, 1500);
         directionYaw = rotation.getYaw();
         KeyBindUtil.setPressed(Ref.gameSettings().keyBindSprint, true);
         KeyBindUtil.setPressed(Ref.gameSettings().keyBindForward, true);
-        KeyBindUtil.setPressed(Ref.gameSettings().keyBindJump, current.getY() > Ref.player().posY - 1);
+        KeyBindUtil.setPressed(Ref.gameSettings().keyBindJump, jump);
     }
 
     @SubscribeEvent

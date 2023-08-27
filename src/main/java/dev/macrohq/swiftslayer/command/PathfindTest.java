@@ -5,6 +5,7 @@ import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand;
 import dev.macrohq.swiftslayer.SwiftSlayer;
 import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder;
+import dev.macrohq.swiftslayer.pathfinding.PathExecutor;
 import dev.macrohq.swiftslayer.util.*;
 import net.minecraft.util.BlockPos;
 
@@ -23,7 +24,7 @@ public class PathfindTest {
            return;
        }
         RenderUtil.lines.addAll(path);
-//        SwiftSlayer.getInstance().pathExecutor.executePath(path);
+        SwiftSlayer.getInstance().pathExecutor.executePath(path);
     }
 
     @SubCommand
@@ -43,6 +44,7 @@ public class PathfindTest {
         RenderUtil.filledBox.clear();
         RenderUtil.markers.clear();
         RenderUtil.lines.clear();
+        SwiftSlayer.getInstance().pathExecutor.disable();
         Ref.removeLater1 = null;
         Ref.removeLater2 = null;
     }

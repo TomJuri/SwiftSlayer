@@ -74,10 +74,13 @@ public class AStarPathfinder {
         }
 
         public void calculateCost(Node start, Node end) {
-            float cost = (parent != null ? Math.abs(calculateYaw() - parent.calculateYaw()) / 360 : 0);
-            cost += 4*BlockUtil.neighbourGenerator(position.up(), 1, 0, 1).stream().filter(pos -> Ref.world().isBlockFullCube(pos)).count();
-            gCost = (float) start.getPosition().distanceSq(position) + cost;
-            hCost = (float) position.distanceSq(end.getPosition());
+            float cost = 2*(parent != null ? Math.abs(calculateYaw() - parent.calculateYaw()) / 360 : 0);
+            // keep the cost variable i was using it to calculate more costs and add them
+            gCost = (float) Math.sqrt(start.getPosition().distanceSq(position)) + cost;
+            hCost = (float) Math.sqrt(position.distanceSq(end.getPosition()));
+            // Sqrt makes the values clean hence better pathfinding
+            // Dont remove it because without sqrt pathfinding goes all over the place
+            // Remove this comment
         }
 
         public float getFCost() {
@@ -102,11 +105,14 @@ public class AStarPathfinder {
                         && Ref.world().isAirBlock(position.add(0, 1, 1))
                         && Ref.world().isAirBlock(position.add(0, 1, -1)));
             }
-
-            return allowedBlocks.contains(Ref.world().getBlockState(position.up().up()).getBlock())
-                    && allowedBlocks.contains(Ref.world().getBlockState(position.up()).getBlock())
+            return Ref.world().getBlockState(position.up()).getBlock().isCollidable()
+                    && Ref.world().getBlockState(position.up().up()).getBlock().isCollidable()
                     && Ref.world().getBlockState(position).getBlock().getMaterial().isSolid()
                     && !collision;
+//            return allowedBlocks.contains(Ref.world().getBlockState(position.up().up()).getBlock())
+//                    && allowedBlocks.contains(Ref.world().getBlockState(position.up()).getBlock())
+//                    && Ref.world().getBlockState(position).getBlock().getMaterial().isSolid()
+//                    && !collision;
         }
 
         public boolean isIn(List<Node> nodes){
