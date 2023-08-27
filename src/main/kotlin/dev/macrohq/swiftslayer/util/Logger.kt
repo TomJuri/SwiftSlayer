@@ -3,11 +3,11 @@ package dev.macrohq.swiftslayer.util
 import net.minecraft.util.ChatComponentText
 
 object Logger {
-    fun info(message: String) {
+    fun info(message: Any) {
         send("a$message")
     }
 
-    fun error(message: String) {
+    fun error(message: Any) {
         send("c$message")
     }
 

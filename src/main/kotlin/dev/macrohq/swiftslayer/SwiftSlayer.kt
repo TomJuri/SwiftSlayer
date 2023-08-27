@@ -28,6 +28,7 @@ class SwiftSlayer {
     fun init(event: FMLInitializationEvent) {
         SwiftSlayerConfig()
         pathExecutor = PathExecutor()
+        MinecraftForge.EVENT_BUS.register(this)
         MinecraftForge.EVENT_BUS.register(pathExecutor)
         CommandManager.register(PathfindTest())
     }
