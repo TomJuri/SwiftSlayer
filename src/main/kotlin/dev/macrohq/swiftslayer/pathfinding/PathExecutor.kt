@@ -9,7 +9,6 @@ import net.minecraft.block.BlockStairs
 import net.minecraft.util.BlockPos
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
-import kotlin.math.abs
 import kotlin.math.sqrt
 
 class PathExecutor {
@@ -17,10 +16,12 @@ class PathExecutor {
     private var current: BlockPos? = null
     private var pathFailCounter = 0;
     var running = false
+    var done = false
     var directionYaw = 0f
 
     fun executePath(inputPath: List<BlockPos>) {
         disable()
+        done = false
         if (running || inputPath.isEmpty()) return
         path = inputPath
         current = path[0]
@@ -42,6 +43,7 @@ class PathExecutor {
         if (!running) return
         if(path.any{it.x == player.getStandingOn().x && it.z == player.getStandingOn().z && (player.getStandingOn().y-it.y) in 0..10}){
             if (player.getStandingOn().x == path[path.size-1].x && player.getStandingOn().z == path[path.size-1].z){
+                done = true
                 running = false
                 gameSettings.keyBindSprint.setPressed(false)
                 gameSettings.keyBindForward.setPressed(false)

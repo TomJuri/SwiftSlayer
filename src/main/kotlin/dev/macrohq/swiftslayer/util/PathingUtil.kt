@@ -17,5 +17,5 @@ object PathingUtil {
             }
         }
     }
-    fun hasArrived() = !pathExecutor.running
+    fun hasArrived() = !pathExecutor.running && pathExecutor.done
 }
