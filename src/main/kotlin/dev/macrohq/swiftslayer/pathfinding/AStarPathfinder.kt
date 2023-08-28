@@ -46,11 +46,11 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
         return path
     }
 
-    public class Node(val position: BlockPos, val parent: Node?) {
+    class Node(val position: BlockPos, val parent: Node?) {
         private var gCost = Float.MAX_VALUE
         private var hCost = Float.MAX_VALUE
 
-        fun calculateYaw(): Float {
+        private fun calculateYaw(): Float {
             var yaw = 0f
             if (parent != null) {
                 val dX = parent.position.x - position.x
@@ -62,8 +62,8 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
 
         fun calculateCost(start: Node, end: Node) {
             var f = 0f
-            if(parent != null) f = (abs((calculateYaw() - parent.calculateYaw()).toDouble()) / 360).toFloat()
-            val cost = 2 * f
+            if(parent != null) f = (abs((calculateYaw() - parent.calculateYaw())).toDouble() / 360).toFloat()
+            val cost = f
             gCost = sqrt(start.position.distanceSq(position)).toFloat() + cost
             hCost = sqrt(position.distanceSq(end.position)).toFloat()
         }
