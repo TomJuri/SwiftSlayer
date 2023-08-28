@@ -11,17 +11,7 @@ import dev.macrohq.swiftslayer.util.Logger.error
 class PathfindTest {
     @Main
     private fun main() {
-        Thread(Runnable {
-        RenderUtil.lines.clear()
-        val astar = AStarPathfinder(player.getStandingOn(), swiftSlayer.removeLater0!!)
-        val path = astar.findPath(10000)
-        if (path.isEmpty()) {
-            error("No path found!")
-        }else {
-            path.forEach { RenderUtil.lines.add(it) }
-            swiftSlayer.pathExecutor.executePath(path)
-        }
-        }).start()
+        swiftSlayer.pathExecutor.execute(player.getStandingOn(), swiftSlayer.removeLater0!!)
     }
 
     @SubCommand

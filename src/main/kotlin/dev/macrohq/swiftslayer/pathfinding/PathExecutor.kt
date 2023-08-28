@@ -28,7 +28,7 @@ class PathExecutor {
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
         if (!running) return
-        if(path.any{it.x == player.getStandingOn().x && it.z == player.getStandingOn().z && (it.y-player.getStandingOn().y) in 0..10}){
+        if(path.any{it.x == player.getStandingOn().x && it.z == player.getStandingOn().z && (player.getStandingOn().y-it.y) in 0..10}){
             if (player.getStandingOn().x == path[path.size-1].x && player.getStandingOn().z == path[path.size-1].z){
                 running = false
                 gameSettings.keyBindSprint.setPressed(false)
@@ -38,9 +38,6 @@ class PathExecutor {
             }
             current = path[path.indexOf(path.find { it.x == player.getStandingOn().x && it.z == player.getStandingOn().z }) + 1]
             path.dropWhile {it!=current}
-        }
-        else{
-
         }
         RenderUtil.markers.clear();
         current?.let { RenderUtil.markers.add(it) };
@@ -59,7 +56,21 @@ class PathExecutor {
         gameSettings.keyBindSprint.setPressed(true)
         gameSettings.keyBindForward.setPressed(true)
         gameSettings.keyBindJump.setPressed(jump)
-//        if(jump) gameSettings.keyBindJump.setPressed(true)
-//        else if(!jump && !player.onGround) gameSettings.keyBindForward.setPressed(false)
+    }
+
+    fun execute(startPos: BlockPos, endPos: BlockPos) {
+        running = false
+        RenderUtil.lines.clear()
+        Thread(Runnable() {
+            var tempPath = listOf<BlockPos>()
+            val algo = AStarPathfinder(startPos, endPos);
+            tempPath = (algo.findPath(10000))
+            if (tempPath.isEmpty()) {
+                error("Could not find path!!")
+            } else {
+                tempPath.forEach { RenderUtil.lines.add(it) }
+                executePath(tempPath)
+            }
+        }).start()
     }
 }
