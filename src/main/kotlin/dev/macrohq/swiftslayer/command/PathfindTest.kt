@@ -13,7 +13,7 @@ class PathfindTest {
     private fun main() {
         Thread(Runnable {
         RenderUtil.lines.clear()
-        val astar = AStarPathfinder(swiftSlayer.removeLater!!, swiftSlayer.removeLater0!!)
+        val astar = AStarPathfinder(player.getStandingOn(), swiftSlayer.removeLater0!!)
         val path = astar.findPath(10000)
         if (path.isEmpty()) {
             error("No path found!")
@@ -22,7 +22,6 @@ class PathfindTest {
             swiftSlayer.pathExecutor.executePath(path)
         }
         }).start()
-
     }
 
     @SubCommand
@@ -45,5 +44,10 @@ class PathfindTest {
         swiftSlayer.pathExecutor.disable()
         swiftSlayer.removeLater = null
         swiftSlayer.removeLater0 = null
+    }
+
+    @SubCommand
+    private fun stop(){
+        swiftSlayer.pathExecutor.disable()
     }
 }

@@ -28,10 +28,8 @@ class PathExecutor {
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
         if (!running) return
-        if(path.any{it.x == player.getStandingOn().x && it.z == player.getStandingOn().z && abs(it.y-player.getStandingOn().y) < 10}){
-            info("player is on a block in the list")
+        if(path.any{it.x == player.getStandingOn().x && it.z == player.getStandingOn().z && (it.y-player.getStandingOn().y) in 0..10}){
             if (player.getStandingOn().x == path[path.size-1].x && player.getStandingOn().z == path[path.size-1].z){
-                info("player is on the end block")
                 running = false
                 gameSettings.keyBindSprint.setPressed(false)
                 gameSettings.keyBindForward.setPressed(false)
@@ -40,6 +38,9 @@ class PathExecutor {
             }
             current = path[path.indexOf(path.find { it.x == player.getStandingOn().x && it.z == player.getStandingOn().z }) + 1]
             path.dropWhile {it!=current}
+        }
+        else{
+
         }
         RenderUtil.markers.clear();
         current?.let { RenderUtil.markers.add(it) };
@@ -51,11 +52,14 @@ class PathExecutor {
     }
 
     private fun movePlayer(current: BlockPos) {
-        val jump = (player.onGround && current.y > player.posY - 1 && world.getBlockState(current).block !is BlockSlab && world.getBlockState(current).block !is BlockStairs && sqrt(player.getDistanceSqToCenter(current)) < 1)
-        val rotation = RotationUtil.Rotation(AngleUtil.getAngles(current.toVec3()).yaw, 0f)
+        val jump = (player.onGround && current.y > player.posY - 1 && world.getBlockState(current).block !is BlockSlab
+                && world.getBlockState(current).block !is BlockStairs && sqrt(player.getDistanceSqToCenter(current)) < 1.2)
+        val rotation = RotationUtil.Rotation(AngleUtil.getAngles(current.toVec3Top()).yaw, 0f)
         directionYaw = rotation.yaw
         gameSettings.keyBindSprint.setPressed(true)
         gameSettings.keyBindForward.setPressed(true)
-        if(jump) player.jump()
+        gameSettings.keyBindJump.setPressed(jump)
+//        if(jump) gameSettings.keyBindJump.setPressed(true)
+//        else if(!jump && !player.onGround) gameSettings.keyBindForward.setPressed(false)
     }
 }
