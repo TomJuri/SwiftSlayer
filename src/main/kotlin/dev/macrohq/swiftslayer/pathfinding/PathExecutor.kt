@@ -18,11 +18,18 @@ class PathExecutor {
     var directionYaw = 0f
 
     fun executePath(inputPath: List<BlockPos>) {
+        if (running || inputPath.isEmpty()) return
         path = inputPath
-        if (running || path.isEmpty()) return
         current = path[0]
         running = true
         directionYaw = player.rotationYaw
+    }
+
+    fun disable() {
+        running = false
+        path = listOf()
+        current = null
+        directionYaw = 0f
     }
 
     @SubscribeEvent
@@ -44,10 +51,6 @@ class PathExecutor {
         movePlayer(current!!)
     }
 
-    fun disable() {
-        running = false
-    }
-
     private fun movePlayer(current: BlockPos) {
         val jump = (player.onGround && current.y > player.posY - 1 && world.getBlockState(current).block !is BlockSlab
                 && world.getBlockState(current).block !is BlockStairs && sqrt(player.getDistanceSqToCenter(current)) < 1.2)
@@ -56,21 +59,5 @@ class PathExecutor {
         gameSettings.keyBindSprint.setPressed(true)
         gameSettings.keyBindForward.setPressed(true)
         gameSettings.keyBindJump.setPressed(jump)
-    }
-
-    fun execute(startPos: BlockPos, endPos: BlockPos) {
-        running = false
-        RenderUtil.lines.clear()
-        Thread(Runnable() {
-            var tempPath = listOf<BlockPos>()
-            val algo = AStarPathfinder(startPos, endPos);
-            tempPath = (algo.findPath(10000))
-            if (tempPath.isEmpty()) {
-                error("Could not find path!!")
-            } else {
-                tempPath.forEach { RenderUtil.lines.add(it) }
-                executePath(tempPath)
-            }
-        }).start()
     }
 }

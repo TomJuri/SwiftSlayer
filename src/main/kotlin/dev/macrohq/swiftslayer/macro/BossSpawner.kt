@@ -24,7 +24,7 @@ class BossSpawner {
         if(!enabled || !condition()) return
         when(state) {
             State.GOTO_MOB -> {
-                target = TargetingUtil.getBestMob(EntityZombie::class.java)
+             /*   target = TargetingUtil.getBestMob(EntityZombie::class.java)
                 RenderUtil.entites.add(target!!)
                 if(target == null) {
                     Logger.error("No mobs found")
@@ -38,7 +38,7 @@ class BossSpawner {
                     return
                 }
                 pathExecutor.executePath(path)
-                condition = { !pathExecutor.running}
+                condition = { !pathExecutor.running}*/
             }
 
             State.ROTATE_TO_MOB -> {
