@@ -3,13 +3,10 @@ package dev.macrohq.swiftslayer.util
 import net.minecraft.entity.EntityLiving
 
 object TargetingUtil {
-    fun <T : EntityLiving> getBestMob(entity: Class<T>): T? {
-        // i love generics
-        // although this could probably be optimized a little bit more
-        // cba rn tho so TODO
+    fun getBestMob(entity: Class<out EntityLiving>): EntityLiving? {
         val entities = player.worldObj.loadedEntityList.filterIsInstance(entity)
-        val entitiesMap = mutableMapOf<T, Pair<Boolean, Float>>()
-        var miniboss: T? = null
+        val entitiesMap = mutableMapOf<EntityLiving, Pair<Boolean, Float>>()
+        var miniboss: EntityLiving? = null
         entities.forEach {
             if (it.health > 40000) {
                 miniboss = it
@@ -17,9 +14,9 @@ object TargetingUtil {
             }
             entitiesMap[it] = Pair(player.canEntityBeSeen(it), it.getDistanceToEntity(player))
         }
-        var closestEntity: T? = null
+        var closestEntity: EntityLiving? = null
         var closestDistance = Float.MAX_VALUE
-        var closestVisibleEntity: T? = null
+        var closestVisibleEntity: EntityLiving? = null
         var closestVisibleDistance = Float.MAX_VALUE
         entitiesMap.keys.forEach {
             val distance = entitiesMap[it]!!.second

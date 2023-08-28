@@ -20,12 +20,12 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
         endNode = Node(endPos, null)
     }
 
-    fun findPath(iterations: Int): List<BlockPos> {
+    fun findPath(iterations: Int, callback: (List<BlockPos>) -> Unit) {
         startNode.calculateCost(startNode, endNode)
         openNodes.add(startNode)
         for (i in 0 until iterations) {
-            val currentNode = openNodes.stream().min(Comparator.comparingDouble { it.getFCost().toDouble() }).orElse(null) ?: return listOf()
-            if (currentNode.position == endNode.position) return reconstructPath(currentNode)
+            val currentNode = openNodes.stream().min(Comparator.comparingDouble { it.getFCost().toDouble() }).orElse(null) ?: return callback(listOf())
+            if (currentNode.position == endNode.position) return callback(reconstructPath(currentNode))
             openNodes.remove(currentNode)
             closedNodes.add(currentNode)
             for (node in currentNode.getNeighbours()) {
@@ -33,7 +33,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
                 if (!node.isIn(openNodes) && !node.isIn(closedNodes)) openNodes.add(node)
             }
         }
-        return listOf()
+        return callback(listOf())
     }
 
     private fun reconstructPath(end: Node): List<BlockPos> {
@@ -46,7 +46,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
         return path
     }
 
-    public class Node(val position: BlockPos, val parent: Node?) {
+    private class Node(val position: BlockPos, val parent: Node?) {
         private var gCost = Float.MAX_VALUE
         private var hCost = Float.MAX_VALUE
 
