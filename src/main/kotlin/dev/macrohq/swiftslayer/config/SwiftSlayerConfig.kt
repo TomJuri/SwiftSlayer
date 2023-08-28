@@ -6,7 +6,6 @@ import cc.polyfrost.oneconfig.config.data.Mod
 import cc.polyfrost.oneconfig.config.data.ModType
 
 class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftslayer.json") {
-    init {
-        initialize()
-    }
+    init { initialize() }
+    val macro = 0
 }

@@ -16,3 +16,9 @@ val swiftSlayer
     get() = SwiftSlayer.instance
 val gameSettings
     get() = mc.gameSettings
+val config
+    get() = swiftSlayer.config
+val pathExecutor
+    get() = swiftSlayer.pathExecutor
+val bossSpawner
+    get() = swiftSlayer.bossSpawner

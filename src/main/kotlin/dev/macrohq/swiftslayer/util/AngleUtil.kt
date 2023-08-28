@@ -1,6 +1,7 @@
 package dev.macrohq.swiftslayer.util
 
 import dev.macrohq.swiftslayer.util.RotationUtil.Rotation
+import net.minecraft.entity.Entity
 import net.minecraft.util.BlockPos
 import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
@@ -22,4 +23,5 @@ object AngleUtil {
     }
     fun getDiffBetweenBlockPos(first: BlockPos, second: BlockPos) = getAngles(first.toVec3()).yaw - getAngles(second.toVec3()).yaw
     fun getAngles(block: BlockPos) = getAngles(block.toVec3())
+    fun getAngles(entity: Entity) = getAngles(entity.positionVector.add(Vec3(0.0, entity.eyeHeight.toDouble(), 0.0)))
 }
