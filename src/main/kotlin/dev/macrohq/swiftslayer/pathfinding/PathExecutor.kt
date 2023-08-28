@@ -1,5 +1,6 @@
 package dev.macrohq.swiftslayer.pathfinding
 
+import cc.polyfrost.oneconfig.utils.Multithreading.runAsync
 import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.Logger.info
 import dev.macrohq.swiftslayer.util.RotationUtil
@@ -14,10 +15,12 @@ import kotlin.math.sqrt
 class PathExecutor {
     private var path = listOf<BlockPos>()
     private var current: BlockPos? = null
+    private var pathFailCounter = 0;
     var running = false
     var directionYaw = 0f
 
     fun executePath(inputPath: List<BlockPos>) {
+        disable()
         if (running || inputPath.isEmpty()) return
         path = inputPath
         current = path[0]
@@ -26,6 +29,8 @@ class PathExecutor {
     }
 
     fun disable() {
+        info("disabling")
+        pathFailCounter = 0
         running = false
         path = listOf()
         current = null
@@ -43,8 +48,16 @@ class PathExecutor {
                 gameSettings.keyBindJump.setPressed(false)
                 return
             }
+            pathFailCounter = 0
             current = path[path.indexOf(path.find { it.x == player.getStandingOn().x && it.z == player.getStandingOn().z }) + 1]
-            path.dropWhile {it!=current}
+        }
+        else if(player.onGround) pathFailCounter++
+
+        if(pathFailCounter>=100 && player.onGround){
+            pathFailCounter = 0
+            running = false
+            PathingUtil.goto(path[path.size-1])
+            return;
         }
         RenderUtil.markers.clear();
         current?.let { RenderUtil.markers.add(it) };

@@ -63,8 +63,8 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
         fun calculateCost(start: Node, end: Node) {
             var f = 0f
             if(parent != null) f = (abs((calculateYaw() - parent.calculateYaw())).toDouble() / 360).toFloat()
-            val cost = f
-            gCost = sqrt(start.position.distanceSq(position)).toFloat() + cost
+            val cost = 1.5 * f
+            gCost = sqrt(start.position.distanceSq(position)).toFloat() + cost.toFloat()
             hCost = sqrt(position.distanceSq(end.position)).toFloat()
         }
 
