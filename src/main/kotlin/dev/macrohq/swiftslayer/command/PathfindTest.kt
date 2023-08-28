@@ -11,19 +11,13 @@ import dev.macrohq.swiftslayer.util.Logger.error
 class PathfindTest {
     @Main
     private fun main() {
-        swiftSlayer.pathExecutor.execute(player.getStandingOn(), swiftSlayer.removeLater0!!)
-    }
-
-    @SubCommand
-    private fun start() {
-        RenderUtil.filledBox.add(player.getStandingOn())
-        swiftSlayer.removeLater = player.getStandingOn()
+        PathingUtil.goto(swiftSlayer.removeLater!!)
     }
 
     @SubCommand
     private fun end() {
         RenderUtil.filledBox.add(player.getStandingOn())
-        swiftSlayer.removeLater0 = player.getStandingOn()
+        swiftSlayer.removeLater = player.getStandingOn()
     }
 
     @SubCommand
@@ -31,13 +25,11 @@ class PathfindTest {
         RenderUtil.filledBox.clear()
         RenderUtil.markers.clear()
         RenderUtil.lines.clear()
-        swiftSlayer.pathExecutor.disable()
         swiftSlayer.removeLater = null
-        swiftSlayer.removeLater0 = null
     }
 
     @SubCommand
-    private fun stop(){
+    private fun stop() {
         swiftSlayer.pathExecutor.disable()
     }
 }
