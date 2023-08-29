@@ -38,11 +38,13 @@ object RotationUtil {
         done = false
         runAsync {
             while(!done) {
+                if(entity.isDead) break
                 val rotation = AngleUtil.getAngles(entity)
                 player.rotationYaw = rotation.yaw
                 player.rotationPitch = rotation.pitch
                 Thread.sleep(1)
             }
+            done = true
         }
     }
 
