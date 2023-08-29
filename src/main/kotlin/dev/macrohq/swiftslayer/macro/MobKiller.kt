@@ -51,7 +51,7 @@ class MobKiller {
             }
             State.PATHFINDING_VERIFY -> {
                 info("In pathfinding verify!")
-                if(PathingUtil.hasArrived()){
+                if(PathingUtil.isDone){
                     info("Arrived at Target Mob! Kill Mob.")
                     state = State.KILLING
                 }

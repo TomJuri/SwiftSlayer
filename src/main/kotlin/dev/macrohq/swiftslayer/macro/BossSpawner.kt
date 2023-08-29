@@ -1,15 +1,10 @@
 package dev.macrohq.swiftslayer.macro
 
-import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder
 import dev.macrohq.swiftslayer.util.*
-import net.minecraft.client.renderer.entity.Render
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.monster.EntityZombie
-import net.minecraft.pathfinding.PathFinder
-import net.minecraft.util.BlockPos
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
-import java.util.concurrent.CompletableFuture
 
 
 class BossSpawner {
@@ -22,29 +17,21 @@ class BossSpawner {
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
         if(!enabled || !condition()) return
+        if(target == null || target!!.isDead) target = EntityUtil.getBestMob(EntityZombie::class.java)
+        if(target == null) {
+            Logger.error("Couldn't find any targets :(")
+            disable()
+            return
+        }
         when(state) {
             State.GOTO_MOB -> {
-             /*   target = TargetingUtil.getBestMob(EntityZombie::class.java)
                 RenderUtil.entites.add(target!!)
-                if(target == null) {
-                    Logger.error("No mobs found")
-                    disable()
-                    return
-                }
-                val path = AStarPathfinder(target!!.getStandingOn(), player.getStandingOn()).findPath(5000)
-                if(path.isEmpty()) {
-                    Logger.error("No path found")
-                    disable()
-                    return
-                }
-                pathExecutor.executePath(path)
-                condition = { !pathExecutor.running}*/
+                PathingUtil.goto(target!!.getStandingOn())
+                condition = { PathingUtil.isDone }
             }
 
             State.ROTATE_TO_MOB -> {
-                RotationUtil.ease(AngleUtil.getAngles(target!!), 100)
-                disable()
-                return
+
             }
 
             State.KILL_MOB -> {

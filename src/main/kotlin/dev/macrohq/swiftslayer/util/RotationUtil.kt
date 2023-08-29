@@ -59,6 +59,21 @@ object RotationUtil {
         }
     }
 
+    fun lock(entity: EntityLiving) {
+        if(!done) return
+        done = false
+        runAsync {
+            while(!done) {
+                if(entity.isDead) break
+                val rotation = AngleUtil.getAngles(entity)
+                player.rotationYaw = rotation.yaw
+                player.rotationPitch = rotation.pitch
+                Thread.sleep(1)
+            }
+            done = true
+        }
+    }
+
     fun onRenderWorldLast() {
         if (done) return
         if (System.currentTimeMillis() <= endTime) {
@@ -86,6 +101,10 @@ object RotationUtil {
         var yawChange = MathHelper.wrapAngleTo180_float(endRot.yaw) - MathHelper.wrapAngleTo180_float(startRot.yaw)
         if (yawChange <= -180.0f) yawChange += 360.0f else if (yawChange > 180.0f) yawChange += -360.0f
         return Rotation(yawChange, endRot.pitch - startRot.pitch)
+    }
+
+    fun stop() {
+        done = true
     }
 
     data class Rotation(val yaw: Float, val pitch: Float)
