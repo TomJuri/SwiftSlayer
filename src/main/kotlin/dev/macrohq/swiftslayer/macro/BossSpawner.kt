@@ -17,12 +17,13 @@ class BossSpawner {
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
         if(!enabled || !condition()) return
-        if(target == null || target!!.isDead) target = EntityUtil.getBestMob(EntityZombie::class.java)
+        if(target == null || target!!.isDead) target = EntityUtil.getMobs(EntityZombie::class.java, 100).firstOrNull()
         if(target == null) {
             Logger.error("Couldn't find any targets :(")
             disable()
             return
         }
+        Logger.info(target!!.getDistanceSqToEntity(player))
         when(state) {
             State.GOTO_MOB -> {
                 RenderUtil.entites.add(target!!)
