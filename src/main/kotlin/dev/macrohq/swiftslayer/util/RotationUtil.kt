@@ -1,6 +1,7 @@
 package dev.macrohq.swiftslayer.util
 
 import cc.polyfrost.oneconfig.utils.dsl.runAsync
+import net.minecraft.entity.EntityLiving
 import net.minecraft.util.MathHelper
 import kotlin.math.pow
 
@@ -32,11 +33,12 @@ object RotationUtil {
         endTime = startTime + durationMillis
     }
 
-    fun lock(rotation: Rotation) {
+    fun lock(entity: EntityLiving) {
         if(!done) return
         done = false
         runAsync {
             while(!done) {
+                val rotation = AngleUtil.getAngles(entity)
                 player.rotationYaw = rotation.yaw
                 player.rotationPitch = rotation.pitch
                 Thread.sleep(1)
