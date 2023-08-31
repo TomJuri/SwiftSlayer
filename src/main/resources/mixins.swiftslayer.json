@@ -2,11 +2,12 @@
   "compatibilityLevel": "JAVA_8",
   "package": "dev.macrohq.swiftslayer.mixin",
   "client": [
-    "MinecraftInvoker",
-    "FMLHandshakeMessageMixin"
+    "FMLHandshakeMessageMixin",
+    "MinecraftInvoker"
   ],
   "verbose": true,
   "mixins": [
-    "EntityMixin"
+    "EntityMixin",
+    "RenderGuardianMixin"
   ]
 }

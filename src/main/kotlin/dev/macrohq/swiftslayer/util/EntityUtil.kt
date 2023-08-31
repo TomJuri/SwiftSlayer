@@ -22,4 +22,8 @@ object EntityUtil {
     fun getRevCost(entity: EntityLiving): Int{
         return 1;
     }
+
+    fun a() {
+        val s = ""
+    }
 }

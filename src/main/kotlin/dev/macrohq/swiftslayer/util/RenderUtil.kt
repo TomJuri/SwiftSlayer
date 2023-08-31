@@ -214,12 +214,16 @@ object RenderUtil {
     }
 
     fun drawLine(event: RenderWorldLastEvent, blockPos1: Vec3, blockPos2: Vec3, color: Color) {
+        drawLine(event.partialTicks, blockPos1, blockPos2, color)
+    }
+
+    fun drawLine(partialTicks: Float, blockPos1: Vec3, blockPos2: Vec3, color: Color) {
         val tessellator = Tessellator.getInstance()
         val bufferBuilder = tessellator.worldRenderer
         val render = mc.renderViewEntity
-        val realX = render.lastTickPosX + (render.posX - render.lastTickPosX) * event.partialTicks
-        val realY = render.lastTickPosY + (render.posY - render.lastTickPosY) * event.partialTicks
-        val realZ = render.lastTickPosZ + (render.posZ - render.lastTickPosZ) * event.partialTicks
+        val realX = render.lastTickPosX + (render.posX - render.lastTickPosX) * partialTicks
+        val realY = render.lastTickPosY + (render.posY - render.lastTickPosY) * partialTicks
+        val realZ = render.lastTickPosZ + (render.posZ - render.lastTickPosZ) * partialTicks
         val r = color.red / 255.0f
         val g = color.green / 255.0f
         val b = color.blue / 255.0f

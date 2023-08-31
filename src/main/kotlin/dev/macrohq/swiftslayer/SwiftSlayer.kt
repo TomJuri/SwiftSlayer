@@ -5,6 +5,7 @@ import dev.macrohq.swiftslayer.command.BossSpawnercommand
 import dev.macrohq.swiftslayer.command.PathfindTest
 import dev.macrohq.swiftslayer.config.SwiftSlayerConfig
 import dev.macrohq.swiftslayer.macro.BossSpawner
+import dev.macrohq.swiftslayer.macro.EndermanMacro
 import dev.macrohq.swiftslayer.macro.MobKiller
 import dev.macrohq.swiftslayer.pathfinding.PathExecutor
 import dev.macrohq.swiftslayer.util.RenderUtil
@@ -28,8 +29,8 @@ class SwiftSlayer {
     lateinit var config: SwiftSlayerConfig private set
     lateinit var bossSpawner: BossSpawner private set
     lateinit var mobKiller: MobKiller private set
+    lateinit var endermanMacro: EndermanMacro private set
     var removeLater: BlockPos? = null
-    var removeLater0: BlockPos? = null
 
     @Mod.EventHandler
     fun init(event: FMLInitializationEvent) {
@@ -37,6 +38,7 @@ class SwiftSlayer {
         pathExecutor = PathExecutor()
         bossSpawner = BossSpawner()
         mobKiller = MobKiller()
+        endermanMacro = EndermanMacro()
         MinecraftForge.EVENT_BUS.register(this)
         MinecraftForge.EVENT_BUS.register(bossSpawner)
         MinecraftForge.EVENT_BUS.register(pathExecutor)
