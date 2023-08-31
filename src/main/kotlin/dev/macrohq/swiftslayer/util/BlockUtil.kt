@@ -1,5 +1,6 @@
 package dev.macrohq.swiftslayer.util
 
+import net.minecraft.block.BlockStairs
 import net.minecraft.util.BlockPos
 import net.minecraft.util.Vec3
 
@@ -18,5 +19,10 @@ object BlockUtil {
             }
         }
         return neighbours
+    }
+
+    fun isStairSlab(block: BlockPos): Boolean{
+        return world.getBlockState(block).block is BlockStairs ||
+                world.getBlockState(block).block is BlockStairs
     }
 }
