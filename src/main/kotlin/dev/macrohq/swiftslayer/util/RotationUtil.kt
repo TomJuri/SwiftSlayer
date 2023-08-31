@@ -13,6 +13,7 @@ object RotationUtil {
     private var done = true
     private lateinit var entity: EntityLiving
     private var lockAim = false
+
     fun easeToEntity(entity: EntityLiving, durationMillis: Long, aimLock: Boolean = false) {
         if (!done) return
         done = false
@@ -47,30 +48,16 @@ object RotationUtil {
         startTime = System.currentTimeMillis()
         endTime = startTime + durationMillis
     }
+
     private fun lock(entity: EntityLiving) {
         runAsync {
             while(lockAim) {
-                if(entity.health<=0) break
+                if(entity.isDead) break
                 val rotation = AngleUtil.getAngles(entity)
                 player.rotationYaw = rotation.yaw
                 player.rotationPitch = rotation.pitch
             }
             stop()
-        }
-    }
-
-    fun lock(entity: EntityLiving) {
-        if(!done) return
-        done = false
-        runAsync {
-            while(!done) {
-                if(entity.isDead) break
-                val rotation = AngleUtil.getAngles(entity)
-                player.rotationYaw = rotation.yaw
-                player.rotationPitch = rotation.pitch
-                Thread.sleep(1)
-            }
-            done = true
         }
     }
 
@@ -103,7 +90,8 @@ object RotationUtil {
         return Rotation(yawChange, endRot.pitch - startRot.pitch)
     }
 
-    fun stop() {
+    fun stop(){
+        lockAim = false
         done = true
     }
 
@@ -112,10 +100,5 @@ object RotationUtil {
     enum class Direction {
         LEFT,
         RIGHT
-    }
-
-    fun stop(){
-        lockAim = false
-        done = true
     }
 }

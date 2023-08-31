@@ -27,19 +27,6 @@ object PathingUtil {
         }
     }
 
-    private var isDoneFollowing = true
-    fun follow(entity: EntityLiving) {
-        if(!isDone) return
-        isDone = false
-        isDoneFollowing = false
-        runAsync {
-            while(!isDoneFollowing) {
-                if(!pathExecutor.running)
-                    goto(entity.getStandingOn())
-            }
-        }
-    }
-
     fun stop() {
         isDone = true
         pathExecutor.disable()
