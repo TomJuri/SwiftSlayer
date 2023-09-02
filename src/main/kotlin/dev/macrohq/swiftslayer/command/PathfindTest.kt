@@ -18,8 +18,8 @@ class PathfindTest {
     private var path = mutableListOf<BlockPos>()
     @Main
     private fun main() {
-//        mobKiller.enable()
-        PathingUtil.goto(swiftSlayer.removeLater!!)
+        mobKiller.enable()
+//        PathingUtil.goto(swiftSlayer.removeLater!!)
     }
 
     @SubCommand

@@ -10,6 +10,7 @@ import net.minecraft.entity.monster.EntityZombie
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import javax.swing.text.JTextComponent.KeyBinding
+import kotlin.math.abs
 
 class MobKiller {
     private var blacklist = mutableListOf<EntityLiving>()
@@ -23,6 +24,8 @@ class MobKiller {
         FINDING,
         PATHFINDING,
         PATHFINDING_VERIFY,
+        LOOKING,
+        LOOKING_VERIFY,
         KILLING,
     }
 
@@ -63,20 +66,31 @@ class MobKiller {
             }
             State.PATHFINDING_VERIFY -> {
                 info("In pathfinding verify!")
-                if(PathingUtil.isDone || player.getDistanceToEntity(targetEntity) < 12){
+                if(PathingUtil.isDone || player.getDistanceToEntity(targetEntity) < 6){
                     PathingUtil.stop()
-                    gameSettings.keyBindSneak.setPressed(true)
-                    RotationUtil.easeToEntity(targetEntity as EntityLiving, 100, true)
+//                    gameSettings.keyBindSneak.setPressed(true)
                     info("Arrived at Target Mob! Kill Mob.")
-                    state = State.KILLING
+                    state = State.LOOKING
                 }
                 return
             }
+            State.LOOKING ->{
+                RotationUtil.easeToEntity(targetEntity as EntityLiving, 200, true)
+                state = State.LOOKING_VERIFY
+                return;
+            }
+            State.LOOKING_VERIFY -> {
+                val yp = AngleUtil.getAngles(targetEntity as EntityLiving)
+                val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw)-AngleUtil.yawTo360(yp.yaw));
+                val pitchDiff = abs(mc.thePlayer.rotationPitch - yp.pitch);
+                if(yawDiff < 2 && pitchDiff < 2){
+                    RotationUtil.stop()
+                    state = State.KILLING
+                }
+            }
             State.KILLING -> {
-                info("Killing")
-                gameSettings.keyBindSneak.setPressed(false)
+//                gameSettings.keyBindSneak.setPressed(false)
                 KeyBindUtil.rightClick()
-                RotationUtil.stop()
                 blacklist.add(targetEntity as EntityLiving)
                 state = State.FINDING
                 ticks = 0
