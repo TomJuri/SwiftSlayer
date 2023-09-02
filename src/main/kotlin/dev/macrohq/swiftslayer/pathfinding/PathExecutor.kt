@@ -22,6 +22,15 @@ class PathExecutor {
     private var done = false
     private var aotving = false
     var directionYaw = 0f
+    var state: State = State.NONE
+
+    enum class State{
+        STARTING,
+        CALCULATING,
+        WALKING,
+        STOPPING,
+        NONE
+    }
 
     fun executePath(inputPath: List<BlockPos>) {
         disable()
@@ -48,6 +57,45 @@ class PathExecutor {
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
         if (!running) return
+//
+//        when(state){
+//            State.STARTING -> {
+//                state = State.CALCULATING;
+//            }
+//            State.CALCULATING -> {
+//                if(path.any{it.x == player.getStandingOn().x && it.z == player.getStandingOn().z && (player.getStandingOn().y-it.y) in 0..10}){
+//                    if (player.getStandingOn().x == path[path.size-1].x && player.getStandingOn().z == path[path.size-1].z){
+//                        state = State.STOPPING
+//                        return
+//                    }
+//                    pathFailCounter = 0
+//                    current = path[path.indexOf(path.find { it.x == player.getStandingOn().x && it.z == player.getStandingOn().z }) + 1]
+//                    RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(current!!).yaw, 0f), 500)
+//                    state = State.WALKING
+//                }
+//                else if(player.onGround) pathFailCounter++
+//                if(pathFailCounter>=100 && player.onGround){
+//                    pathFailCounter = 0
+//                    running = false
+//                    PathingUtil.goto(path[path.size-1])
+//                    return;
+//                }
+//                RenderUtil.markers.clear();
+//                current?.let { RenderUtil.markers.add(it) };
+//            }
+//            State.WALKING -> {
+//                val jumpp = player.onGround && current!!.y > player.posY -1 && !BlockUtil.isStairSlab(player.getStandingOn())
+//                        && (sqrt((player.getStandingOn().x - current!!.x).toDouble().pow(2.0) + (player.getStandingOn().z - current!!.z).toDouble().pow(2.0)) < 1.2)
+//                val rotation = RotationUtil.Rotation(AngleUtil.getAngles(current.toVec3Top()).yaw, 0f)
+//                directionYaw = rotation.yaw
+//                gameSettings.keyBindSprint.setPressed(true)
+//                gameSettings.keyBindForward.setPressed(true)
+//                gameSettings.keyBindJump.setPressed(jumpp)
+//            }
+//
+//            else -> {}
+//        }
+
         if(path.any{it.x == player.getStandingOn().x && it.z == player.getStandingOn().z && (player.getStandingOn().y-it.y) in 0..10}){
             if (player.getStandingOn().x == path[path.size-1].x && player.getStandingOn().z == path[path.size-1].z){
                 done = true
@@ -60,7 +108,7 @@ class PathExecutor {
             }
             pathFailCounter = 0
             current = path[path.indexOf(path.find { it.x == player.getStandingOn().x && it.z == player.getStandingOn().z }) + 1]
-            RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(current!!).yaw, 0f), 500)
+            RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(current!!).yaw, 20f), 500)
         }
         else if(player.onGround) pathFailCounter++
 

@@ -10,8 +10,11 @@ import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder
 import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.Logger.error
 import dev.macrohq.swiftslayer.util.Logger.info
+import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.util.BlockPos
+import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
+import kotlin.math.abs
 
 @Command(value = "pathfindtest", aliases = ["pft"])
 class PathfindTest {
@@ -20,6 +23,13 @@ class PathfindTest {
     private fun main() {
         mobKiller.enable()
 //        PathingUtil.goto(swiftSlayer.removeLater!!)
+//        RenderUtil.entites.clear()
+//        RenderUtil.entites.add(EntityUtil.getMobs(EntityZombie::class.java, 1999)[0])
+//        val swiftYaw = AngleUtil.getAngles(swiftSlayer.removeLater!!).yaw
+//        val playerYaw = AngleUtil.yawTo360(player.rotationYaw)
+//        val yawChange = abs(MathHelper.wrapAngleTo180_float(AngleUtil.getAngles(swiftSlayer.removeLater!!).yaw - AngleUtil.yawTo360(player.rotationYaw)))
+//        val pitchChange = abs(-player.rotationPitch + AngleUtil.getAngles(swiftSlayer.removeLater!!).pitch)
+//        info("yawChange: $yawChange, pitchChange: $pitchChange")
     }
 
     @SubCommand

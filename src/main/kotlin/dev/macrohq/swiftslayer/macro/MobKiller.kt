@@ -75,15 +75,15 @@ class MobKiller {
                 return
             }
             State.LOOKING ->{
-                RotationUtil.easeToEntity(targetEntity as EntityLiving, 200, true)
+                RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(targetEntity!!).yaw, 45f), 400)
                 state = State.LOOKING_VERIFY
                 return;
             }
             State.LOOKING_VERIFY -> {
-                val yp = AngleUtil.getAngles(targetEntity as EntityLiving)
+                val yp = RotationUtil.Rotation(AngleUtil.getAngles(targetEntity!!).yaw, 45f)
                 val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw)-AngleUtil.yawTo360(yp.yaw));
                 val pitchDiff = abs(mc.thePlayer.rotationPitch - yp.pitch);
-                if(yawDiff < 2 && pitchDiff < 2){
+                if(pitchDiff < 2){
                     RotationUtil.stop()
                     state = State.KILLING
                 }
