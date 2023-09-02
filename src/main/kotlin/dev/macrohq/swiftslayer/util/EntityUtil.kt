@@ -8,7 +8,7 @@ import kotlin.math.sqrt
 
 object EntityUtil {
     fun getMobs(entityClass: Class<out EntityLiving>, health: Int): List<EntityLiving>{
-        val entities = world.getLoadedEntityList().filterIsInstance(entityClass).filter { it.health >= health }
+        val entities = world.getLoadedEntityList().filterIsInstance(entityClass).filter { it.health >= health && it.health <= 13000}
         return entities.sortedBy { getCost(it) }
     }
 

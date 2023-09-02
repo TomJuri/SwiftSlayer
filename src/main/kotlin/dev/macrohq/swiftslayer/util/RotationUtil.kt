@@ -29,7 +29,7 @@ object RotationUtil {
     }
 
     fun ease(rotation: Rotation, durationMillis: Long) {
-        if (!done) return
+//        if (!done) return
         done = false
         startRotation = Rotation(player.rotationYaw, player.rotationPitch)
         val neededChange = getNeededChange(startRotation, rotation)

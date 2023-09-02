@@ -19,7 +19,7 @@ object PathingUtil {
             if (path.isEmpty()) {
                 Logger.info("Could not find path!!")
             } else {
-                path.forEach { RenderUtil.lines.add(it) }
+                RenderUtil.markers.addAll(path)
                 pathExecutor.executePath(path)
             }
             while(pathExecutor.running) Thread.sleep(1)
