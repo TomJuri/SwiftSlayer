@@ -21,10 +21,10 @@ class PathfindTest {
     private var path = mutableListOf<BlockPos>()
     @Main
     private fun main() {
-//        mobKiller.enable()
+        mobKiller.enable()
 //        RenderUtil.markers.clear()
 //        RenderUtil.markers.addAll(AStarPathfinder(player.getStandingOn(), swiftSlayer.removeLater!!).findPath(2000))
-        PathingUtil.goto(swiftSlayer.removeLater!!)
+//        PathingUtil.goto(swiftSlayer.removeLater!!)
     }
 
     @SubCommand

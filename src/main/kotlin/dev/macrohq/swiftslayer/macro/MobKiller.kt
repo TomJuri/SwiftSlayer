@@ -87,6 +87,7 @@ class MobKiller {
                 val pitchDiff = abs(mc.thePlayer.rotationPitch - yp.pitch);
                 if(pitchDiff < 2){
                     RotationUtil.stop()
+                    InventoryUtil.holdItem("spirit")
                     state = State.KILLING
                 }
             }

@@ -29,7 +29,6 @@ class PathExecutor {
         CALCULATING,
         WALKING,
         AOTV,
-        AOTV_VERIFY,
         STOPPING,
         NONE
     }
@@ -89,7 +88,10 @@ class PathExecutor {
                     PathingUtil.goto(path[path.size - 1])
                     return;
                 }
-                state = if(sqrt(player.getDistanceSqToCenter(current)) > 12 && !aotving) State.AOTV
+                state = if(sqrt(player.getDistanceSqToCenter(current)) > 12 && !aotving && path.indexOf(current) != path.size-1) {
+                    InventoryUtil.holdItem("of the void")
+                    State.AOTV
+                }
                 else State.WALKING
                 return
             }
