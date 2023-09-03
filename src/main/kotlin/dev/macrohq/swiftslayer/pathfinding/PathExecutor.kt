@@ -107,7 +107,11 @@ class PathExecutor {
                 state = State.WALKING
             }
             State.WALKING -> {
-                val jumpp = player.onGround && current!!.y > player.posY - 1 && !BlockUtil.isStairSlab(current!!)
+//                val jumpp = player.onGround && current!!.y > player.posY - 1 && !BlockUtil.isStairSlab(current!!)
+//                        && (sqrt((player.getStandingOn().x - current!!.x).toDouble().pow(2.0) +
+//                        (player.getStandingOn().z - current!!.z).toDouble().pow(2.0)) < 1.5) && !BlockUtil.isStairSlab(
+//                    player.getStandingOn())
+                val jumpp = player.onGround && (current!!.y - player.posY) in 0.0..0.5
                         && (sqrt((player.getStandingOn().x - current!!.x).toDouble().pow(2.0) +
                         (player.getStandingOn().z - current!!.z).toDouble().pow(2.0)) < 1.5) && !BlockUtil.isStairSlab(
                     player.getStandingOn())
