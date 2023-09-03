@@ -49,8 +49,6 @@ class MobKiller {
                 val targetEntityList = EntityUtil.getMobs(EntityZombie::class.java, 1999).toMutableList()
                 if(targetEntity!=null) targetEntityList.remove(targetEntity)
                 targetEntityList.removeAll(blacklist)
-//                if(targetEntityList.size==0){
-//                    info("size 0"); disable(); return;}
                 targetEntity = targetEntityList[0]
                 RenderUtil.entites.add(targetEntity as EntityLiving)
                 state = State.PATHFINDING
@@ -66,9 +64,13 @@ class MobKiller {
             }
             State.PATHFINDING_VERIFY -> {
                 info("In pathfinding verify!")
+                if(PathingUtil.hasFailed()){
+                    PathingUtil.stop()
+                    blacklist.add(targetEntity as EntityLiving)
+                    state = State.FINDING
+                }
                 if(PathingUtil.isDone || player.getDistanceToEntity(targetEntity) < 6){
                     PathingUtil.stop()
-//                    gameSettings.keyBindSneak.setPressed(true)
                     info("Arrived at Target Mob! Kill Mob.")
                     state = State.LOOKING
                 }

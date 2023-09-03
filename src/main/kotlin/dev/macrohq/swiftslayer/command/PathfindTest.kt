@@ -21,15 +21,10 @@ class PathfindTest {
     private var path = mutableListOf<BlockPos>()
     @Main
     private fun main() {
-        mobKiller.enable()
-//        PathingUtil.goto(swiftSlayer.removeLater!!)
-//        RenderUtil.entites.clear()
-//        RenderUtil.entites.add(EntityUtil.getMobs(EntityZombie::class.java, 1999)[0])
-//        val swiftYaw = AngleUtil.getAngles(swiftSlayer.removeLater!!).yaw
-//        val playerYaw = AngleUtil.yawTo360(player.rotationYaw)
-//        val yawChange = abs(MathHelper.wrapAngleTo180_float(AngleUtil.getAngles(swiftSlayer.removeLater!!).yaw - AngleUtil.yawTo360(player.rotationYaw)))
-//        val pitchChange = abs(-player.rotationPitch + AngleUtil.getAngles(swiftSlayer.removeLater!!).pitch)
-//        info("yawChange: $yawChange, pitchChange: $pitchChange")
+//        mobKiller.enable()
+//        RenderUtil.markers.clear()
+//        RenderUtil.markers.addAll(AStarPathfinder(player.getStandingOn(), swiftSlayer.removeLater!!).findPath(2000))
+        PathingUtil.goto(swiftSlayer.removeLater!!)
     }
 
     @SubCommand

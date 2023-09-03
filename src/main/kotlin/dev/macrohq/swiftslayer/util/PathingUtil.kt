@@ -9,14 +9,17 @@ object PathingUtil {
 
     var isDone = true
       private set
+    private var hasFailed = false
 
     fun goto(pos: BlockPos) {
         if(!isDone) return
+        hasFailed = false
         isDone = false
         runAsync {
             RenderUtil.lines.clear()
             val path = AStarPathfinder(player.getStandingOn(), pos).findPath(10000)
             if (path.isEmpty()) {
+                hasFailed = true
                 Logger.info("Could not find path!!")
             } else {
                 RenderUtil.markers.addAll(path)
@@ -30,6 +33,10 @@ object PathingUtil {
     fun stop() {
         isDone = true
         pathExecutor.disable()
+    }
+
+    fun hasFailed(): Boolean{
+        return hasFailed
     }
 
 }

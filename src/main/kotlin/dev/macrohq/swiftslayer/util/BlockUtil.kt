@@ -41,6 +41,7 @@ object BlockUtil {
             if(world.isAirBlock(it)){
                 blockFail++
             }
+            if(world.isBlockFullCube(it) && blockFail>0) return false
             if(AStarPathfinder.Node(it, null).isWalkable()){
                 blockFail = 0
             }
