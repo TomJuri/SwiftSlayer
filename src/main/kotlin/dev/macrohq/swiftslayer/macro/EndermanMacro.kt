@@ -1,9 +1,13 @@
 package dev.macrohq.swiftslayer.macro
 
+import cc.polyfrost.oneconfig.utils.dsl.runAsync
+import dev.macrohq.swiftslayer.util.*
 import net.minecraft.entity.item.EntityArmorStand
+import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.util.Vec3
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
+import java.security.Key
 
 class EndermanMacro {
 
@@ -18,10 +22,25 @@ class EndermanMacro {
         if(!enabled) return
         when(state) {
             State.HIT -> {
-                if(determineState() != State.HIT) state = State.DAMAGE
+                if(player.getDistanceSqToEntity(target) < 10.0) gameSettings.keyBindBack.setPressed(true) else gameSettings.keyBindBack.setPressed(false)
+                if(player.worldObj.loadedEntityList.filterIsInstance<EntityZombie>().any { it.getDistanceSqToEntity(target) > 4.0 }) return
+                InventoryUtil.holdItem("Reaper Scythe")
+                KeyBindUtil.rightClick()
             }
 
-            State.DAMAGE -> TODO()
+            State.DAMAGE -> {
+                RotationUtil.easeToEntity(target, 250, true)
+                if(player.getDistanceSqToEntity(target) > 3.0) gameSettings.keyBindForward.setPressed(true) else gameSettings.keyBindForward.setPressed(false)
+                runAsync {
+                    while(state == State.DAMAGE) {
+                        gameSettings.keyBindSneak.setPressed(true)
+                        Thread.sleep(100)
+                        KeyBindUtil.leftClick()
+                        gameSettings.keyBindSneak.setPressed(false)
+                    }
+                }
+            }
+
             State.LASER -> TODO()
         }
     }
