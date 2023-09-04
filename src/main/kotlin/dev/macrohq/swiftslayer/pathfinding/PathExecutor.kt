@@ -91,7 +91,7 @@ class PathExecutor {
             }
             State.AOTV -> {
                 val yp = AngleUtil.getAngles(current!!.up().up())
-                RotationUtil.ease(yp, 500)
+                RotationUtil.ease(yp, 200)
                 val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw)-AngleUtil.yawTo360(yp.yaw));
                 val pitchDiff = abs(mc.thePlayer.rotationPitch - yp.pitch);
                 if(yawDiff < 5 && pitchDiff < 2){
