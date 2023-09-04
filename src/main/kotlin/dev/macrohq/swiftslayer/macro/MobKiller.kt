@@ -18,6 +18,7 @@ class MobKiller {
     private var state: State = State.NONE;
     private var targetEntity: Entity? = null
     private var ticks: Int = 0
+    private var stuckCounter: Int = 0
     private enum class State{
         NONE,
         STARTING,
@@ -34,6 +35,8 @@ class MobKiller {
         if(player == null || world == null) return
         if(!mobKiller) return
         ticks++
+        if(player.lastTickPosition().add(0,-1,0) == player.getStandingOnFloor()){stuckCounter++}
+        else stuckCounter=0
 
         when(state){
             State.STARTING -> {
@@ -43,36 +46,32 @@ class MobKiller {
             State.FINDING -> {
                 RenderUtil.entites.clear()
                 if(ticks>=60){
+                    info("BlackList Cleared.")
                     blacklist.clear()
                     ticks = 0;
                 }
                 val targetEntityList = EntityUtil.getMobs(EntityZombie::class.java, 1999).toMutableList()
                 if(targetEntity!=null) targetEntityList.remove(targetEntity)
                 targetEntityList.removeAll(blacklist)
+                if(targetEntityList.isEmpty()) return
                 targetEntity = targetEntityList[0]
                 RenderUtil.entites.add(targetEntity as EntityLiving)
                 state = State.PATHFINDING
-//                info("Set state to pathfinding.")
                 if(targetEntity==null) disable()
-                return
             }
             State.PATHFINDING -> {
-//                info("In pathfinding!")
                 PathingUtil.goto(targetEntity!!.position.down())
                 state = State.PATHFINDING_VERIFY
-                return
             }
             State.PATHFINDING_VERIFY -> {
-//                info("In pathfinding verify!")
-                info("hasfailed: ${PathingUtil.hasFailed()}")
-                if(PathingUtil.hasFailed()){
+                if(PathingUtil.hasFailed() || (targetEntity as EntityLiving).health <= 0 || stuckCounter>=40){
                     PathingUtil.stop()
+                    stuckCounter = 0
                     blacklist.add(targetEntity as EntityLiving)
                     state = State.FINDING
                 }
                 if(PathingUtil.isDone || player.getDistanceToEntity(targetEntity) < 6){
                     PathingUtil.stop()
-//                    info("Arrived at Target Mob! Kill Mob.")
                     state = State.LOOKING
                 }
                 return
@@ -88,18 +87,15 @@ class MobKiller {
                 val pitchDiff = abs(mc.thePlayer.rotationPitch - yp.pitch);
                 if(pitchDiff < 2){
                     RotationUtil.stop()
-//                    info("holding sceptre")
                     InventoryUtil.holdItem("Spirit")
                     state = State.KILLING
                 }
             }
             State.KILLING -> {
-//                gameSettings.keyBindSneak.setPressed(false)
                 KeyBindUtil.rightClick()
                 blacklist.add(targetEntity as EntityLiving)
                 state = State.FINDING
                 ticks = 0
-                return
             }
             else -> {}
         }

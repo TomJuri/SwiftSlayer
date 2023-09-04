@@ -2,7 +2,6 @@ package dev.macrohq.swiftslayer.util
 
 import cc.polyfrost.oneconfig.utils.dsl.runAsync
 import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder
-import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
 
 object PathingUtil {
@@ -17,7 +16,7 @@ object PathingUtil {
         isDone = false
         runAsync {
             RenderUtil.lines.clear()
-            val path = AStarPathfinder(player.getStandingOn(), pos).findPath(1000)
+            val path = AStarPathfinder(player.getStandingOnCeil(), pos).findPath(1000)
             if (path.isEmpty()) {
                 hasFailed = true
                 Logger.info("Could not find path!!")
