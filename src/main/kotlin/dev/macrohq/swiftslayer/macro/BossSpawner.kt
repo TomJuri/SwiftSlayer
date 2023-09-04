@@ -27,7 +27,7 @@ class BossSpawner {
         when(state) {
             State.GOTO_MOB -> {
                 RenderUtil.entites.add(target!!)
-                PathingUtil.goto(target!!.getStandingOn())
+                PathingUtil.goto(target!!.getStandingOnCeil())
                 condition = { PathingUtil.isDone }
             }
 

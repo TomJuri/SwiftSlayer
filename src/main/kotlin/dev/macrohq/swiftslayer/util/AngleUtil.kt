@@ -9,6 +9,10 @@ import kotlin.math.atan2
 import kotlin.math.sqrt
 
 object AngleUtil {
+
+    fun yawTo360(yaw: Float): Float{
+        return (((yaw%360)+360)%360)
+    }
     fun getAngles(vec: Vec3): Rotation {
         val diffX = vec.xCoord - player.posX
         val diffY = vec.yCoord - (player.posY + player.getEyeHeight())

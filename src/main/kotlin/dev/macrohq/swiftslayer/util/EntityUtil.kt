@@ -1,29 +1,28 @@
 package dev.macrohq.swiftslayer.util
 
+import dev.macrohq.swiftslayer.util.Logger.info
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.monster.EntityZombie
+import net.minecraft.util.MathHelper
 import kotlin.math.abs
 import kotlin.math.sqrt
 
 object EntityUtil {
     fun getMobs(entityClass: Class<out EntityLiving>, health: Int): List<EntityLiving>{
-        val entities = world.getLoadedEntityList().filterIsInstance(entityClass).filter { it.health >= health }
+        val entities = world.getLoadedEntityList().filterIsInstance(entityClass).filter { it.health >= health && it.health <= 50000}
         return entities.sortedBy { getCost(it) }
     }
-
     fun getCost(entity: EntityLiving): Float {
-        // Maybe AngleDiff isn't important.
+        val yawChange = abs(MathHelper.wrapAngleTo180_float(AngleUtil.getAngles(entity).yaw - AngleUtil.yawTo360(player.rotationYaw)))/180
+        val pitchChange = abs(-player.rotationPitch + AngleUtil.getAngles(entity).pitch)/45
+        val angleChange = yawChange + pitchChange
         val distance = sqrt(player.getDistanceToEntity(entity))
         val cost = getRevCost(entity)
-        return (distance*0.5 + cost*0.3 + 1).toFloat()
+        return (distance + angleChange + cost)
     }
 
     fun getRevCost(entity: EntityLiving): Int{
         return 1;
-    }
-
-    fun a() {
-        val s = ""
     }
 }

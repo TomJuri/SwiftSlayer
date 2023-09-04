@@ -21,7 +21,7 @@ object RotationUtil {
         this.lockAim = aimLock
 
         startRotation = Rotation(player.rotationYaw, player.rotationPitch)
-        val rotation = AngleUtil.getAngles(entity)
+        val rotation = AngleUtil.getAngles(entity.positionVector)
         val neededChange = getNeededChange(startRotation, rotation)
         endRotation = Rotation(startRotation.yaw + neededChange.yaw, startRotation.pitch + neededChange.pitch)
         startTime = System.currentTimeMillis()
@@ -29,7 +29,7 @@ object RotationUtil {
     }
 
     fun ease(rotation: Rotation, durationMillis: Long) {
-        if (!done) return
+//        if (!done) return
         done = false
         startRotation = Rotation(player.rotationYaw, player.rotationPitch)
         val neededChange = getNeededChange(startRotation, rotation)
@@ -53,7 +53,7 @@ object RotationUtil {
         runAsync {
             while(lockAim) {
                 if(entity.isDead) break
-                val rotation = AngleUtil.getAngles(entity)
+                val rotation = AngleUtil.getAngles(entity.positionVector)
                 player.rotationYaw = rotation.yaw
                 player.rotationPitch = rotation.pitch
             }

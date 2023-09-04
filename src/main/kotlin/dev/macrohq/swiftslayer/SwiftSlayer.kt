@@ -10,7 +10,6 @@ import dev.macrohq.swiftslayer.macro.MobKiller
 import dev.macrohq.swiftslayer.pathfinding.PathExecutor
 import dev.macrohq.swiftslayer.util.RenderUtil
 import dev.macrohq.swiftslayer.util.RotationUtil
-import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.util.BlockPos
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.common.MinecraftForge

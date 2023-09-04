@@ -12,6 +12,11 @@ import org.lwjgl.opengl.GL11
 import java.awt.Color
 
 object RenderUtil {
+    var markers = mutableListOf<BlockPos>()
+    var filledBox = mutableListOf<BlockPos>()
+    var lines = mutableListOf<Vec3>()
+    var entites = mutableListOf<Entity>()
+    var points = mutableListOf<Vec3>()
     var green = Color(0, 255, 0, 255)
 
     fun onRenderWorldLast(event: RenderWorldLastEvent) {
@@ -35,6 +40,9 @@ object RenderUtil {
             }
             drawEntity(event, entity, chroma, true)
         }
+        for(point in points){
+            drawPoints(event, point, chroma)
+        }
     }
 
     fun drawFilledBox(event: RenderWorldLastEvent, blockPos: BlockPos, color: Color, esp: Boolean) {
@@ -51,21 +59,23 @@ object RenderUtil {
 
     fun drawBox(event: RenderWorldLastEvent, blockPos: BlockPos, color: Color, esp: Boolean) {
         val aabb = AxisAlignedBB(
-            blockPos.x.toDouble()-0.05,
-            blockPos.y.toDouble()-0.05,
-            blockPos.z.toDouble()-0.05,
-            (blockPos.x + 1).toDouble()+0.05,
-            (blockPos.y + 1).toDouble()+0.05,
-            (blockPos.z + 1).toDouble()+0.05
+            blockPos.x.toDouble(),
+            blockPos.y.toDouble(),
+            blockPos.z.toDouble(),
+            (blockPos.x + 1).toDouble(),
+            (blockPos.y + 1).toDouble(),
+            (blockPos.z + 1).toDouble()
         )
         drawBox(event, aabb, color, esp)
     }
 
-    fun drawLine(event: RenderWorldLastEvent, b1: BlockPos, b2: BlockPos, color: Color) {
-        val v1 = Vec3(b1.x + 0.5, b1.y + 1.1, b1.z + 0.5)
-        val v2 = Vec3(b2.x + 0.5, b2.y + 1.1, b2.z + 0.5)
-        drawLine(event, v1, v2, color)
-    }
+//    fun drawLine(event: RenderWorldLastEvent, b1: Vec3, b2: Vec3, color: Color) {
+//        val v1 = Vec3(b1.xCoord, b1.yCoord, b1.zCoord)
+//        val v2 = Vec3(b1.xCoord, b1.yCoord, b1.zCoord)
+//        val v1 = Vec3(b1.x + 0.5, b1.y + 1.1, b1.z + 0.5)
+//        val v2 = Vec3(b2.x + 0.5, b2.y + 1.1, b2.z + 0.5)
+//        drawLine(event, v1, v2, color)
+//    }
 
     fun drawEntity(event: RenderWorldLastEvent?, entity: Entity, color: Color, esp: Boolean) {
         val aabb = AxisAlignedBB(
@@ -73,6 +83,11 @@ object RenderUtil {
             entity.posX + 0.5, entity.posY + 2, entity.posZ + 0.5
         )
         drawFilledBox(event!!, aabb, color, esp)
+    }
+
+    fun drawPoints(event: RenderWorldLastEvent, point: Vec3, color: Color){
+        val aabb = AxisAlignedBB(point.xCoord-0.07, point.yCoord-0.07, point.zCoord-0.07, point.xCoord+0.07, point.yCoord+0.07, point.zCoord+0.07)
+        drawFilledBox(event, aabb, color, true)
     }
 
     fun drawBox(event: RenderWorldLastEvent, aabb: AxisAlignedBB, color: Color, esp: Boolean) {
@@ -253,9 +268,5 @@ object RenderUtil {
         GlStateManager.popMatrix()
     }
 
-        var markers = mutableListOf<BlockPos>()
-        var filledBox = mutableListOf<BlockPos>()
-        var lines = mutableListOf<BlockPos>()
-    var entites = mutableListOf<Entity>()
 
 }
