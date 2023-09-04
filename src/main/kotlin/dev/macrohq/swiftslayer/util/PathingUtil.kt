@@ -17,12 +17,11 @@ object PathingUtil {
         isDone = false
         runAsync {
             RenderUtil.lines.clear()
-            val path = AStarPathfinder(player.getStandingOn(), pos).findPath(10000)
+            val path = AStarPathfinder(player.getStandingOn(), pos).findPath(1000)
             if (path.isEmpty()) {
                 hasFailed = true
                 Logger.info("Could not find path!!")
             } else {
-                RenderUtil.markers.addAll(path)
                 pathExecutor.executePath(path)
             }
             while(pathExecutor.running) Thread.sleep(1)

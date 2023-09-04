@@ -52,18 +52,19 @@ class MobKiller {
                 targetEntity = targetEntityList[0]
                 RenderUtil.entites.add(targetEntity as EntityLiving)
                 state = State.PATHFINDING
-                info("Set state to pathfinding.")
+//                info("Set state to pathfinding.")
                 if(targetEntity==null) disable()
                 return
             }
             State.PATHFINDING -> {
-                info("In pathfinding!")
+//                info("In pathfinding!")
                 PathingUtil.goto(targetEntity!!.position.down())
                 state = State.PATHFINDING_VERIFY
                 return
             }
             State.PATHFINDING_VERIFY -> {
-                info("In pathfinding verify!")
+//                info("In pathfinding verify!")
+                info("hasfailed: ${PathingUtil.hasFailed()}")
                 if(PathingUtil.hasFailed()){
                     PathingUtil.stop()
                     blacklist.add(targetEntity as EntityLiving)
@@ -71,7 +72,7 @@ class MobKiller {
                 }
                 if(PathingUtil.isDone || player.getDistanceToEntity(targetEntity) < 6){
                     PathingUtil.stop()
-                    info("Arrived at Target Mob! Kill Mob.")
+//                    info("Arrived at Target Mob! Kill Mob.")
                     state = State.LOOKING
                 }
                 return
@@ -87,7 +88,8 @@ class MobKiller {
                 val pitchDiff = abs(mc.thePlayer.rotationPitch - yp.pitch);
                 if(pitchDiff < 2){
                     RotationUtil.stop()
-                    InventoryUtil.holdItem("spirit")
+//                    info("holding sceptre")
+                    InventoryUtil.holdItem("Spirit")
                     state = State.KILLING
                 }
             }

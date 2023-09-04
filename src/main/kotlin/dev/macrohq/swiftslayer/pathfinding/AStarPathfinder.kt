@@ -98,7 +98,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
                 if (this.parent.position.y < this.position.y
                     && !BlockUtil.isStairSlab(this.position)
                 ) {
-                    cost += 1.4f;
+                    cost += 1.5f;
                 }
             }
             BlockUtil.neighbourGenerator(this.position.up().up().up(), 1).forEach{

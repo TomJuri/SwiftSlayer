@@ -11,13 +11,12 @@ object InventoryUtil {
         }
         return false
     }
-    fun getSlotFromName(name: String): Int{
+    private fun getSlotFromName(name: String): Int{
         val inventory = player.inventory
-        for(i in 0..inventory.sizeInventory){
-            if(inventory.getStackInSlot(i)!=null &&
-                inventory.getStackInSlot(i).displayName.lowercase(Locale.getDefault()).contains(name.lowercase(Locale.getDefault()))) return i
+        for(i in 0..8){
+            val currItem = inventory.getStackInSlot(i)
+            if(currItem!=null && currItem.displayName.contains(name, true)) return i
         }
         return 100
     }
-
 }

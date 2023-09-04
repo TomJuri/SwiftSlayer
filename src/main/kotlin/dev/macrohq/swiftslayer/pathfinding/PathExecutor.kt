@@ -60,7 +60,7 @@ class PathExecutor {
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
         if (!running) return
-        if(aotving && sqrt(player.lastTickPosition().distanceSq(player.getStandingOn()))>4){aotving = false; info("aotv'd")}
+        if(aotving && sqrt(player.lastTickPosition().distanceSq(player.getStandingOn()))>4){aotving = false;}
 
         when (state) {
             State.STARTING -> {
@@ -107,19 +107,13 @@ class PathExecutor {
                 state = State.WALKING
             }
             State.WALKING -> {
-//                val jumpp = player.onGround && current!!.y > player.posY - 1 && !BlockUtil.isStairSlab(current!!)
-//                        && (sqrt((player.getStandingOn().x - current!!.x).toDouble().pow(2.0) +
-//                        (player.getStandingOn().z - current!!.z).toDouble().pow(2.0)) < 1.5) && !BlockUtil.isStairSlab(
-//                    player.getStandingOn())
-                val jumpp = player.onGround && (current!!.y - player.posY) in 0.0..0.5
-                        && (sqrt((player.getStandingOn().x - current!!.x).toDouble().pow(2.0) +
-                        (player.getStandingOn().z - current!!.z).toDouble().pow(2.0)) < 1.5) && !BlockUtil.isStairSlab(
-                    player.getStandingOn())
+                val jump = player.onGround && (current!!.y - player.posY) in 0.0..0.5
+                        && (sqrt((player.posX - current!!.x).pow(2.0) + (player.posZ - current!!.z).pow(2.0)) < 1.5)
                 val rotation = RotationUtil.Rotation(AngleUtil.getAngles(current!!.toVec3Top()).yaw, 0f)
                 directionYaw = rotation.yaw
                 gameSettings.keyBindSprint.setPressed(true)
                 gameSettings.keyBindForward.setPressed(true)
-                gameSettings.keyBindJump.setPressed(jumpp)
+                gameSettings.keyBindJump.setPressed(jump)
                 state = State.CALCULATING
             }
 
