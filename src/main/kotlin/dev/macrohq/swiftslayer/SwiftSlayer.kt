@@ -1,10 +1,8 @@
 package dev.macrohq.swiftslayer
 
 import cc.polyfrost.oneconfig.utils.commands.CommandManager
-import dev.macrohq.swiftslayer.command.BossSpawnercommand
 import dev.macrohq.swiftslayer.command.PathfindTest
 import dev.macrohq.swiftslayer.config.SwiftSlayerConfig
-import dev.macrohq.swiftslayer.macro.BossSpawner
 import dev.macrohq.swiftslayer.macro.EndermanMacro
 import dev.macrohq.swiftslayer.macro.MobKiller
 import dev.macrohq.swiftslayer.pathfinding.PathExecutor
@@ -26,7 +24,6 @@ class SwiftSlayer {
 
     lateinit var pathExecutor: PathExecutor private set
     lateinit var config: SwiftSlayerConfig private set
-    lateinit var bossSpawner: BossSpawner private set
     lateinit var mobKiller: MobKiller private set
     lateinit var endermanMacro: EndermanMacro private set
     var removeLater: BlockPos? = null
@@ -35,15 +32,12 @@ class SwiftSlayer {
     fun init(event: FMLInitializationEvent) {
         config = SwiftSlayerConfig()
         pathExecutor = PathExecutor()
-        bossSpawner = BossSpawner()
         mobKiller = MobKiller()
         endermanMacro = EndermanMacro()
         MinecraftForge.EVENT_BUS.register(this)
-        MinecraftForge.EVENT_BUS.register(bossSpawner)
         MinecraftForge.EVENT_BUS.register(pathExecutor)
         MinecraftForge.EVENT_BUS.register(mobKiller)
         CommandManager.register(PathfindTest())
-        CommandManager.register(BossSpawnercommand())
     }
 
     @SubscribeEvent
