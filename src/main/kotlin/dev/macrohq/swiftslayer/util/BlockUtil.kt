@@ -1,13 +1,11 @@
 package dev.macrohq.swiftslayer.util
 
-import dev.macrohq.swiftslayer.pathfinding.AStar
 import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder
 import net.minecraft.block.BlockStairs
 import net.minecraft.util.BlockPos
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
-import kotlin.math.floor
 
 object BlockUtil {
     fun neighbourGenerator(mainBlock: BlockPos, size: Int): List<BlockPos> {

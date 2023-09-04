@@ -86,14 +86,14 @@ class AStar(startPos: BlockPos, endPos: BlockPos) {
         private var yaw: Float = 0f
 
         fun getFCost(): Float {
-            return gCost + hCost;
+            return gCost + hCost
         }
 
         private fun angleCost(bp1: BlockPos, bp2: BlockPos): Float {
             val dx = bp2.x - bp1.x
             val dz = bp2.z - bp1.z
             val yaw = -Math.toDegrees(atan2(dx.toDouble(), dz.toDouble())).toFloat()
-            return AngleUtil.yawTo360(yaw);
+            return AngleUtil.yawTo360(yaw)
         }
 
         fun calculateCost(endNode: Node) {
@@ -106,7 +106,7 @@ class AStar(startPos: BlockPos, endPos: BlockPos) {
                 if (this.parent!!.position.y < this.position.y
                     && !BlockUtil.isStairSlab(this.position)
                 ) {
-                    cost += 1.4f;
+                    cost += 1.4f
                 }
 
             }
@@ -140,7 +140,7 @@ class AStar(startPos: BlockPos, endPos: BlockPos) {
             return allowedBlocks.contains(world.getBlockState(position.up()).block)
                     && allowedBlocks.contains(world.getBlockState(position.up().up()).block)
                     && world.getBlockState(position).block.material.isSolid
-                    && !collision;
+                    && !collision
         }
 
         private val allowedBlocks = listOf(

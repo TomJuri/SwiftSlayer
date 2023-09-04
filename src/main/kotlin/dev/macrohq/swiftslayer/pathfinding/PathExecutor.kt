@@ -13,7 +13,7 @@ import kotlin.math.sqrt
 class PathExecutor {
     private var path = listOf<BlockPos>()
     private var current: BlockPos? = null
-    private var pathFailCounter = 0;
+    private var pathFailCounter = 0
     private var done = false
     private var aotving = false
     var running = false
@@ -58,7 +58,7 @@ class PathExecutor {
         if(aotving && sqrt(player.lastTickPosition().distanceSq(player.getStandingOnCeil()))>4){aotving = false;}
         when (state) {
             State.STARTING -> {
-                state = State.CALCULATING;
+                state = State.CALCULATING
             }
 
             State.CALCULATING -> {
@@ -72,15 +72,15 @@ class PathExecutor {
                         path[path.indexOf(path.find { it.x == player.getStandingOnCeil().x && it.z == player.getStandingOnCeil().z }) + 1]
                     RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(current!!).yaw, 20f), 500)
 
-                    RenderUtil.markers.clear();
-                    current?.let { RenderUtil.markers.add(it) };
+                    RenderUtil.markers.clear()
+                    current?.let { RenderUtil.markers.add(it) }
 
                 } else if (player.onGround) pathFailCounter++
                 if ((pathFailCounter >= 100 && player.onGround)) {
                     pathFailCounter = 0
                     running = false
                     PathingUtil.goto(path[path.size - 1])
-                    return;
+                    return
                 }
                 state = if(sqrt(player.getDistanceSqToCenter(current)) > 12 && !aotving && path.indexOf(current) != path.size-1) {
                     InventoryUtil.holdItem("of the void")
@@ -92,8 +92,8 @@ class PathExecutor {
             State.AOTV -> {
                 val yp = AngleUtil.getAngles(current!!.up().up())
                 RotationUtil.ease(yp, 200)
-                val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw)-AngleUtil.yawTo360(yp.yaw));
-                val pitchDiff = abs(mc.thePlayer.rotationPitch - yp.pitch);
+                val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw)-AngleUtil.yawTo360(yp.yaw))
+                val pitchDiff = abs(mc.thePlayer.rotationPitch - yp.pitch)
                 if(yawDiff < 5 && pitchDiff < 2){
                     aotving = true
                     KeyBindUtil.rightClick()

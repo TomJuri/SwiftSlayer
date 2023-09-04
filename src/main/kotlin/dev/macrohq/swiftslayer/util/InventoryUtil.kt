@@ -1,7 +1,5 @@
 package dev.macrohq.swiftslayer.util
 
-import java.util.*
-
 object InventoryUtil {
 
     fun holdItem(name: String): Boolean{
