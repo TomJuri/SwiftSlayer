@@ -12,11 +12,15 @@ object BlockUtil {
         return neighbourGenerator(mainBlock, size, size, size)
     }
 
-    private fun neighbourGenerator(mainBlock: BlockPos, xD: Int, yD: Int, zD: Int): List<BlockPos> {
+    fun neighbourGenerator(mainBlock: BlockPos, xD: Int, yD: Int, zD: Int): List<BlockPos>{
+        return neighbourGenerator(mainBlock, -xD, xD, -yD, yD, -zD, zD)
+    }
+
+    fun neighbourGenerator(mainBlock: BlockPos, xD1: Int, xD2: Int, yD1: Int, yD2: Int, zD1: Int, zD2: Int): List<BlockPos> {
         val neighbours: MutableList<BlockPos> = ArrayList()
-        for (x in -xD..xD) {
-            for (y in -yD..yD) {
-                for (z in -zD..zD) {
+        for (x in xD1..xD2) {
+            for (y in yD1..yD2) {
+                for (z in zD1..zD2) {
                     neighbours.add(BlockPos(mainBlock.x + x, mainBlock.y + y, mainBlock.z + z))
                 }
             }

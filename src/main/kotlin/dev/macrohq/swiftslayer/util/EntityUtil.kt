@@ -1,13 +1,15 @@
 package dev.macrohq.swiftslayer.util
 
 import net.minecraft.entity.EntityLiving
+import net.minecraft.util.BlockPos
 import net.minecraft.util.MathHelper
 import kotlin.math.abs
 import kotlin.math.sqrt
 
 object EntityUtil {
     fun getMobs(entityClass: Class<out EntityLiving>, health: Int): List<EntityLiving>{
-        val entities = world.getLoadedEntityList().filterIsInstance(entityClass).filter { it.maxHealth == 1024f && it.health<=health}
+        val entities = world.getLoadedEntityList().filterIsInstance(entityClass).filter { it.maxHealth == 1024f && it.health<=health && sqrt(
+            it.position.distanceSq(BlockPos(-382,51,-7))) > 20}
         return entities.sortedBy { getCost(it) }
     }
     fun getCost(entity: EntityLiving): Float {

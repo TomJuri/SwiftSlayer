@@ -101,6 +101,8 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
                 ) {
                     cost += 1.5f
                 }
+
+                if(BlockUtil.isStairSlab(this.position)) cost -= 1f
             }
             BlockUtil.neighbourGenerator(this.position.up().up().up(), 1).forEach{
                 if(world.isBlockFullCube(it)) cost += 1f
@@ -115,7 +117,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
 
         fun getNeighbours() : List<Node> {
             val neighbours = mutableListOf<Node>()
-            BlockUtil.neighbourGenerator(position, 1).forEach {
+            BlockUtil.neighbourGenerator(this.position, -1, 1, -3, 3, -1, 1).forEach {
                 val newNode = Node(it, this)
                 if (newNode.isWalkable()) neighbours.add(newNode)
             }
@@ -124,6 +126,12 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
 
         fun isWalkable(): Boolean {
             var collision = false
+            var headhit = false
+            if(this.parent!=null && this.parent.position.y < this.position.y){
+                if(!allowedBlocks.contains(world.getBlockState(this.parent.position.add(0,3,0)).block)){
+                    headhit = true
+                }
+            }
             if (parent != null && parent.position.x != position.x && parent.position.z != position.z) {
                 collision = !(world.isAirBlock(position.add(1, 1, 0))
                         && world.isAirBlock(position.add(-1, 1, 0))
@@ -134,6 +142,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
                     && allowedBlocks.contains(world.getBlockState(position.up().up()).block)
                     && world.getBlockState(position).block.material.isSolid
                     && !collision
+                    && !headhit
         }
 
         fun isIn(nodes: List<Node>): Boolean {

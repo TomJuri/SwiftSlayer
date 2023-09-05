@@ -81,7 +81,7 @@ class PathExecutor {
                     PathingUtil.goto(path[path.size - 1])
                     return
                 }
-                state = if(sqrt(player.getDistanceSqToCenter(current)) > 12 && !aotving && path.indexOf(current) != path.size-1) {
+                state = if(sqrt(player.getDistanceSqToCenter(current)) > 9 && !aotving && path.indexOf(current) != path.size-1) {
                     InventoryUtil.holdItem("of the void")
                     State.AOTV
                 }
@@ -100,8 +100,9 @@ class PathExecutor {
                 state = State.WALKING
             }
             State.WALKING -> {
-                val jump = player.onGround && (current!!.y - player.posY) in 0.0..0.5
-                        && (sqrt((player.posX - current!!.x).pow(2.0) + (player.posZ - current!!.z).pow(2.0)) < 1.5)
+//                info("jumpDist: ${sqrt((player.posX - current!!.x).pow(2.0) + (player.posZ - current!!.z).pow(2.0))}")
+                val jump = player.onGround && (current!!.y +0.5 - player.posY) >= 0.5
+                        && (sqrt((player.posX - current!!.x).pow(2.0) + (player.posZ - current!!.z).pow(2.0)) < 2)
                 val rotation = RotationUtil.Rotation(AngleUtil.getAngles(current!!.toVec3Top()).yaw, 0f)
                 directionYaw = rotation.yaw
                 gameSettings.keyBindSprint.setPressed(true)

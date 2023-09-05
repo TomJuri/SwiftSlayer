@@ -5,6 +5,7 @@ import dev.macrohq.swiftslayer.util.Logger.info
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.monster.EntityZombie
+import net.minecraft.entity.passive.EntityWolf
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import kotlin.math.abs
@@ -46,7 +47,7 @@ class MobKiller {
                     blacklist.clear()
                     ticks = 0
                 }
-                val targetEntityList = EntityUtil.getMobs(EntityZombie::class.java, 50000).toMutableList()
+                val targetEntityList = EntityUtil.getMobs(EntityWolf::class.java, 32000).toMutableList()
                 if(targetEntity!=null) targetEntityList.remove(targetEntity)
                 targetEntityList.removeAll(blacklist)
                 if(targetEntityList.isEmpty()) return
