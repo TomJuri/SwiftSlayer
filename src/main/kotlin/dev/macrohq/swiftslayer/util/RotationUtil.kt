@@ -1,6 +1,7 @@
 package dev.macrohq.swiftslayer.util
 
 import cc.polyfrost.oneconfig.utils.dsl.runAsync
+import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLiving
 import net.minecraft.util.MathHelper
 import kotlin.math.pow
@@ -11,10 +12,10 @@ object RotationUtil {
     private var startTime = 0L
     private var endTime = 0L
     private var done = true
-    private lateinit var entity: EntityLiving
+    private lateinit var entity: Entity
     private var lockAim = false
 
-    fun easeToEntity(entity: EntityLiving, durationMillis: Long, aimLock: Boolean = false) {
+    fun easeToEntity(entity: Entity, durationMillis: Long, aimLock: Boolean = false) {
         if (!done) return
         done = false
         this.entity = entity
@@ -22,7 +23,7 @@ object RotationUtil {
 
         startRotation = Rotation(player.rotationYaw, player.rotationPitch)
         val rotation = AngleUtil.getAngles(entity.positionVector)
-        val neededChange = getNeededChange(startRotation, rotation)
+        val neededChange = AngleUtil.getNeededChange(startRotation, rotation)
         endRotation = Rotation(startRotation.yaw + neededChange.yaw, startRotation.pitch + neededChange.pitch)
         startTime = System.currentTimeMillis()
         endTime = startTime + durationMillis
@@ -32,7 +33,7 @@ object RotationUtil {
 //        if (!done) return
         done = false
         startRotation = Rotation(player.rotationYaw, player.rotationPitch)
-        val neededChange = getNeededChange(startRotation, rotation)
+        val neededChange = AngleUtil.getNeededChange(startRotation, rotation)
         endRotation = Rotation(startRotation.yaw + neededChange.yaw, startRotation.pitch + neededChange.pitch)
         startTime = System.currentTimeMillis()
         endTime = startTime + durationMillis
@@ -49,7 +50,7 @@ object RotationUtil {
         endTime = startTime + durationMillis
     }
 
-    private fun lock(entity: EntityLiving) {
+    private fun lock(entity: Entity) {
         runAsync {
             while(lockAim) {
                 if(entity.isDead) break
@@ -82,12 +83,6 @@ object RotationUtil {
 
     private fun easeOutCubic(number: Float): Float {
         return (1.0 - (1.0 - number).pow(3.0)).toFloat()
-    }
-
-    private fun getNeededChange(startRot: Rotation, endRot: Rotation): Rotation {
-        var yawChange = MathHelper.wrapAngleTo180_float(endRot.yaw) - MathHelper.wrapAngleTo180_float(startRot.yaw)
-        if (yawChange <= -180.0f) yawChange += 360.0f else if (yawChange > 180.0f) yawChange += -360.0f
-        return Rotation(yawChange, endRot.pitch - startRot.pitch)
     }
 
     fun stop(){

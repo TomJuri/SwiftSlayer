@@ -20,7 +20,5 @@ val config
     get() = swiftSlayer.config
 val pathExecutor
     get() = swiftSlayer.pathExecutor
-val bossSpawner
-    get() = swiftSlayer.bossSpawner
 val mobKiller
     get() = swiftSlayer.mobKiller

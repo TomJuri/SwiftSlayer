@@ -1,21 +1,18 @@
 package dev.macrohq.swiftslayer.macro
 
-import cc.polyfrost.oneconfig.utils.dsl.tick
 import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.Logger.info
-import kotlinx.coroutines.currentCoroutineContext
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.monster.EntityZombie
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
-import javax.swing.text.JTextComponent.KeyBinding
 import kotlin.math.abs
 
 class MobKiller {
     private var blacklist = mutableListOf<EntityLiving>()
     private var mobKiller = false
-    private var state: State = State.NONE;
+    private var state: State = State.NONE
     private var targetEntity: Entity? = null
     private var ticks: Int = 0
     private var stuckCounter: Int = 0
@@ -47,7 +44,7 @@ class MobKiller {
                 RenderUtil.entites.clear()
                 if(ticks>=60){
                     blacklist.clear()
-                    ticks = 0;
+                    ticks = 0
                 }
                 val targetEntityList = EntityUtil.getMobs(EntityZombie::class.java, 50000).toMutableList()
                 if(targetEntity!=null) targetEntityList.remove(targetEntity)
@@ -78,12 +75,12 @@ class MobKiller {
             State.LOOKING ->{
                 RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(targetEntity!!).yaw, 45f), 400)
                 state = State.LOOKING_VERIFY
-                return;
+                return
             }
             State.LOOKING_VERIFY -> {
                 val yp = RotationUtil.Rotation(AngleUtil.getAngles(targetEntity!!).yaw, 45f)
-                val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw)-AngleUtil.yawTo360(yp.yaw));
-                val pitchDiff = abs(mc.thePlayer.rotationPitch - yp.pitch);
+                val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw)-AngleUtil.yawTo360(yp.yaw))
+                val pitchDiff = abs(mc.thePlayer.rotationPitch - yp.pitch)
                 if(pitchDiff < 2){
                     RotationUtil.stop()
                     InventoryUtil.holdItem("Spirit")

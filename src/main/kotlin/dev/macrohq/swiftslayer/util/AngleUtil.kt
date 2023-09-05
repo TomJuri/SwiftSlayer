@@ -36,7 +36,7 @@ object AngleUtil {
     }
 
     fun getYawChange(entity: Entity): Float{
-        val startRot = RotationUtil.Rotation(player.rotationYaw, player.rotationPitch)
+        val startRot = Rotation(player.rotationYaw, player.rotationPitch)
         val endRot = Rotation(getAngles(entity.positionVector).yaw, 0f)
         return getNeededChange(startRot, endRot).yaw
     }

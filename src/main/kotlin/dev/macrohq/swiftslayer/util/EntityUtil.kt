@@ -1,9 +1,6 @@
 package dev.macrohq.swiftslayer.util
 
-import dev.macrohq.swiftslayer.util.Logger.info
-import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLiving
-import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.util.MathHelper
 import kotlin.math.abs
 import kotlin.math.sqrt
@@ -23,6 +20,6 @@ object EntityUtil {
     }
 
     fun getRevCost(entity: EntityLiving): Int{
-        return 1;
+        return 1
     }
 }

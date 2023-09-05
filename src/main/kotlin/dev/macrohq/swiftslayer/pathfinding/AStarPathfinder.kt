@@ -1,7 +1,8 @@
 package dev.macrohq.swiftslayer.pathfinding
 
-import dev.macrohq.swiftslayer.util.*
-import net.minecraft.block.BlockStairs
+import dev.macrohq.swiftslayer.util.AngleUtil
+import dev.macrohq.swiftslayer.util.BlockUtil
+import dev.macrohq.swiftslayer.util.world
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
 import net.minecraft.util.MathHelper
@@ -86,7 +87,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
             val dx = bp2.x - bp1.x
             val dz = bp2.z - bp1.z
             val yaw = -Math.toDegrees(atan2(dx.toDouble(), dz.toDouble())).toFloat()
-            return AngleUtil.yawTo360(yaw);
+            return AngleUtil.yawTo360(yaw)
         }
         fun calculateCost(endNode: Node) {
             var cost = 0f
@@ -98,7 +99,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
                 if (this.parent.position.y < this.position.y
                     && !BlockUtil.isStairSlab(this.position)
                 ) {
-                    cost += 1.5f;
+                    cost += 1.5f
                 }
             }
             BlockUtil.neighbourGenerator(this.position.up().up().up(), 1).forEach{
@@ -132,7 +133,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
             return allowedBlocks.contains(world.getBlockState(position.up()).block)
                     && allowedBlocks.contains(world.getBlockState(position.up().up()).block)
                     && world.getBlockState(position).block.material.isSolid
-                    && !collision;
+                    && !collision
         }
 
         fun isIn(nodes: List<Node>): Boolean {

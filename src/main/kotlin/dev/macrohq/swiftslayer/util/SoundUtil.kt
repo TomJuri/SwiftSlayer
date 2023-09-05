@@ -13,7 +13,7 @@ object SoundUtil {
             val volumeControl = clip.getControl(FloatControl.Type.MASTER_GAIN) as FloatControl
             val volumePercentage = volumePercent.toFloat() / 100f
             val dB = (ln(volumePercentage.toDouble()) / ln(10.0) * 20.0).toFloat()
-            volumeControl.setValue(dB)
+            volumeControl.value = dB
             clip.start()
         }.start()
     }
