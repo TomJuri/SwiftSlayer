@@ -4,6 +4,8 @@ import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
 import dev.macrohq.swiftslayer.util.*
+import net.minecraft.entity.item.EntityArmorStand
+import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.util.BlockPos
 
 @Command(value = "pathfindtest", aliases = ["pft"])
@@ -15,6 +17,11 @@ class PathfindTest {
 //        RenderUtil.markers.clear()
 //        RenderUtil.markers.addAll(AStarPathfinder(player.getStandingOn(), swiftSlayer.removeLater!!).findPath(2000))
 //        PathingUtil.goto(swiftSlayer.removeLater!!)
+//        world.loadedEntityList.filterIsInstance<EntityZombie>().forEach{
+//            println("maxHealth: ${it.maxHealth}, currnetHealth: ${it.health}")
+//        }
+//        RenderUtil.entites.clear()
+//        RenderUtil.entites.add(EntityUtil.getMobs(EntityZombie::class.java, 50000)[0])
     }
 
     @SubCommand

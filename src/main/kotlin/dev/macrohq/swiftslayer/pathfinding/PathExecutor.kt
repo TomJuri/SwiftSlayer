@@ -41,7 +41,6 @@ class PathExecutor {
     }
 
     fun disable() {
-        info("disabling")
         state = State.NONE
         pathFailCounter = 0
         RotationUtil.stop()
@@ -76,7 +75,7 @@ class PathExecutor {
                     current?.let { RenderUtil.markers.add(it) };
 
                 } else if (player.onGround) pathFailCounter++
-                if ((pathFailCounter >= 100 && player.onGround)) {
+                if ((pathFailCounter >= 40 && player.onGround)) {
                     pathFailCounter = 0
                     running = false
                     PathingUtil.goto(path[path.size - 1])

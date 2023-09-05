@@ -46,11 +46,10 @@ class MobKiller {
             State.FINDING -> {
                 RenderUtil.entites.clear()
                 if(ticks>=60){
-                    info("BlackList Cleared.")
                     blacklist.clear()
                     ticks = 0;
                 }
-                val targetEntityList = EntityUtil.getMobs(EntityZombie::class.java, 1999).toMutableList()
+                val targetEntityList = EntityUtil.getMobs(EntityZombie::class.java, 50000).toMutableList()
                 if(targetEntity!=null) targetEntityList.remove(targetEntity)
                 targetEntityList.removeAll(blacklist)
                 if(targetEntityList.isEmpty()) return
@@ -95,7 +94,6 @@ class MobKiller {
                 KeyBindUtil.rightClick()
                 blacklist.add(targetEntity as EntityLiving)
                 state = State.FINDING
-                ticks = 0
             }
             else -> {}
         }
