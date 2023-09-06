@@ -16,16 +16,7 @@ class PathfindTest {
     private var path = mutableListOf<BlockPos>()
     @Main
     private fun main() {
-        mobKiller.enable()
-//        RenderUtil.markers.clear()
-//        RenderUtil.markers.addAll(AStarPathfinder(player.getStandingOnFloor(), EntityUtil.getMobs(EntityWolf::class.java, 20000)[0].position.down()).findPath(2000))
-//        PathingUtil.goto(swiftSlayer.removeLater!!)
-//        world.loadedEntityList.filterIsInstance<EntityZombie>().forEach{
-//            println("maxHealth: ${it.maxHealth}, currnetHealth: ${it.health}")
-//        }
-//        RenderUtil.entites.clear()
-//        RenderUtil.entites.add(EntityUtil.getMobs(EntityWolf::class.java, 32000)[0])
-//        RenderUtil.markers.addAll(BlockUtil.neighbourGenerator(player.getStandingOnFloor(), -1, 1, -2, 1, -1, 1))
+        batphoneHandler.enable()
     }
 
     @SubCommand
@@ -49,5 +40,6 @@ class PathfindTest {
         mobKiller.disable()
         PathingUtil.stop()
         RotationUtil.stop()
+        batphoneHandler.disable()
     }
 }
