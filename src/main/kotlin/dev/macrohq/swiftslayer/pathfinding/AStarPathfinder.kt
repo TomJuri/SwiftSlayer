@@ -14,7 +14,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
     private var startNode: Node
     private var endNode: Node
     private val openNodes = mutableListOf<Node>()
-    private val closedNodes= mutableListOf<Node>()
+    private val closedNodes = mutableListOf<Node>()
 
     init {
         startNode = Node(startPos, null)
@@ -25,7 +25,9 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
         startNode.calculateCost(endNode)
         openNodes.add(startNode)
         for (i in 0 until iterations) {
-            val currentNode = openNodes.stream().min(Comparator.comparingDouble { it.getFCost().toDouble() }).orElse(null) ?: return listOf()
+            val currentNode =
+                openNodes.stream().min(Comparator.comparingDouble { it.getFCost().toDouble() }).orElse(null)
+                    ?: return listOf()
             if (currentNode.position == endNode.position) return reconstructPath(currentNode)
             openNodes.remove(currentNode)
             closedNodes.add(currentNode)
@@ -48,16 +50,16 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
 //        return path
 
         val smooth = mutableListOf<BlockPos>()
-        if(path.isNotEmpty()){
+        if (path.isNotEmpty()) {
             smooth.add(path[0])
             var currPoint = 0
             var maxiters = 2000
 
-            while(currPoint+1 < path.size && maxiters-->0){
+            while (currPoint + 1 < path.size && maxiters-- > 0) {
                 var nextPos = currPoint + 1
 
-                for(i in (path.size-1) downTo nextPos){
-                    if(BlockUtil.blocksBetweenValid(path[currPoint], path[i])){
+                for (i in (path.size - 1) downTo nextPos) {
+                    if (BlockUtil.blocksBetweenValid(path[currPoint], path[i])) {
                         nextPos = i
                         break
                     }
@@ -83,12 +85,14 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
             }
             return yaw
         }
+
         private fun angleCost(bp1: BlockPos, bp2: BlockPos): Float {
             val dx = bp2.x - bp1.x
             val dz = bp2.z - bp1.z
             val yaw = -Math.toDegrees(atan2(dx.toDouble(), dz.toDouble())).toFloat()
             return AngleUtil.yawTo360(yaw)
         }
+
         fun calculateCost(endNode: Node) {
             var cost = 0f
             if (this.parent != null) {
@@ -102,10 +106,10 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
                     cost += 1.5f
                 }
 
-                if(BlockUtil.isStairSlab(this.position)) cost -= 1f
+                if (BlockUtil.isStairSlab(this.position)) cost -= 1f
             }
-            BlockUtil.neighbourGenerator(this.position.up().up().up(), 1).forEach{
-                if(world.isBlockFullCube(it)) cost += 1.5f
+            BlockUtil.neighbourGenerator(this.position.up().up().up(), 1).forEach {
+                if (world.isBlockFullCube(it)) cost += 1.5f
             }
             this.gCost = if (this.parent != null) sqrt(this.parent.position.distanceSq(this.position)).toFloat()
             else 0f
@@ -115,7 +119,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
 
         fun getFCost() = gCost + hCost
 
-        fun getNeighbours() : List<Node> {
+        fun getNeighbours(): List<Node> {
             val neighbours = mutableListOf<Node>()
             BlockUtil.neighbourGenerator(this.position, -1, 1, -4, 3, -1, 1).forEach {
                 val newNode = Node(it, this)
@@ -127,8 +131,8 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
         fun isWalkable(): Boolean {
             var collision = false
             var headhit = false
-            if(this.parent!=null && this.parent.position.y < this.position.y){
-                if(!allowedBlocks.contains(world.getBlockState(this.parent.position.add(0,3,0)).block)){
+            if (this.parent != null && this.parent.position.y < this.position.y) {
+                if (!allowedBlocks.contains(world.getBlockState(this.parent.position.add(0, 3, 0)).block)) {
                     headhit = true
                 }
             }

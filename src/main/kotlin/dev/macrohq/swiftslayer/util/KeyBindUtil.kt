@@ -1,5 +1,6 @@
 package dev.macrohq.swiftslayer.util
 
+import cc.polyfrost.oneconfig.utils.dsl.runAsync
 import dev.macrohq.swiftslayer.mixin.MinecraftInvoker
 
 object KeyBindUtil {
@@ -28,5 +29,13 @@ object KeyBindUtil {
         if(rightCps > 12) return
         (mc as MinecraftInvoker).invokeRightClickMouse()
         rightCps++
+    }
+
+    fun jump() {
+        gameSettings.keyBindJump.setPressed(true)
+        runAsync {
+            Thread.sleep(100)
+            gameSettings.keyBindJump.setPressed(false)
+        }
     }
 }

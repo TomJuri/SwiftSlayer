@@ -4,8 +4,8 @@ import cc.polyfrost.oneconfig.utils.commands.CommandManager
 import dev.macrohq.swiftslayer.command.PathfindTest
 import dev.macrohq.swiftslayer.config.SwiftSlayerConfig
 import dev.macrohq.swiftslayer.feature.AutoBatphone
-import dev.macrohq.swiftslayer.macro.EndermanMacro
 import dev.macrohq.swiftslayer.macro.MobKiller
+import dev.macrohq.swiftslayer.macro.VoidgloomKiller
 import dev.macrohq.swiftslayer.pathfinding.PathExecutor
 import dev.macrohq.swiftslayer.util.RenderUtil
 import dev.macrohq.swiftslayer.util.RotationUtil
@@ -26,8 +26,8 @@ class SwiftSlayer {
     lateinit var pathExecutor: PathExecutor private set
     lateinit var config: SwiftSlayerConfig private set
     lateinit var mobKiller: MobKiller private set
-    lateinit var endermanMacro: EndermanMacro private set
-    lateinit var batphoneHandler: AutoBatphone private set
+    lateinit var voidgloomKiller: VoidgloomKiller private set
+    lateinit var autoBatphone: AutoBatphone private set
     var removeLater: BlockPos? = null
 
     @Mod.EventHandler
@@ -35,12 +35,12 @@ class SwiftSlayer {
         config = SwiftSlayerConfig()
         pathExecutor = PathExecutor()
         mobKiller = MobKiller()
-        endermanMacro = EndermanMacro()
-        batphoneHandler = AutoBatphone()
+        voidgloomKiller = VoidgloomKiller()
+        autoBatphone = AutoBatphone()
         MinecraftForge.EVENT_BUS.register(this)
         MinecraftForge.EVENT_BUS.register(pathExecutor)
         MinecraftForge.EVENT_BUS.register(mobKiller)
-        MinecraftForge.EVENT_BUS.register(batphoneHandler)
+        MinecraftForge.EVENT_BUS.register(autoBatphone)
         CommandManager.register(PathfindTest())
     }
 

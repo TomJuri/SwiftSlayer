@@ -23,4 +23,4 @@ val pathExecutor
 val mobKiller
     get() = swiftSlayer.mobKiller
 val batphoneHandler
-    get() = swiftSlayer.batphoneHandler
+    get() = swiftSlayer.autoBatphone
