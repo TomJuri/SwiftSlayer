@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.entity.RenderGuardian;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityGuardian;
 import net.minecraft.util.Vec3;
-import org.lwjgl.Sys;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,7 +22,7 @@ public abstract class RenderGuardianMixin {
     private void renderGuardianBeamMixin(EntityGuardian entity, double x, double y, double z, float entityYaw, float partialTicks, CallbackInfo ci) {
         Vec3 start = func_177110_a(entity.getTargetedEntity(), (double) entity.getTargetedEntity().height * 0.5D, partialTicks);
         Vec3 end = func_177110_a(entity, entity.getEyeHeight(), partialTicks);
-        SwiftSlayer.Companion.getInstance().getEndermanMacro().lasers = new Pair<>(start, end);
-        SwiftSlayer.Companion.getInstance().getEndermanMacro().setLastLaser(System.currentTimeMillis());
+        SwiftSlayer.Companion.getInstance().getVoidgloomKiller().lasers = new Pair<>(start, end);
+        SwiftSlayer.Companion.getInstance().getVoidgloomKiller().setLastLaser(System.currentTimeMillis());
     }
 }
