@@ -12,7 +12,7 @@ import kotlin.math.sqrt
 object EntityUtil {
     fun getMobs(entityClass: Class<out EntityLiving>, health: Int): List<EntityLiving>{
         val entities = world.getLoadedEntityList().filterIsInstance(entityClass).filter { it.maxHealth == 1024f && it.health<=health
-                && inRange(it)}
+                && inRange(it) }
         return entities.sortedBy { getCost(it) }
     }
     fun getCost(entity: EntityLiving): Float {
