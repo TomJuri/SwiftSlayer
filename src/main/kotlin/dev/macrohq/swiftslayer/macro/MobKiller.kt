@@ -4,6 +4,7 @@ import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.Logger.info
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLiving
+import net.minecraft.entity.monster.EntitySpider
 import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.entity.passive.EntityWolf
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -47,7 +48,7 @@ class MobKiller {
                     blacklist.clear()
                     ticks = 0
                 }
-                val targetEntityList = EntityUtil.getMobs(EntityWolf::class.java, 32000).toMutableList()
+                val targetEntityList = EntityUtil.getMobs(EntitySpider::class.java, 32000).toMutableList()
                 if(targetEntity!=null) targetEntityList.remove(targetEntity)
                 targetEntityList.removeAll(blacklist)
                 if(targetEntityList.isEmpty()) return
@@ -66,6 +67,7 @@ class MobKiller {
                     stuckCounter = 0
                     blacklist.add(targetEntity as EntityLiving)
                     state = State.FINDING
+                    return
                 }
                 if(PathingUtil.isDone || player.getDistanceToEntity(targetEntity) < 6){
                     PathingUtil.stop()
