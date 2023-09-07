@@ -41,7 +41,6 @@ class SwiftSlayer {
         MinecraftForge.EVENT_BUS.register(pathExecutor)
         MinecraftForge.EVENT_BUS.register(mobKiller)
         MinecraftForge.EVENT_BUS.register(autoBatphone)
-        MinecraftForge.EVENT_BUS.register(autoSlayer)
         CommandManager.register(PathfindTest())
     }
 
