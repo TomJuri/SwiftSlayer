@@ -59,6 +59,19 @@ class VoidgloomKiller {
         }
     }
 
+    fun enable(target: EntityArmorStand) {
+        if (enabled) return
+        enabled = true
+        this.target = target
+        Logger.info("VoidgloomKiller enabled")
+    }
+
+    fun disable() {
+        if (!enabled) return
+        enabled = false
+        Logger.info("VoidgloomKiller disabled")
+    }
+
     private fun determineState() : State {
         if(target.name.contains("Hits"))
             return State.HIT
