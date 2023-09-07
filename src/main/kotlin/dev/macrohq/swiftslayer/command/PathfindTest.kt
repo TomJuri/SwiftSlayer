@@ -16,7 +16,10 @@ class PathfindTest {
     private var path = mutableListOf<BlockPos>()
     @Main
     private fun main() {
-        batphoneHandler.enable()
+        mobKiller.enable()
+//        batphoneHandler.enable(true)
+//        RenderUtil.markers.clear()
+//        RenderUtil.markers.addAll(AStarPathfinder(player.getStandingOnFloor(), swiftSlayer.removeLater!!).findPath(2000))
     }
 
     @SubCommand

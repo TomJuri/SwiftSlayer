@@ -105,7 +105,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
                 if(BlockUtil.isStairSlab(this.position)) cost -= 1f
             }
             BlockUtil.neighbourGenerator(this.position.up().up().up(), 1).forEach{
-                if(world.isBlockFullCube(it)) cost += 1f
+                if(world.isBlockFullCube(it)) cost += 1.5f
             }
             this.gCost = if (this.parent != null) sqrt(this.parent.position.distanceSq(this.position)).toFloat()
             else 0f

@@ -18,7 +18,8 @@ object EntityUtil {
         val angleChange = yawChange + pitchChange
         val distance = sqrt(player.getDistanceToEntity(entity))
         val cost = getRevCost(entity)
-        return (distance + angleChange + cost)
+//        return (distance + angleChange + cost)
+        return distance
     }
 
     fun getRevCost(entity: EntityLiving): Int{

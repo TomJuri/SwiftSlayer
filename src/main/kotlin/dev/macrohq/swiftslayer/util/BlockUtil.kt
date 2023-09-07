@@ -34,24 +34,47 @@ object BlockUtil {
     }
 
     fun blocksBetweenValid(startPos: BlockPos, endPos: BlockPos): Boolean{
-        val blocks = bresenham(startPos.toVec3().addVector(0.0,0.4,0.0), endPos.toVec3().addVector(0.0,0.4,0.0))
+        val blocks = bresenham(startPos.toVec3().addVector(0.0,0.4,0.0), endPos.toVec3().addVector(0.0,0.4,0.0)).toMutableList()
         var blockFail = 0
+        var lastBlockY = blocks[0].y
+        var lastFullBlock = world.isBlockFullCube(blocks[0])
+        var isLastBlockSlab = isStairSlab(blocks[0])
+        var isLastBlockAir = world.isAirBlock(blocks[0])
+        blocks.remove(blocks[0])
         blocks.forEach{
             if(!AStarPathfinder.Node(it, null).isWalkable() && !world.isAirBlock(it)){
                 return false
             }
-            if(world.isAirBlock(it)){
-                blockFail++
-            }
-            if(world.isBlockFullCube(it) && blockFail>0) return false
-            if(AStarPathfinder.Node(it, null).isWalkable()){
-                blockFail = 0
-            }
-            if(blockFail>5){
-                return false
-            }
+//            if(!(isLastBlockSlab && world.isBlockFullCube(it))) return false
+            if(isLastBlockAir && world.isBlockFullCube(it) && !isStairSlab(it)) return false
+//            if(!(isLastBlockAir && isStairSlab(it))) return false
+            if(lastFullBlock && world.isBlockFullCube(it) &&  it.y > lastBlockY) return false
+            if(world.isAirBlock(it)) blockFail++
+            else blockFail=0
+            if(blockFail>3) return false
+
+            lastBlockY = it.y
+            lastFullBlock = world.isBlockFullCube(it)
+            isLastBlockSlab = isStairSlab(it)
+            isLastBlockAir = world.isAirBlock(it)
         }
         return true
+//        blocks.forEach{
+//            if(!AStarPathfinder.Node(it, null).isWalkable() && !world.isAirBlock(it)){
+//                return false
+//            }
+//            if(world.isAirBlock(it)){
+//                blockFail++
+//            }
+//            if(world.isBlockFullCube(it) && blockFail>0) return false
+//            if(AStarPathfinder.Node(it, null).isWalkable()){
+//                blockFail = 0
+//            }
+//            if(blockFail>5){
+//                return false
+//            }
+//        }
+//        return true
     }
 
     fun bresenham(start: Vec3, end: Vec3): List<BlockPos> {
