@@ -1,19 +1,19 @@
-package dev.macrohq.swiftslayer.features
+package dev.macrohq.swiftslayer.feature
 
 import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.Logger.error
 import dev.macrohq.swiftslayer.util.Logger.info
-import kotlinx.coroutines.suspendCancellableCoroutine
 import net.minecraft.inventory.ContainerChest
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
-class BatphoneHandler {
+class AutoBatphone {
     private var state = State.NONE
     private var batphone = false
     private var canceling = false
-    enum class State{
+
+    enum class State {
         STARTING,
         CLICKING,
         OPENING,

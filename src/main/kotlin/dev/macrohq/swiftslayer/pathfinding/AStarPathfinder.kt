@@ -117,7 +117,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
 
         fun getNeighbours() : List<Node> {
             val neighbours = mutableListOf<Node>()
-            BlockUtil.neighbourGenerator(this.position, -1, 1, -3, 3, -1, 1).forEach {
+            BlockUtil.neighbourGenerator(this.position, -1, 1, -4, 3, -1, 1).forEach {
                 val newNode = Node(it, this)
                 if (newNode.isWalkable()) neighbours.add(newNode)
             }

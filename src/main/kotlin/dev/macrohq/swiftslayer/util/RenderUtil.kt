@@ -4,18 +4,25 @@ import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityLiving
+import net.minecraft.entity.monster.EntitySpider
+import net.minecraft.entity.monster.EntityZombie
+import net.minecraft.entity.passive.EntityWolf
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.util.BlockPos
+import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import org.lwjgl.opengl.GL11
 import java.awt.Color
+import kotlin.math.abs
+import kotlin.math.sqrt
 
 object RenderUtil {
     var markers = mutableListOf<BlockPos>()
     var filledBox = mutableListOf<BlockPos>()
     var lines = mutableListOf<Vec3>()
-    var entites = mutableListOf<Entity>()
+    var entites = mutableListOf<EntityLiving>()
     var points = mutableListOf<Vec3>()
     var green = Color(0, 255, 0, 255)
 
@@ -33,12 +40,12 @@ object RenderUtil {
             drawLine(event, block, lines[lines.indexOf(block) + 1], chroma)
         }
         for(entity in entites) {
-            if(!entity.isEntityAlive) {
+            if (entity.health <= 0) {
                 entites.remove(entity)
-
                 return
             }
             drawEntity(event, entity, chroma, true)
+
         }
         for(point in points){
             drawPoints(event, point, chroma)
@@ -83,10 +90,35 @@ object RenderUtil {
             entity.posX + 0.5, entity.posY + 2, entity.posZ + 0.5
         )
         drawFilledBox(event!!, aabb, color, esp)
+        renderText(
+            entity.positionVector.addVector(0.0, 1.2, 0.0), "${getCost(entity as EntityLiving)}, ${
+                EntityUtil.getMobs(
+                    EntityZombie::class.java, 50000
+                ).indexOf(entity)
+            }"
+        )
     }
 
-    fun drawPoints(event: RenderWorldLastEvent, point: Vec3, color: Color){
-        val aabb = AxisAlignedBB(point.xCoord-0.07, point.yCoord-0.07, point.zCoord-0.07, point.xCoord+0.07, point.yCoord+0.07, point.zCoord+0.07)
+    // Only for debugging
+    fun getCost(entity: EntityLiving): String {
+        val yawChange =
+            abs(MathHelper.wrapAngleTo180_float(AngleUtil.getAngles(entity).yaw - AngleUtil.yawTo360(player.rotationYaw))) / 180.0
+        val pitchChange = abs(-player.rotationPitch + AngleUtil.getAngles(entity).pitch)
+        val angleChange = yawChange + pitchChange
+        val distance = (player.getDistanceToEntity(entity))
+        return "dist: ${(distance * 200).toInt() / 200.0 * 0.5f}, ang: ${(angleChange * 200).toInt() / 200.0 * 0.2f}"
+//        return distance
+    }
+
+    fun drawPoints(event: RenderWorldLastEvent, point: Vec3, color: Color) {
+        val aabb = AxisAlignedBB(
+            point.xCoord - 0.07,
+            point.yCoord - 0.07,
+            point.zCoord - 0.07,
+            point.xCoord + 0.07,
+            point.yCoord + 0.07,
+            point.zCoord + 0.07
+        )
         drawFilledBox(event, aabb, color, true)
     }
 
@@ -268,5 +300,30 @@ object RenderUtil {
         GlStateManager.popMatrix()
     }
 
-
+    fun renderText(pos: Vec3, text: String?) {
+        val renderPosX: Double = mc.renderManager.viewerPosX
+        val renderPosY: Double = mc.renderManager.viewerPosY
+        val renderPosZ: Double = mc.renderManager.viewerPosZ
+        val x = pos.xCoord - renderPosX
+        val y = pos.yCoord - renderPosY
+        val z = pos.zCoord - renderPosZ
+        GlStateManager.pushMatrix()
+        GlStateManager.translate(x + 0.5, y + 1.2, z + 0.5)
+        GlStateManager.rotate(-mc.renderManager.playerViewY, 0.0f, 1.0f, 0.0f)
+        GlStateManager.rotate(mc.renderManager.playerViewX, 1.0f, 0.0f, 0.0f)
+        val scale = 0.003 * sqrt(player.getDistanceSq(pos.toBlockPos()))
+        GlStateManager.scale(-scale, -scale, scale)
+        GL11.glNormal3f(0.0f, 1.0f, 0.0f)
+        GlStateManager.disableLighting()
+        GlStateManager.depthMask(false)
+        GlStateManager.disableDepth()
+        GlStateManager.enableBlend()
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
+        mc.fontRendererObj.drawString(text, 0, 0, 0xFFFFFF)
+        GlStateManager.enableDepth()
+        GlStateManager.depthMask(true)
+        GlStateManager.enableLighting()
+        GlStateManager.disableBlend()
+        GlStateManager.popMatrix()
+    }
 }

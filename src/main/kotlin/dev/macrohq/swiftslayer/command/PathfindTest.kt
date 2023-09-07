@@ -20,6 +20,8 @@ class PathfindTest {
 //        batphoneHandler.enable(true)
 //        RenderUtil.markers.clear()
 //        RenderUtil.markers.addAll(AStarPathfinder(player.getStandingOnFloor(), swiftSlayer.removeLater!!).findPath(2000))
+//        RenderUtil.entites.clear()
+//        RenderUtil.entites.addAll(EntityUtil.getMobs(EntityZombie::class.java, 50000))
     }
 
     @SubCommand
@@ -35,6 +37,7 @@ class PathfindTest {
         RenderUtil.markers.clear()
         RenderUtil.lines.clear()
         RenderUtil.points.clear()
+        RenderUtil.entites.clear()
         swiftSlayer.removeLater = null
     }
 

@@ -48,7 +48,7 @@ class MobKiller {
                     blacklist.clear()
                     ticks = 0
                 }
-                val targetEntityList = EntityUtil.getMobs(EntitySpider::class.java, 32000).toMutableList()
+                val targetEntityList = EntityUtil.getMobs(EntityZombie::class.java, 32000).toMutableList()
                 if(targetEntity!=null) targetEntityList.remove(targetEntity)
                 targetEntityList.removeAll(blacklist)
                 if(targetEntityList.isEmpty()) return
