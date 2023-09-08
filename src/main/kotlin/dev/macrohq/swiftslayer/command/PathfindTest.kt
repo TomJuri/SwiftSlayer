@@ -21,6 +21,7 @@ class PathfindTest {
 //        RenderUtil.markers.addAll(AStarPathfinder(player.getStandingOnFloor(), swiftSlayer.removeLater!!).findPath(2000))
 //        RenderUtil.entites.clear()
 //        RenderUtil.entites.addAll(EntityUtil.getMobs(EntityZombie::class.java, 50000))
+//        PathingUtil.goto(swiftSlayer.removeLater!!)
     }
 
     @SubCommand

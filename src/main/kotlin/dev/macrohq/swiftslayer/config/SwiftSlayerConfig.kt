@@ -12,7 +12,7 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     @Dropdown(
         name = "Slayer",
         category = "General",
-        subcategory = "Slayers",
+        subcategory = "Slayer",
         options = ["Revenant Horror", "Tarantula Broodfather", "Sven Packmaster", "Voidgloom Seraph"]
     )
     var slayer: Int = 0
@@ -20,8 +20,16 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     @Dropdown(
         name = "Tier",
         category = "General",
-        subcategory = "Slayers",
+        subcategory = "Slayer",
         options = ["1", "2", "3", "4", "5"]
     )
     var slayerTier: Int = 0
+
+    @Dropdown(
+        name = "MobKiller Weapon",
+        category = "General",
+        subcategory = "Slayer",
+        options = ["Spirit Sceptre", "Aspect of the Dragons"]
+    )
+    var mobkillerWeapon = 0
 }

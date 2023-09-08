@@ -1,5 +1,6 @@
 package dev.macrohq.swiftslayer.macro
 
+import cc.polyfrost.oneconfig.libs.checker.units.qual.Angle
 import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.Logger.info
 import net.minecraft.entity.Entity
@@ -15,10 +16,13 @@ class MobKiller {
     private var blacklist = mutableListOf<EntityLiving>()
     private var mobKiller = false
     private var state: State = State.NONE
-    private var targetEntity: Entity? = null
+    private var targetEntity: EntityLiving? = null
     private var ticks: Int = 0
     private var stuckCounter: Int = 0
-    private enum class State{
+    private var lookTimer: Int = 0
+    private lateinit var angle: RotationUtil.Rotation
+
+    private enum class State {
         NONE,
         STARTING,
         FINDING,
@@ -43,6 +47,7 @@ class MobKiller {
                 return
             }
             State.FINDING -> {
+                info("finding")
                 RenderUtil.entites.clear()
                 if(ticks>=60){
                     blacklist.clear()
@@ -56,43 +61,46 @@ class MobKiller {
                 targetEntity = targetEntityList[0]
                 RenderUtil.entites.add(targetEntity as EntityLiving)
                 state = State.PATHFINDING
-                if(targetEntity==null) disable()
             }
             State.PATHFINDING -> {
+                info("pathfinding")
                 PathingUtil.goto(targetEntity!!.position.down())
                 state = State.PATHFINDING_VERIFY
             }
             State.PATHFINDING_VERIFY -> {
-                if(PathingUtil.hasFailed() || (targetEntity as EntityLiving).health <= 0 || stuckCounter>=40){
+                info("path verif")
+                if (PathingUtil.hasFailed() || (targetEntity)!!.health <= 0 || stuckCounter >= 40) {
                     PathingUtil.stop()
                     stuckCounter = 0
-                    blacklist.add(targetEntity as EntityLiving)
+                    blacklist.add(targetEntity!!)
                     state = State.FINDING
                     return
                 }
-                if(PathingUtil.isDone || player.getDistanceToEntity(targetEntity) < 6){
-                    PathingUtil.stop()
+                if (PathingUtil.isDone || player.getDistanceToEntity(targetEntity) < attackDistance()) {
+                    stop()
                     state = State.LOOKING
                 }
                 return
             }
-            State.LOOKING ->{
-                RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(targetEntity!!).yaw, 45f), 400)
+            State.LOOKING -> {
+                info("looking")
+                angle = angleForWeapon(targetEntity!!)
+                RotationUtil.ease(angle, 100)
                 state = State.LOOKING_VERIFY
                 return
             }
             State.LOOKING_VERIFY -> {
-                val yp = RotationUtil.Rotation(AngleUtil.getAngles(targetEntity!!).yaw, 45f)
-                val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw)-AngleUtil.yawTo360(yp.yaw))
-                val pitchDiff = abs(mc.thePlayer.rotationPitch - yp.pitch)
-                if(pitchDiff < 2){
+                info("look verif")
+                if (lookTimer++ >= 40) state = State.LOOKING
+                if (lookDone()) {
                     RotationUtil.stop()
-                    InventoryUtil.holdItem("Spirit")
+                    holdWeapon()
                     state = State.KILLING
                 }
             }
             State.KILLING -> {
-                KeyBindUtil.rightClick()
+                info("kill")
+                useWeapon()
                 blacklist.add(targetEntity as EntityLiving)
                 state = State.FINDING
             }
@@ -105,11 +113,67 @@ class MobKiller {
         state = State.STARTING
     }
 
-    fun disable(){
+    fun disable() {
         mobKiller = false
         PathingUtil.stop()
         RotationUtil.stop()
         state = State.NONE
         Logger.error("Disabling")
+    }
+
+    private fun angleForWeapon(entity: EntityLiving): RotationUtil.Rotation {
+        return when (config.mobkillerWeapon) {
+            0 -> {
+                RotationUtil.Rotation(AngleUtil.getAngles(targetEntity!!).yaw, 45f)
+            }
+
+            1 -> {
+                AngleUtil.getAngles(entity.positionVector.addVector(0.0, 1.0, 0.0))
+            }
+
+            else -> {
+                RotationUtil.Rotation(0f, 0f)
+            }
+        }
+    }
+
+    private fun useWeapon() {
+        when (config.mobkillerWeapon) {
+            0 -> KeyBindUtil.rightClick()
+            1 -> KeyBindUtil.leftClick()
+            else -> {}
+        }
+    }
+
+    private fun attackDistance(): Int {
+        return when (config.mobkillerWeapon) {
+            0 -> 6
+            1 -> 3
+            else -> 6
+        }
+    }
+
+    private fun holdWeapon() {
+        when (config.mobkillerWeapon) {
+            0 -> InventoryUtil.holdItem("Spirit")
+            1 -> InventoryUtil.holdItem("Aspect of the Dragons")
+        }
+    }
+
+    private fun stop() {
+        when (config.mobkillerWeapon) {
+            0 -> {}
+            1 -> PathingUtil.stop()
+        }
+    }
+
+    private fun lookDone(): Boolean {
+        val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw) - AngleUtil.yawTo360(angle.yaw))
+        val pitchDiff = abs(mc.thePlayer.rotationPitch - angle.pitch)
+        when (config.mobkillerWeapon) {
+            0 -> return pitchDiff < 2
+            1 -> return yawDiff < 10 && pitchDiff < 5
+        }
+        return true
     }
 }

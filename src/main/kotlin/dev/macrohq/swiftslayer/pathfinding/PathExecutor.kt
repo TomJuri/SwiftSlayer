@@ -41,14 +41,18 @@ class PathExecutor {
     }
 
     fun disable() {
-        state = State.NONE
         pathFailCounter = 0
         RotationUtil.stop()
-        running = false
         path = listOf()
-        aotving = false
         current = null
         directionYaw = 0f
+        done = true
+        running = false
+        aotving = false
+        gameSettings.keyBindSprint.setPressed(false)
+        gameSettings.keyBindForward.setPressed(false)
+        gameSettings.keyBindJump.setPressed(false)
+        state = State.NONE
     }
 
     @SubscribeEvent
@@ -96,6 +100,7 @@ class PathExecutor {
                 if(yawDiff < 5 && pitchDiff < 2){
                     aotving = true
                     KeyBindUtil.rightClick()
+                    RotationUtil.stop()
                 }
                 state = State.WALKING
             }
@@ -112,54 +117,10 @@ class PathExecutor {
             }
 
             State.STOPPING -> {
-                done = true
-                running = false
-                aotving = false
-                gameSettings.keyBindSprint.setPressed(false)
-                gameSettings.keyBindForward.setPressed(false)
-                gameSettings.keyBindJump.setPressed(false)
-                state = State.NONE
-                return
+                disable()
             }
 
             else -> {}
         }
     }
-//
-//        if(path.any{it.x == player.getStandingOn().x && it.z == player.getStandingOn().z && (player.getStandingOn().y-it.y) in 0..10}){
-//            if (player.getStandingOn().x == path[path.size-1].x && player.getStandingOn().z == path[path.size-1].z){
-//                done = true
-//                running = false
-//                aotving = false
-//                gameSettings.keyBindSprint.setPressed(false)
-//                gameSettings.keyBindForward.setPressed(false)
-//                gameSettings.keyBindJump.setPressed(false)
-//                return
-//            }
-//            pathFailCounter = 0
-//            current = path[path.indexOf(path.find { it.x == player.getStandingOn().x && it.z == player.getStandingOn().z }) + 1]
-//            RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(current!!).yaw, 20f), 500)
-//        }
-//        else if(player.onGround) pathFailCounter++
-//
-//        if(pathFailCounter>=100 && player.onGround){
-//            pathFailCounter = 0
-//            running = false
-//            PathingUtil.goto(path[path.size-1])
-//            return;
-//        }
-//        RenderUtil.markers.clear();
-//        current?.let { RenderUtil.markers.add(it) };
-//        movePlayer(current!!)
-//    }
-
-//    private fun movePlayer(current: BlockPos) {
-//        val jump = (player.onGround && current.y > player.posY - 1 &&!BlockUtil.isStairSlab(current)  && !BlockUtil.isStairSlab(
-//            player.getStandingOn())
-//                && sqrt((player.getStandingOn().x - current.x).toDouble().pow(2.0) + (player.getStandingOn().z - current.z).toDouble().pow(2.0)) < 1.2)
-//        val rotation = RotationUtil.Rotation(AngleUtil.getAngles(current.toVec3Top()).yaw, 0f)
-//        directionYaw = rotation.yaw
-//        gameSettings.keyBindSprint.setPressed(true)
-//        gameSettings.keyBindForward.setPressed(true)
-//    }
 }
