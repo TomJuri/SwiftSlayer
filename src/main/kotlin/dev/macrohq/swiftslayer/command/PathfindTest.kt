@@ -3,7 +3,6 @@ package dev.macrohq.swiftslayer.command
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
-import dev.macrohq.swiftslayer.pathfinding.AStar
 import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder
 import dev.macrohq.swiftslayer.util.*
 import net.minecraft.entity.item.EntityArmorStand

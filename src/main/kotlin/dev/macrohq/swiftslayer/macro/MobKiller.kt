@@ -49,9 +49,10 @@ class MobKiller {
                     ticks = 0
                 }
                 val targetEntityList = EntityUtil.getMobs(EntityZombie::class.java, 32000).toMutableList()
-                if(targetEntity!=null) targetEntityList.remove(targetEntity)
                 targetEntityList.removeAll(blacklist)
+
                 if(targetEntityList.isEmpty()) return
+
                 targetEntity = targetEntityList[0]
                 RenderUtil.entites.add(targetEntity as EntityLiving)
                 state = State.PATHFINDING
