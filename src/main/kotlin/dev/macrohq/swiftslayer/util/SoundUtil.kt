@@ -11,7 +11,7 @@ object SoundUtil {
             val inputStream = AudioSystem.getAudioInputStream(SoundUtil::class.java.getResource(file))
             clip.open(inputStream)
             val volumeControl = clip.getControl(FloatControl.Type.MASTER_GAIN) as FloatControl
-            val volumePercentage = volumePercent.toFloat() / 100f
+            val volumePercentage = volumePercent / 100f
             val dB = (ln(volumePercentage.toDouble()) / ln(10.0) * 20.0).toFloat()
             volumeControl.value = dB
             clip.start()
