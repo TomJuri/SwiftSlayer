@@ -24,3 +24,5 @@ val mobKiller
     get() = swiftSlayer.mobKiller
 val batphoneHandler
     get() = swiftSlayer.autoBatphone
+val macroManager
+    get() = swiftSlayer.macroManager

@@ -8,7 +8,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
 class AutoBatphone {
     private var state = State.STARTING
-    private var batphone = false
     private var canceling = false
     var enabled = false
         private set
@@ -108,15 +107,14 @@ class AutoBatphone {
         if (enabled) return
         canceling = cancelSlayer
         state = State.STARTING
-        batphone = true
         enabled = true
         Logger.info("Enabling Auto Batphone")
     }
 
     fun disable() {
+        if (!enabled) return
         Logger.info("Disabling Auto Batphone")
         state = State.STARTING
-        batphone = false
         enabled = false
     }
 }

@@ -4,6 +4,7 @@ import cc.polyfrost.oneconfig.utils.commands.CommandManager
 import dev.macrohq.swiftslayer.command.PathfindTest
 import dev.macrohq.swiftslayer.config.SwiftSlayerConfig
 import dev.macrohq.swiftslayer.feature.AutoBatphone
+import dev.macrohq.swiftslayer.macro.MacroManager
 import dev.macrohq.swiftslayer.macro.MobKiller
 import dev.macrohq.swiftslayer.macro.VoidgloomKiller
 import dev.macrohq.swiftslayer.pathfinding.PathExecutor
@@ -28,6 +29,7 @@ class SwiftSlayer {
     lateinit var mobKiller: MobKiller private set
     lateinit var voidgloomKiller: VoidgloomKiller private set
     lateinit var autoBatphone: AutoBatphone private set
+    lateinit var macroManager: MacroManager private set
     var removeLater: BlockPos? = null
 
     @Mod.EventHandler
@@ -37,10 +39,12 @@ class SwiftSlayer {
         mobKiller = MobKiller()
         voidgloomKiller = VoidgloomKiller()
         autoBatphone = AutoBatphone()
+        macroManager = MacroManager()
         MinecraftForge.EVENT_BUS.register(this)
         MinecraftForge.EVENT_BUS.register(pathExecutor)
         MinecraftForge.EVENT_BUS.register(mobKiller)
         MinecraftForge.EVENT_BUS.register(autoBatphone)
+        MinecraftForge.EVENT_BUS.register(macroManager)
         CommandManager.register(PathfindTest())
     }
 

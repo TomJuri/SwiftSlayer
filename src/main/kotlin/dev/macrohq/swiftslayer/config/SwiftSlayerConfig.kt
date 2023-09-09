@@ -9,7 +9,7 @@ import cc.polyfrost.oneconfig.config.core.OneKeyBind
 import cc.polyfrost.oneconfig.config.data.Mod
 import cc.polyfrost.oneconfig.config.data.ModType
 import cc.polyfrost.oneconfig.libs.universal.UKeyboard
-import dev.macrohq.swiftslayer.macro.MacroManager
+import dev.macrohq.swiftslayer.util.macroManager
 
 class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftslayer.json") {
     @Dropdown(
@@ -62,6 +62,6 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
 
     init {
         initialize()
-        registerKeyBind(toggleMacro) { MacroManager.toggle() }
+        registerKeyBind(toggleMacro) { macroManager.toggle() }
     }
 }

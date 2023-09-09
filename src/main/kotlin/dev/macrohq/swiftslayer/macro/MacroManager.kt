@@ -3,7 +3,7 @@ package dev.macrohq.swiftslayer.macro
 import dev.macrohq.swiftslayer.util.Logger
 import dev.macrohq.swiftslayer.util.config
 
-object MacroManager {
+class MacroManager {
 
     private var enabled = false
 
