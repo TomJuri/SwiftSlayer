@@ -3,7 +3,11 @@ package dev.macrohq.swiftslayer.command
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
+import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder
 import dev.macrohq.swiftslayer.util.*
+import net.minecraft.entity.item.EntityArmorStand
+import net.minecraft.entity.monster.EntityZombie
+import net.minecraft.entity.passive.EntityWolf
 import net.minecraft.util.BlockPos
 
 @Command(value = "pathfindtest", aliases = ["pft"])
@@ -15,6 +19,9 @@ class PathfindTest {
 //        batphoneHandler.enable(true)
 //        RenderUtil.markers.clear()
 //        RenderUtil.markers.addAll(AStarPathfinder(player.getStandingOnFloor(), swiftSlayer.removeLater!!).findPath(2000))
+//        RenderUtil.entites.clear()
+//        RenderUtil.entites.addAll(EntityUtil.getMobs(EntityZombie::class.java, 50000))
+//        PathingUtil.goto(swiftSlayer.removeLater!!)
     }
 
     @SubCommand
@@ -30,6 +37,7 @@ class PathfindTest {
         RenderUtil.markers.clear()
         RenderUtil.lines.clear()
         RenderUtil.points.clear()
+        RenderUtil.entites.clear()
         swiftSlayer.removeLater = null
     }
 

@@ -7,7 +7,7 @@ import net.minecraft.util.BlockPos
 object PathingUtil {
 
     var isDone = true
-      private set
+        private set
     private var hasFailed = false
 
     fun goto(pos: BlockPos) {

@@ -8,6 +8,7 @@ import cc.polyfrost.oneconfig.config.data.ModType
 
 class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftslayer.json") {
     init { initialize() }
+    val macro = 0
 
     @Dropdown(
         name = "Slayer",
@@ -15,7 +16,7 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
         subcategory = "Slayers",
         options = ["Revenant Horror", "Tarantula Broodfather", "Sven Packmaster", "Voidgloom Seraph"]
     )
-    val slayer: Int = 0
+    var slayer: Int = 0
 
     @Dropdown(
         name = "Tier",
@@ -23,7 +24,15 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
         subcategory = "Slayers",
         options = ["1", "2", "3", "4", "5"]
     )
-    val slayerTier: Int = 0
+    var slayerTier: Int = 0
+
+    @Dropdown(
+        name = "MobKiller Weapon",
+        category = "General",
+        subcategory = "Slayer",
+        options = ["Spirit Sceptre", "Aspect of the Dragons"]
+    )
+    var mobkillerWeapon = 0
 
     @Slider(
         name = "Failsafe volume",
@@ -34,5 +43,4 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
         step = 5
     )
     val failsafeVolume = 100
-
 }

@@ -12,7 +12,8 @@ class AutoBatphone {
     private var state = State.NONE
     private var batphone = false
     private var canceling = false
-    enum class State{
+
+    enum class State {
         STARTING,
         CLICKING,
         OPENING,
