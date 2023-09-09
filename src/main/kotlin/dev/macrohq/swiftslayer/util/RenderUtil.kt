@@ -134,7 +134,6 @@ object RenderUtil {
         val b = color.blue / 255.0f
         val a = 255.0f * 0.9f
         GlStateManager.pushMatrix()
-        GL11.glDisable(GL11.GL_CULL_FACE)
         GlStateManager.translate(-realX, -realY, -realZ)
         GlStateManager.disableTexture2D()
         GlStateManager.disableLighting()
@@ -196,7 +195,6 @@ object RenderUtil {
         val b = color.blue / 255.0f
         val a = color.alpha / 255.0f * 0.3f
         GlStateManager.pushMatrix()
-        GL11.glDisable(GL11.GL_CULL_FACE)
         GlStateManager.translate(-realX, -realY, -realZ)
         GlStateManager.disableTexture2D()
         GlStateManager.disableLighting()
@@ -276,7 +274,6 @@ object RenderUtil {
         val b = color.blue / 255.0f
         val a = 255.0f * 0.9f
         GlStateManager.pushMatrix()
-        GL11.glDisable(GL11.GL_CULL_FACE)
         GlStateManager.translate(-realX, -realY, -realZ)
         GlStateManager.disableTexture2D()
         GlStateManager.disableLighting()
