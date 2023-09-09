@@ -2,21 +2,23 @@ package dev.macrohq.swiftslayer.config
 
 import cc.polyfrost.oneconfig.config.Config
 import cc.polyfrost.oneconfig.config.annotations.Dropdown
+import cc.polyfrost.oneconfig.config.annotations.KeyBind
 import cc.polyfrost.oneconfig.config.annotations.Slider
+import cc.polyfrost.oneconfig.config.annotations.Switch
+import cc.polyfrost.oneconfig.config.core.OneKeyBind
 import cc.polyfrost.oneconfig.config.data.Mod
 import cc.polyfrost.oneconfig.config.data.ModType
+import cc.polyfrost.oneconfig.libs.universal.UKeyboard
+import dev.macrohq.swiftslayer.macro.MacroManager
 
 class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftslayer.json") {
-    init { initialize() }
-    val macro = 0
-
     @Dropdown(
         name = "Slayer",
         category = "General",
         subcategory = "Slayers",
         options = ["Revenant Horror", "Tarantula Broodfather", "Sven Packmaster", "Voidgloom Seraph"]
     )
-    var slayer: Int = 0
+    var slayer = 0
 
     @Dropdown(
         name = "Tier",
@@ -24,7 +26,7 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
         subcategory = "Slayers",
         options = ["1", "2", "3", "4", "5"]
     )
-    var slayerTier: Int = 0
+    var slayerTier = 5
 
     @Dropdown(
         name = "MobKiller Weapon",
@@ -43,4 +45,23 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
         step = 5
     )
     val failsafeVolume = 100
+
+    @KeyBind(
+        name = "Toggle Macro",
+        category = "General",
+        subcategory = "Macro"
+    )
+    var toggleMacro = OneKeyBind(UKeyboard.KEY_X)
+
+    @Switch(
+        name = "Debug Mode",
+        category = "General",
+        subcategory = "Debug"
+    )
+    var debugMode = false
+
+    init {
+        initialize()
+        registerKeyBind(toggleMacro) { MacroManager.toggle() }
+    }
 }

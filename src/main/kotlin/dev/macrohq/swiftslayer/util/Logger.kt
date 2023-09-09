@@ -11,7 +11,12 @@ object Logger {
         send("c$message")
     }
 
-    private fun send(message: String) {
+    fun log(message: Any) {
+        send("7$message", true)
+    }
+
+    private fun send(message: String, debug: Boolean = false) {
+        if (debug && !config.debugMode) return
         player.addChatMessage(ChatComponentText("§aSwift§bSlayer §8» §$message"))
     }
 }
