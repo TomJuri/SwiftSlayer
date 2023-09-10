@@ -5,36 +5,28 @@ import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder
 import net.minecraft.util.BlockPos
 
 object PathingUtil {
-
-    var isDone = true
+    val isDone get() = !pathExecutor.enabled
+    var hasFailed = false
         private set
-    private var hasFailed = false
 
     fun goto(pos: BlockPos) {
         if(!isDone) return
         hasFailed = false
-        isDone = false
         runAsync {
             RenderUtil.lines.clear()
             val path = AStarPathfinder(player.getStandingOnCeil(), pos).findPath(1000)
             if (path.isEmpty()) {
                 hasFailed = true
-                Logger.info("Could not find path!!")
+                Logger.error("Could not find path!!")
             } else {
+                path.forEach { RenderUtil.lines.add(it.toVec3Top()) }
                 pathExecutor.enable(path)
             }
-            while (pathExecutor.enabled) Thread.sleep(1)
-            isDone = true
         }
     }
 
     fun stop() {
-        isDone = true
+        hasFailed = false
         pathExecutor.disable()
     }
-
-    fun hasFailed(): Boolean{
-        return hasFailed
-    }
-
 }

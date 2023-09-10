@@ -70,7 +70,7 @@ class MobKiller {
 
             State.PATHFINDING_VERIFY -> {
                 info("path verif")
-                if (PathingUtil.hasFailed() || (targetEntity)!!.health <= 0 || stuckCounter >= 40) {
+                if (PathingUtil.hasFailed || (targetEntity)!!.health <= 0 || stuckCounter >= 40) {
                     PathingUtil.stop()
                     stuckCounter = 0
                     blacklist.add(targetEntity!!)

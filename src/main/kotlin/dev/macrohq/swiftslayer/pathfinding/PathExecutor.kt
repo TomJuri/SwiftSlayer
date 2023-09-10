@@ -9,13 +9,14 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 class PathExecutor {
+    var enabled = false
+        private set
+    var directionYaw = 0f
+        private set
     private var path = listOf<BlockPos>()
     private var next: BlockPos? = null
     private var pathFailCounter = 0
-    private var done = false
     private var aotving = false
-    var enabled = false
-    var directionYaw = 0f
 
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
@@ -35,6 +36,7 @@ class PathExecutor {
 
         if (!isOnPath() && player.onGround) {
             if (pathFailCounter >= 40) {
+                Logger.error("Path execution failed, retrying.")
                 disable()
                 PathingUtil.goto(path[path.size - 1])
                 return
@@ -50,13 +52,13 @@ class PathExecutor {
 
         if (canAOTV()) {
             if (InventoryUtil.getHotbarSlotForItem("Aspect of the Void") != 100) {
-                Logger.log("No AOTV in hotbar.")
                 KeyBindUtil.rightClick()
                 aotving = true
+                return
             }
-
-            return
+            Logger.error("No AOTV in hotbar.")
         }
+
         RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(next!!).yaw, 20f), 500)
         val rotation = RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 0f)
         directionYaw = rotation.yaw
@@ -65,25 +67,19 @@ class PathExecutor {
         gameSettings.keyBindJump.setPressed(shouldJump())
     }
 
-    fun enable(path: List<BlockPos>) {
-        disable()
-        done = false
-        if (enabled || path.isEmpty()) return
-        this.path = path
-        next = this.path[0]
-        enabled = true
+    fun enable(pathIn: List<BlockPos>) {
+        if (enabled || pathIn.isEmpty()) return
+        Logger.info("Enabling PathExecutor.")
+        path = pathIn
+        next = path[0]
         directionYaw = player.rotationYaw
+        pathFailCounter = 0
+        aotving = false
+        enabled = true
     }
 
     fun disable() {
-        pathFailCounter = 0
         RotationUtil.stop()
-        path = listOf()
-        next = null
-        directionYaw = 0f
-        done = true
-        enabled = false
-        aotving = false
         gameSettings.keyBindSprint.setPressed(false)
         gameSettings.keyBindForward.setPressed(false)
         gameSettings.keyBindJump.setPressed(false)
