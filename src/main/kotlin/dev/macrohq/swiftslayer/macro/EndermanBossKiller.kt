@@ -32,7 +32,7 @@ class EndermanBossKiller {
         }
         when(state) {
             State.HIT -> {
-                RotationUtil.easeToEntity(target, 250, aimLock = true, true)
+                RotationUtil.lock(target, 250, true)
                 if(player.getDistanceSqToEntity(target) < 10.0) gameSettings.keyBindBack.setPressed(true) else gameSettings.keyBindBack.setPressed(false)
                 if(player.worldObj.loadedEntityList.filterIsInstance<EntityZombie>().any { it.getDistanceSqToEntity(target) > 4.0 }) return
                 InventoryUtil.holdItem("Reaper Scythe")
@@ -40,7 +40,7 @@ class EndermanBossKiller {
             }
 
             State.DAMAGE -> {
-                RotationUtil.easeToEntity(target, 250, aimLock = true, true)
+                RotationUtil.lock(target, 250, true)
                 if(player.getDistanceSqToEntity(target) > 3.0) gameSettings.keyBindForward.setPressed(true) else gameSettings.keyBindForward.setPressed(false)
                 if (timer.isDone) {
                     gameSettings.keyBindSneak.setPressed(true)

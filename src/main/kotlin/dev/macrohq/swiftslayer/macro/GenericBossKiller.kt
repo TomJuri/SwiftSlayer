@@ -22,7 +22,7 @@ class GenericBossKiller {
         }
         if (!hasRotated) {
             if (config.bossKillerWeapon == 1) {
-                RotationUtil.easeToEntity(target, 500, aimLock = true, true)
+                RotationUtil.lock(target, 500, true)
             } else {
                 RotationUtil.ease(RotationUtil.Rotation(player.rotationYaw, 90f), 500)
             }

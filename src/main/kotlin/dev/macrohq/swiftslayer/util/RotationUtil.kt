@@ -10,24 +10,7 @@ object RotationUtil {
     private var startTime = 0L
     private var endTime = 0L
     private var done = true
-
-    private lateinit var entity: Entity
-    private var lockAim = false
-    private var eyes = false
-
-    fun easeToEntity(entity: Entity, durationMillis: Long, aimLock: Boolean = false, eyes: Boolean) {
-        if (!done) return
-        done = false
-        this.entity = entity
-        this.lockAim = aimLock
-        this.eyes = eyes
-        startRotation = Rotation(player.rotationYaw, player.rotationPitch)
-        val rotation = AngleUtil.getAngles(entity.positionVector)
-        val neededChange = AngleUtil.getNeededChange(startRotation, rotation)
-        endRotation = Rotation(startRotation.yaw + neededChange.yaw, startRotation.pitch + neededChange.pitch)
-        startTime = System.currentTimeMillis()
-        endTime = startTime + durationMillis
-    }
+    private var lock: Pair<Entity, Double>? = null
 
     fun ease(rotation: Rotation, durationMillis: Long) {
         done = false
@@ -38,22 +21,18 @@ object RotationUtil {
         endTime = startTime + durationMillis
     }
 
-    private fun lock(entity: Entity, eyes: Boolean) {
-        runAsync {
-            while(lockAim) {
-                if(entity.isDead) break
-                val rotation = AngleUtil.getAngles(
-                    entity.positionVector.addVector(
-                        0.0,
-                        if (eyes) entity.eyeHeight.toDouble() else 0.0,
-                        0.0
-                    )
+    fun lock(entity: Entity, durationMillis: Long, eyes: Boolean) {
+        done = false
+        ease(
+            AngleUtil.getAngles(
+                entity.positionVector.addVector(
+                    0.0,
+                    if (eyes) entity.eyeHeight.toDouble() else 0.0,
+                    0.0
                 )
-                player.rotationYaw = rotation.yaw
-                player.rotationPitch = rotation.pitch
-            }
-            stop()
-        }
+            ), durationMillis
+        )
+        lock = Pair(entity, if (eyes) entity.eyeHeight.toDouble() else 0.0)
     }
 
     fun onRenderWorldLast() {
@@ -65,8 +44,19 @@ object RotationUtil {
         }
         player.rotationYaw = endRotation.yaw
         player.rotationPitch = endRotation.pitch
-        done = true
-        if (lockAim) lock(entity, eyes)
+        if (lock != null) {
+            runAsync {
+                while (lock != null) {
+                    if (lock!!.first.isDead) break
+                    val rotation = AngleUtil.getAngles(lock!!.first.positionVector.addVector(0.0, lock!!.second, 0.0))
+                    player.rotationYaw = rotation.yaw
+                    player.rotationPitch = rotation.pitch
+                }
+                stop()
+            }
+        } else {
+            stop()
+        }
     }
 
     private fun interpolate(start: Float, end: Float): Float {
@@ -79,9 +69,9 @@ object RotationUtil {
         return (1.0 - (1.0 - number).pow(3.0)).toFloat()
     }
 
-    fun stop(){
-        lockAim = false
+    fun stop() {
         done = true
+        lock = null
     }
 
     data class Rotation(val yaw: Float, val pitch: Float)
