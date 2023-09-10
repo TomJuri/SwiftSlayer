@@ -15,7 +15,7 @@ class Failsafe {
     fun onWorldUnload(event: WorldEvent.Unload) {
         if (!macroManager.enabled) return
         Logger.error("The server you were on probably restarted. Disabling.")
-        SoundUtil.playSound("assets/swiftslayer/pipe.wav", config.failsafeVolume)
+        SoundUtil.playSound("/assets/swiftslayer/pipe.wav", config.failsafeVolume)
     }
 
     @SubscribeEvent
@@ -23,7 +23,7 @@ class Failsafe {
         if (!macroManager.enabled) return
         if (event.packet !is S09PacketHeldItemChange) return
         Logger.error("You Item was changed this is probably a staff check!")
-        SoundUtil.playSound("assets/swiftslayer/pipe.wav", config.failsafeVolume)
+        SoundUtil.playSound("/assets/swiftslayer/pipe.wav", config.failsafeVolume)
     }
 
     @SubscribeEvent
@@ -36,7 +36,7 @@ class Failsafe {
             }
         }
         Logger.error("You have probably been bedrock trapped! $count bedrock blocks found!")
-        SoundUtil.playSound("assets/swiftslayer/pipe.wav", config.failsafeVolume)
+        SoundUtil.playSound("/assets/swiftslayer/pipe.wav", config.failsafeVolume)
     }
 
     @SubscribeEvent
@@ -44,7 +44,7 @@ class Failsafe {
         if (!macroManager.enabled) return
         if (event.message.unformattedText.contains("You were killed by")) {
             Logger.error("You died bozo!")
-            SoundUtil.playSound("assets/swiftslayer/pipe.wav", config.failsafeVolume)
+            SoundUtil.playSound("/assets/swiftslayer/pipe.wav", config.failsafeVolume)
             macroManager.disable()
         }
     }

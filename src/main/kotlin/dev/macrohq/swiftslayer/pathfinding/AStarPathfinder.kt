@@ -5,7 +5,6 @@ import dev.macrohq.swiftslayer.util.BlockUtil
 import dev.macrohq.swiftslayer.util.world
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
-import net.minecraft.util.MathHelper
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.sqrt
@@ -47,8 +46,6 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
             currentNode = currentNode.parent
         }
 
-//        return path
-
         val smooth = mutableListOf<BlockPos>()
         if (path.isNotEmpty()) {
             smooth.add(path[0])
@@ -75,16 +72,6 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
         private var gCost = Float.MAX_VALUE
         private var hCost = Float.MAX_VALUE
         private var yaw = 0f
-
-        private fun calculateYaw(): Float {
-            var yaw = 0f
-            if (parent != null) {
-                val dX = parent.position.x - position.x
-                val dZ = parent.position.z - position.z
-                yaw = MathHelper.wrapAngleTo180_float(-Math.toDegrees(atan2(dX.toDouble(), dZ.toDouble())).toFloat())
-            }
-            return yaw
-        }
 
         private fun angleCost(bp1: BlockPos, bp2: BlockPos): Float {
             val dx = bp2.x - bp1.x
