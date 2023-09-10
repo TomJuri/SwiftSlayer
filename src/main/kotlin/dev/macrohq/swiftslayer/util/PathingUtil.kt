@@ -19,7 +19,7 @@ object PathingUtil {
                 hasFailed = true
                 Logger.error("Could not find path!!")
             } else {
-                path.forEach { RenderUtil.lines.add(it.toVec3Top()) }
+//                path.forEach { RenderUtil.lines.add(it.toVec3Top()) }
                 pathExecutor.enable(path)
             }
         }

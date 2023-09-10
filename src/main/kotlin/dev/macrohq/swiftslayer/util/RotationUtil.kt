@@ -32,7 +32,7 @@ object RotationUtil {
                 )
             ), durationMillis
         )
-        lock = Pair(entity, if (eyes) entity.eyeHeight.toDouble() else 0.0)
+        lock = Pair(entity, if (eyes) entity.eyeHeight.toDouble() else 1.0)
     }
 
     fun onRenderWorldLast() {

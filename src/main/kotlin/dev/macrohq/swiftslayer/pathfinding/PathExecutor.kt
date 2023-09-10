@@ -42,6 +42,8 @@ class PathExecutor {
 
         if(isOnPath()) {
             next = path[path.indexOf(getStandingOn()!!) + 1]
+
+            RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f), 500)
             RenderUtil.markers.clear()
             RenderUtil.markers.add(next!!)
         }
@@ -64,7 +66,6 @@ class PathExecutor {
         }
 
         val rotation = RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f)
-        RotationUtil.ease(rotation, 500)
         directionYaw = rotation.yaw
         gameSettings.keyBindSprint.setPressed(true)
         gameSettings.keyBindForward.setPressed(true)

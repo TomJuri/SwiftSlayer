@@ -46,9 +46,9 @@ class MobKiller {
             }
 
             State.FINDING -> {
-                info("finding")
+//                info("finding")
                 RenderUtil.entites.clear()
-                if (ticks >= 60) {
+                if (ticks >= 80) {
                     blacklist.clear()
                     ticks = 0
                 }
@@ -63,13 +63,14 @@ class MobKiller {
             }
 
             State.PATHFINDING -> {
-                info("pathfinding")
+//                info("pathfinding")
                 PathingUtil.goto(targetEntity!!.position.down())
                 state = State.PATHFINDING_VERIFY
             }
 
             State.PATHFINDING_VERIFY -> {
-                info("path verif")
+//                info("path verif")
+//                info("stuckCounter: ${stuckCounter}")
                 if (PathingUtil.hasFailed || (targetEntity)!!.health <= 0 || stuckCounter >= 40) {
                     PathingUtil.stop()
                     stuckCounter = 0
@@ -85,15 +86,15 @@ class MobKiller {
             }
 
             State.LOOKING -> {
-                info("looking")
+//                info("looking")
                 lookAtEntity(targetEntity!!)
                 state = State.LOOKING_VERIFY
                 return
             }
 
             State.LOOKING_VERIFY -> {
-                info("look verif")
-                if (lookTimer++ >= 40) state = State.LOOKING
+//                info("look verif")
+                if (lookTimer++ >= 40) {state = State.LOOKING; lookTimer = 0}
                 if (lookDone()) {
                     RotationUtil.stop()
                     holdWeapon()
@@ -102,7 +103,7 @@ class MobKiller {
             }
 
             State.KILLING -> {
-                info("kill")
+//                info("kill")
                 useWeapon()
                 blacklist.add(targetEntity as EntityLiving)
                 state = State.FINDING
@@ -153,7 +154,7 @@ class MobKiller {
         return when (config.mobKillerWeapon) {
             0 -> 6
             1 -> 3
-            2 -> 15
+            2 -> 32
             else -> 6
         }
     }

@@ -11,13 +11,13 @@ class PathfindTest {
     private var path = mutableListOf<BlockPos>()
     @Main
     private fun main() {
-//        mobKiller.enable()
+        mobKiller.enable()
 //        batphoneHandler.enable(true)
 //        RenderUtil.markers.clear()
 //        RenderUtil.markers.addAll(AStarPathfinder(player.getStandingOnFloor(), swiftSlayer.removeLater!!).findPath(2000))
 //        RenderUtil.entites.clear()
 //        RenderUtil.entites.addAll(EntityUtil.getMobs(EntityZombie::class.java, 50000))
-        PathingUtil.goto(swiftSlayer.removeLater!!)
+//        PathingUtil.goto(swiftSlayer.removeLater!!)
     }
 
     @SubCommand
