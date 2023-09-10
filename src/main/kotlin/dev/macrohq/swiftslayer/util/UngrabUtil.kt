@@ -10,7 +10,7 @@ object UngrabUtil {
     private var doesGameWantUngrabbed = false
 
     fun ungrabMouse() {
-        if (isUngrabbed) return
+        if (isUngrabbed || !config.ungrabMouse) return
         gameSettings.pauseOnLostFocus = false
         if (oldMouseHelper == null) oldMouseHelper = mc.mouseHelper
         doesGameWantUngrabbed = !Mouse.isGrabbed()

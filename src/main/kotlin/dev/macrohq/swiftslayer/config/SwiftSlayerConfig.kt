@@ -75,6 +75,13 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     )
     var useBatphone = false
 
+    @Switch(
+        name = "Ungrab Mouse",
+        category = "General",
+        subcategory = "QOL"
+    )
+    var ungrabMouse = false
+
     init {
         initialize()
         registerKeyBind(toggleMacro) { macroManager.toggle() }
