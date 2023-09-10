@@ -38,6 +38,7 @@ class MacroManager {
             return
         }
         Logger.info("Enabling macro.")
+        UngrabUtil.ungrabMouse()
         enabled = true
     }
 
@@ -49,6 +50,7 @@ class MacroManager {
         mobKiller.disable()
         genericBossKiller.disable()
         endermanBossKiller.disable()
+        UngrabUtil.regrabMouse()
     }
 
     private enum class State {
