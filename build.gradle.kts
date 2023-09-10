@@ -28,6 +28,7 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
     modRuntimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.1.2")
     embed("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
+    embed("com.squareup.okhttp3:okhttp:3.14.9")
 }
 
 blossom {
