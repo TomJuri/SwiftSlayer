@@ -7,7 +7,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
 class MacroManager {
 
-    private var enabled = false
+    var enabled = false
+        private set
     private var state = State.ACTIVATE_QUEST
 
     @SubscribeEvent
@@ -39,7 +40,7 @@ class MacroManager {
         enabled = true
     }
 
-    private fun disable() {
+    fun disable() {
         if (!enabled) return
         Logger.info("Disabling macro.")
         enabled = false

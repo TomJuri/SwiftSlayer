@@ -4,6 +4,7 @@ import dev.macrohq.swiftslayer.event.ReceivePacketEvent
 import dev.macrohq.swiftslayer.util.*
 import net.minecraft.init.Blocks
 import net.minecraft.network.play.server.S09PacketHeldItemChange
+import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
@@ -33,5 +34,15 @@ class Failsafe {
         }
         Logger.error("You have probably been bedrock trapped! $count bedrock blocks found!")
         SoundUtil.playSound("assets/swiftslayer/pipe.wav", config.failsafeVolume)
+    }
+
+    @SubscribeEvent
+    fun onChatReceive(event: ClientChatReceivedEvent) {
+        if (!macroManager.enabled) return
+        if (event.message.unformattedText.contains("You were killed by")) {
+            Logger.error("You died bozo!")
+            SoundUtil.playSound("assets/swiftslayer/pipe.wav", config.failsafeVolume)
+            macroManager.disable()
+        }
     }
 }
