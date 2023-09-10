@@ -21,9 +21,9 @@ object PathingUtil {
                 hasFailed = true
                 Logger.info("Could not find path!!")
             } else {
-                pathExecutor.executePath(path)
+                pathExecutor.enable(path)
             }
-            while(pathExecutor.running) Thread.sleep(1)
+            while (pathExecutor.enabled) Thread.sleep(1)
             isDone = true
         }
     }

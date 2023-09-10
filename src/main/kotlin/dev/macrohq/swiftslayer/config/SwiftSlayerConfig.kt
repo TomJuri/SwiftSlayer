@@ -87,7 +87,7 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
         category = "General",
         subcategory = "QOL"
     )
-    var pathexecAotv = false
+    var useAOTV = false
 
     init {
         initialize()
