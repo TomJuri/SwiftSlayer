@@ -31,39 +31,43 @@ class MobKiller {
     }
 
     @SubscribeEvent
-    fun onTick(event: TickEvent.ClientTickEvent){
-        if(player == null || world == null) return
+    fun onTick(event: TickEvent.ClientTickEvent) {
+        if (player == null || world == null) return
         if (!enabled) return
         ticks++
-        if(player.lastTickPosition().add(0,-1,0) == player.getStandingOnFloor()){stuckCounter++}
-        else stuckCounter=0
+        if (player.lastTickPosition().add(0, -1, 0) == player.getStandingOnFloor()) {
+            stuckCounter++
+        } else stuckCounter = 0
 
-        when(state){
+        when (state) {
             State.STARTING -> {
                 state = State.FINDING
                 return
             }
+
             State.FINDING -> {
                 info("finding")
                 RenderUtil.entites.clear()
-                if(ticks>=60){
+                if (ticks >= 60) {
                     blacklist.clear()
                     ticks = 0
                 }
                 val targetEntityList = EntityUtil.getMobs(EntityZombie::class.java, 32000).toMutableList()
                 targetEntityList.removeAll(blacklist)
 
-                if(targetEntityList.isEmpty()) return
+                if (targetEntityList.isEmpty()) return
 
                 targetEntity = targetEntityList[0]
                 RenderUtil.entites.add(targetEntity as EntityLiving)
                 state = State.PATHFINDING
             }
+
             State.PATHFINDING -> {
                 info("pathfinding")
                 PathingUtil.goto(targetEntity!!.position.down())
                 state = State.PATHFINDING_VERIFY
             }
+
             State.PATHFINDING_VERIFY -> {
                 info("path verif")
                 if (PathingUtil.hasFailed() || (targetEntity)!!.health <= 0 || stuckCounter >= 40) {
@@ -79,6 +83,7 @@ class MobKiller {
                 }
                 return
             }
+
             State.LOOKING -> {
                 info("looking")
                 angle = angleForWeapon(targetEntity!!)
@@ -86,6 +91,7 @@ class MobKiller {
                 state = State.LOOKING_VERIFY
                 return
             }
+
             State.LOOKING_VERIFY -> {
                 info("look verif")
                 if (lookTimer++ >= 40) state = State.LOOKING
@@ -95,17 +101,19 @@ class MobKiller {
                     state = State.KILLING
                 }
             }
+
             State.KILLING -> {
                 info("kill")
                 useWeapon()
                 blacklist.add(targetEntity as EntityLiving)
                 state = State.FINDING
             }
+
             else -> {}
         }
     }
 
-    fun enable(){
+    fun enable() {
         enabled = true
         state = State.STARTING
     }

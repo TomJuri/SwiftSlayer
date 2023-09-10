@@ -10,6 +10,7 @@ object RotationUtil {
     private var startTime = 0L
     private var endTime = 0L
     private var done = true
+
     private lateinit var entity: Entity
     private var lockAim = false
     private var eyes = false
@@ -33,17 +34,6 @@ object RotationUtil {
         startRotation = Rotation(player.rotationYaw, player.rotationPitch)
         val neededChange = AngleUtil.getNeededChange(startRotation, rotation)
         endRotation = Rotation(startRotation.yaw + neededChange.yaw, startRotation.pitch + neededChange.pitch)
-        startTime = System.currentTimeMillis()
-        endTime = startTime + durationMillis
-    }
-
-    fun easeDirection(rotation: Rotation, durationMillis: Long, direction: Direction) {
-        if (!done) return
-        done = false
-        val currentRotation = Rotation(player.rotationYaw, player.rotationPitch)
-        val endRotationYaw = if (direction == Direction.LEFT) currentRotation.yaw - rotation.yaw else currentRotation.yaw + rotation.yaw
-        startRotation = currentRotation
-        endRotation = Rotation(endRotationYaw, rotation.pitch)
         startTime = System.currentTimeMillis()
         endTime = startTime + durationMillis
     }
@@ -95,9 +85,4 @@ object RotationUtil {
     }
 
     data class Rotation(val yaw: Float, val pitch: Float)
-
-    enum class Direction {
-        LEFT,
-        RIGHT
-    }
 }

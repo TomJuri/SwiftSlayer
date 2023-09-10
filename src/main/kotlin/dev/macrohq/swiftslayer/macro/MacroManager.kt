@@ -15,7 +15,10 @@ class MacroManager {
     fun onTick(event: ClientTickEvent) {
         if (!enabled || autoBatphone.enabled || mobKiller.enabled || genericBossKiller.enabled || endermanBossKiller.enabled) return
         when (state) {
-            State.ACTIVATE_QUEST -> autoBatphone.enable(true)
+            State.ACTIVATE_QUEST -> {
+                if (!config.useBatphone) return
+                autoBatphone.enable(true)
+            }
             State.KILL_MOBS -> mobKiller.enable()
             State.KILL_BOSS -> {
                 val boss =
@@ -26,9 +29,7 @@ class MacroManager {
         }
     }
 
-    fun toggle() {
-        if (!enabled) enable() else disable()
-    }
+    fun toggle() = if (!enabled) enable() else disable()
 
     private fun enable() {
         if (enabled) return
@@ -50,7 +51,7 @@ class MacroManager {
         endermanBossKiller.disable()
     }
 
-    enum class State {
+    private enum class State {
         ACTIVATE_QUEST,
         KILL_MOBS,
         KILL_BOSS

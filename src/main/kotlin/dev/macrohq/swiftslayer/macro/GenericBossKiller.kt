@@ -41,6 +41,7 @@ class GenericBossKiller {
     fun enable(target: EntityLiving) {
         if (enabled) return
         Logger.info("Enabling GenericBossKiller")
+        this.target = target
         enabled = true
     }
 

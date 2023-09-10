@@ -42,6 +42,7 @@ object KeyBindUtil {
     }
 
     fun jump() {
+        if (!player.onGround) return
         gameSettings.keyBindJump.setPressed(true)
         runAsync {
             Thread.sleep(100)

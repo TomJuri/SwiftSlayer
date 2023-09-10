@@ -2,8 +2,10 @@ package dev.macrohq.swiftslayer
 
 import cc.polyfrost.oneconfig.utils.commands.CommandManager
 import dev.macrohq.swiftslayer.command.PathfindTest
+import dev.macrohq.swiftslayer.command.SwiftSlayerCommand
 import dev.macrohq.swiftslayer.config.SwiftSlayerConfig
 import dev.macrohq.swiftslayer.feature.AutoBatphone
+import dev.macrohq.swiftslayer.feature.Failsafe
 import dev.macrohq.swiftslayer.macro.EndermanBossKiller
 import dev.macrohq.swiftslayer.macro.GenericBossKiller
 import dev.macrohq.swiftslayer.macro.MacroManager
@@ -49,7 +51,9 @@ class SwiftSlayer {
         MinecraftForge.EVENT_BUS.register(autoBatphone)
         MinecraftForge.EVENT_BUS.register(macroManager)
         MinecraftForge.EVENT_BUS.register(genericBossKiller)
+        MinecraftForge.EVENT_BUS.register(Failsafe())
         CommandManager.register(PathfindTest())
+        CommandManager.register(SwiftSlayerCommand())
     }
 
     @SubscribeEvent

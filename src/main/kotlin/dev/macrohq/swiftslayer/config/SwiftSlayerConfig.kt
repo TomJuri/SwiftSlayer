@@ -32,7 +32,7 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
         name = "MobKiller Weapon",
         category = "General",
         subcategory = "Slayer",
-        options = ["Spirit Sceptre", "Melee"]
+        options = ["Spirit Sceptre", "Aspect of the Dragons"]
     )
     var mobKillerWeapon = 0
 
@@ -67,6 +67,13 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
         subcategory = "Debug"
     )
     var debugMode = false
+
+    @Switch(
+        name = "Use Batphone",
+        category = "General",
+        subcategory = "Slayer"
+    )
+    var useBatphone = false
 
     init {
         initialize()
