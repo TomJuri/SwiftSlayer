@@ -27,7 +27,7 @@ object RotationUtil {
             AngleUtil.getAngles(
                 entity.positionVector.addVector(
                     0.0,
-                    if (eyes) entity.eyeHeight.toDouble() else 0.0,
+                    if (eyes) entity.eyeHeight.toDouble() else 1.0,
                     0.0
                 )
             ), durationMillis

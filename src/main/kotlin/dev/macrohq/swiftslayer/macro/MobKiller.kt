@@ -77,7 +77,7 @@ class MobKiller {
                     state = State.FINDING
                     return
                 }
-                if (PathingUtil.isDone || player.getDistanceToEntity(targetEntity) < attackDistance()) {
+                if ((PathingUtil.isDone || player.getDistanceToEntity(targetEntity) < attackDistance()) && player.canEntityBeSeen(targetEntity)) {
                     stop()
                     state = State.LOOKING
                 }
@@ -86,8 +86,7 @@ class MobKiller {
 
             State.LOOKING -> {
                 info("looking")
-                angle = angleForWeapon(targetEntity!!)
-                RotationUtil.ease(angle, 100)
+                lookAtEntity(targetEntity!!)
                 state = State.LOOKING_VERIFY
                 return
             }
@@ -126,25 +125,25 @@ class MobKiller {
         Logger.error("Disabling")
     }
 
+    private fun lookAtEntity(entity: EntityLiving){
+        angle = angleForWeapon(entity)
+        when (config.mobKillerWeapon) {
+            0, 1 -> RotationUtil.ease(angle, 100)
+            2 -> RotationUtil.lock(entity, 200, false)
+        }
+    }
+
     private fun angleForWeapon(entity: EntityLiving): RotationUtil.Rotation {
         return when (config.mobKillerWeapon) {
-            0 -> {
-                RotationUtil.Rotation(AngleUtil.getAngles(targetEntity!!).yaw, 45f)
-            }
-
-            1 -> {
-                AngleUtil.getAngles(entity.positionVector.addVector(0.0, 1.0, 0.0))
-            }
-
-            else -> {
-                RotationUtil.Rotation(0f, 0f)
-            }
+            0 -> RotationUtil.Rotation(AngleUtil.getAngles(targetEntity!!).yaw, 45f)
+            1, 2 -> AngleUtil.getAngles(entity.positionVector.addVector(0.0, 1.0, 0.0))
+            else -> RotationUtil.Rotation(0f, 0f)
         }
     }
 
     private fun useWeapon() {
         when (config.mobKillerWeapon) {
-            0 -> KeyBindUtil.rightClick()
+            0,2 -> KeyBindUtil.rightClick()
             1 -> KeyBindUtil.leftClick()
             else -> {}
         }
@@ -154,21 +153,23 @@ class MobKiller {
         return when (config.mobKillerWeapon) {
             0 -> 6
             1 -> 3
+            2 -> 15
             else -> 6
         }
     }
 
     private fun holdWeapon() {
         when (config.mobKillerWeapon) {
-            0 -> InventoryUtil.holdItem("Spirit")
+            0 -> InventoryUtil.holdItem("Spirit Sceptre")
             1 -> InventoryUtil.holdItem("Aspect of the Dragons")
+            2 -> InventoryUtil.holdItem("Frozen Scythe")
         }
     }
 
     private fun stop() {
         when (config.mobKillerWeapon) {
             0 -> {}
-            1 -> PathingUtil.stop()
+            1, 2 -> PathingUtil.stop()
         }
     }
 
@@ -178,6 +179,7 @@ class MobKiller {
         when (config.mobKillerWeapon) {
             0 -> return pitchDiff < 2
             1 -> return yawDiff < 10 && pitchDiff < 5
+            2 -> return yawDiff < 3 && pitchDiff < 3
         }
         return true
     }

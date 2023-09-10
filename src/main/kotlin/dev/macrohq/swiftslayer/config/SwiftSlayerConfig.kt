@@ -32,7 +32,7 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
         name = "MobKiller Weapon",
         category = "General",
         subcategory = "Slayer",
-        options = ["Spirit Sceptre", "Aspect of the Dragons"]
+        options = ["Spirit Sceptre", "Aspect of the Dragons", "Frozen Scythe"]
     )
     var mobKillerWeapon = 0
 
@@ -80,7 +80,14 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
         category = "General",
         subcategory = "QOL"
     )
-    var ungrabMouse = false
+    var ungrabMouse = true
+
+    @Switch(
+        name = "Aotv",
+        category = "General",
+        subcategory = "QOL"
+    )
+    var pathexecAotv = false
 
     init {
         initialize()

@@ -85,7 +85,7 @@ class PathExecutor {
                     PathingUtil.goto(path[path.size - 1])
                     return
                 }
-                state = if(sqrt(player.getDistanceSqToCenter(current)) > 9 && !aotving && path.indexOf(current) != path.size-1) {
+                state = if(sqrt(player.getDistanceSqToCenter(current)) > 9 && !aotving && path.indexOf(current) != path.size-1 && config.pathexecAotv) {
                     InventoryUtil.holdItem("of the void")
                     State.AOTV
                 }
