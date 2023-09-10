@@ -22,7 +22,11 @@ val pathExecutor
     get() = swiftSlayer.pathExecutor
 val mobKiller
     get() = swiftSlayer.mobKiller
-val batphoneHandler
+val autoBatphone
     get() = swiftSlayer.autoBatphone
 val macroManager
     get() = swiftSlayer.macroManager
+val genericBossKiller
+    get() = swiftSlayer.genericBossKiller
+val endermanBossKiller
+    get() = swiftSlayer.endermanBossKiller

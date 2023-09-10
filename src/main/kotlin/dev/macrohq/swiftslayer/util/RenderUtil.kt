@@ -1,13 +1,10 @@
 package dev.macrohq.swiftslayer.util
 
 import net.minecraft.client.renderer.GlStateManager
-import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLiving
-import net.minecraft.entity.monster.EntitySpider
 import net.minecraft.entity.monster.EntityZombie
-import net.minecraft.entity.passive.EntityWolf
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.util.BlockPos
 import net.minecraft.util.MathHelper
@@ -123,7 +120,6 @@ object RenderUtil {
     }
 
     fun drawBox(event: RenderWorldLastEvent, aabb: AxisAlignedBB, color: Color, esp: Boolean) {
-        val tessellator = Tessellator.getInstance()
         val bufferBuilder = tessellator.worldRenderer
         val render = mc.renderViewEntity
         val realX = render.lastTickPosX + (render.posX - render.lastTickPosX) * event.partialTicks
@@ -207,7 +203,6 @@ object RenderUtil {
         }
         GlStateManager.depthMask(false)
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0)
-        val tessellator = Tessellator.getInstance()
         val bufferBuilder = tessellator.worldRenderer
         GlStateManager.color(r, g, b, a)
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_COLOR)
@@ -263,7 +258,6 @@ object RenderUtil {
     }
 
     fun drawLine(partialTicks: Float, blockPos1: Vec3, blockPos2: Vec3, color: Color) {
-        val tessellator = Tessellator.getInstance()
         val bufferBuilder = tessellator.worldRenderer
         val render = mc.renderViewEntity
         val realX = render.lastTickPosX + (render.posX - render.lastTickPosX) * partialTicks

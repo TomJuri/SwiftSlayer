@@ -1,20 +1,17 @@
 package dev.macrohq.swiftslayer.macro
 
-import cc.polyfrost.oneconfig.libs.checker.units.qual.Angle
 import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.Logger.info
-import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLiving
-import net.minecraft.entity.monster.EntitySpider
 import net.minecraft.entity.monster.EntityZombie
-import net.minecraft.entity.passive.EntityWolf
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import kotlin.math.abs
 
 class MobKiller {
     private var blacklist = mutableListOf<EntityLiving>()
-    private var mobKiller = false
+    var enabled = false
+        private set
     private var state: State = State.NONE
     private var targetEntity: EntityLiving? = null
     private var ticks: Int = 0
@@ -36,7 +33,7 @@ class MobKiller {
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent){
         if(player == null || world == null) return
-        if(!mobKiller) return
+        if (!enabled) return
         ticks++
         if(player.lastTickPosition().add(0,-1,0) == player.getStandingOnFloor()){stuckCounter++}
         else stuckCounter=0
@@ -109,12 +106,12 @@ class MobKiller {
     }
 
     fun enable(){
-        mobKiller = true
+        enabled = true
         state = State.STARTING
     }
 
     fun disable() {
-        mobKiller = false
+        enabled = false
         PathingUtil.stop()
         RotationUtil.stop()
         state = State.NONE
@@ -122,7 +119,7 @@ class MobKiller {
     }
 
     private fun angleForWeapon(entity: EntityLiving): RotationUtil.Rotation {
-        return when (config.mobkillerWeapon) {
+        return when (config.mobKillerWeapon) {
             0 -> {
                 RotationUtil.Rotation(AngleUtil.getAngles(targetEntity!!).yaw, 45f)
             }
@@ -138,7 +135,7 @@ class MobKiller {
     }
 
     private fun useWeapon() {
-        when (config.mobkillerWeapon) {
+        when (config.mobKillerWeapon) {
             0 -> KeyBindUtil.rightClick()
             1 -> KeyBindUtil.leftClick()
             else -> {}
@@ -146,7 +143,7 @@ class MobKiller {
     }
 
     private fun attackDistance(): Int {
-        return when (config.mobkillerWeapon) {
+        return when (config.mobKillerWeapon) {
             0 -> 6
             1 -> 3
             else -> 6
@@ -154,14 +151,14 @@ class MobKiller {
     }
 
     private fun holdWeapon() {
-        when (config.mobkillerWeapon) {
+        when (config.mobKillerWeapon) {
             0 -> InventoryUtil.holdItem("Spirit")
             1 -> InventoryUtil.holdItem("Aspect of the Dragons")
         }
     }
 
     private fun stop() {
-        when (config.mobkillerWeapon) {
+        when (config.mobKillerWeapon) {
             0 -> {}
             1 -> PathingUtil.stop()
         }
@@ -170,7 +167,7 @@ class MobKiller {
     private fun lookDone(): Boolean {
         val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw) - AngleUtil.yawTo360(angle.yaw))
         val pitchDiff = abs(mc.thePlayer.rotationPitch - angle.pitch)
-        when (config.mobkillerWeapon) {
+        when (config.mobKillerWeapon) {
             0 -> return pitchDiff < 2
             1 -> return yawDiff < 10 && pitchDiff < 5
         }

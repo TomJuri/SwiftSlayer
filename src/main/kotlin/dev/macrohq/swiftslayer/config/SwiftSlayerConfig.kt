@@ -26,15 +26,23 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
         subcategory = "Slayers",
         options = ["1", "2", "3", "4", "5"]
     )
-    var slayerTier = 5
+    var slayerTier = 4
 
     @Dropdown(
         name = "MobKiller Weapon",
         category = "General",
         subcategory = "Slayer",
-        options = ["Spirit Sceptre", "Aspect of the Dragons"]
+        options = ["Spirit Sceptre", "Melee"]
     )
-    var mobkillerWeapon = 0
+    var mobKillerWeapon = 0
+
+    @Dropdown(
+        name = "BossKiller Weapon",
+        category = "General",
+        subcategory = "Slayer",
+        options = ["Hyperion", "Melee"]
+    )
+    var bossKillerWeapon = 0
 
     @Slider(
         name = "Failsafe volume",

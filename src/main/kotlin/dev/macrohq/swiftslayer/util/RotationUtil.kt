@@ -2,8 +2,6 @@ package dev.macrohq.swiftslayer.util
 
 import cc.polyfrost.oneconfig.utils.dsl.runAsync
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLiving
-import net.minecraft.util.MathHelper
 import kotlin.math.pow
 
 object RotationUtil {
@@ -14,13 +12,14 @@ object RotationUtil {
     private var done = true
     private lateinit var entity: Entity
     private var lockAim = false
+    private var eyes = false
 
-    fun easeToEntity(entity: Entity, durationMillis: Long, aimLock: Boolean = false) {
+    fun easeToEntity(entity: Entity, durationMillis: Long, aimLock: Boolean = false, eyes: Boolean) {
         if (!done) return
         done = false
         this.entity = entity
         this.lockAim = aimLock
-
+        this.eyes = eyes
         startRotation = Rotation(player.rotationYaw, player.rotationPitch)
         val rotation = AngleUtil.getAngles(entity.positionVector)
         val neededChange = AngleUtil.getNeededChange(startRotation, rotation)
@@ -30,7 +29,6 @@ object RotationUtil {
     }
 
     fun ease(rotation: Rotation, durationMillis: Long) {
-//        if (!done) return
         done = false
         startRotation = Rotation(player.rotationYaw, player.rotationPitch)
         val neededChange = AngleUtil.getNeededChange(startRotation, rotation)
@@ -50,11 +48,17 @@ object RotationUtil {
         endTime = startTime + durationMillis
     }
 
-    private fun lock(entity: Entity) {
+    private fun lock(entity: Entity, eyes: Boolean) {
         runAsync {
             while(lockAim) {
                 if(entity.isDead) break
-                val rotation = AngleUtil.getAngles(entity.positionVector)
+                val rotation = AngleUtil.getAngles(
+                    entity.positionVector.addVector(
+                        0.0,
+                        if (eyes) entity.eyeHeight.toDouble() else 0.0,
+                        0.0
+                    )
+                )
                 player.rotationYaw = rotation.yaw
                 player.rotationPitch = rotation.pitch
             }
@@ -72,7 +76,7 @@ object RotationUtil {
         player.rotationYaw = endRotation.yaw
         player.rotationPitch = endRotation.pitch
         done = true
-        if(lockAim) lock(entity)
+        if (lockAim) lock(entity, eyes)
     }
 
     private fun interpolate(start: Float, end: Float): Float {

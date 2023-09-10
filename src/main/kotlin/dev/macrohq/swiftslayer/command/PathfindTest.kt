@@ -3,11 +3,7 @@ package dev.macrohq.swiftslayer.command
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
-import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder
 import dev.macrohq.swiftslayer.util.*
-import net.minecraft.entity.item.EntityArmorStand
-import net.minecraft.entity.monster.EntityZombie
-import net.minecraft.entity.passive.EntityWolf
 import net.minecraft.util.BlockPos
 
 @Command(value = "pathfindtest", aliases = ["pft"])
@@ -46,6 +42,6 @@ class PathfindTest {
         mobKiller.disable()
         PathingUtil.stop()
         RotationUtil.stop()
-        batphoneHandler.disable()
+        autoBatphone.disable()
     }
 }

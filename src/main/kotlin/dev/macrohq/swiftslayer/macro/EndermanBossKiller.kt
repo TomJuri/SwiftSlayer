@@ -1,20 +1,24 @@
 package dev.macrohq.swiftslayer.macro
 
 import dev.macrohq.swiftslayer.util.*
+import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.entity.monster.EntityZombie
+import net.minecraft.util.StringUtils
 import net.minecraft.util.Vec3
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
-class VoidgloomKiller {
+class EndermanBossKiller {
 
-    private var enabled = false
-    private lateinit var target: EntityArmorStand
+    var enabled = false
+        private set
+    private lateinit var target: EntityLiving
+    private lateinit var targetArmorStand: EntityArmorStand
     private var state = State.HIT
     lateinit var lasers: Pair<Vec3, Vec3>
     var lastLaser = 0L
-    var timer = Timer(0)
+    private var timer = Timer(0)
 
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
@@ -28,7 +32,7 @@ class VoidgloomKiller {
         }
         when(state) {
             State.HIT -> {
-                RotationUtil.easeToEntity(target, 250, true)
+                RotationUtil.easeToEntity(target, 250, aimLock = true, true)
                 if(player.getDistanceSqToEntity(target) < 10.0) gameSettings.keyBindBack.setPressed(true) else gameSettings.keyBindBack.setPressed(false)
                 if(player.worldObj.loadedEntityList.filterIsInstance<EntityZombie>().any { it.getDistanceSqToEntity(target) > 4.0 }) return
                 InventoryUtil.holdItem("Reaper Scythe")
@@ -36,7 +40,7 @@ class VoidgloomKiller {
             }
 
             State.DAMAGE -> {
-                RotationUtil.easeToEntity(target, 250, true)
+                RotationUtil.easeToEntity(target, 250, aimLock = true, true)
                 if(player.getDistanceSqToEntity(target) > 3.0) gameSettings.keyBindForward.setPressed(true) else gameSettings.keyBindForward.setPressed(false)
                 if (timer.isDone) {
                     gameSettings.keyBindSneak.setPressed(true)
@@ -59,10 +63,12 @@ class VoidgloomKiller {
         }
     }
 
-    fun enable(target: EntityArmorStand) {
+    fun enable(target: EntityLiving) {
         if (enabled) return
         enabled = true
         this.target = target
+        targetArmorStand = player.worldObj.loadedEntityList.filterIsInstance<EntityArmorStand>()
+            .first { StringUtils.stripControlCodes(it.name).contains("Voidgloom Seraph") }
         Logger.info("VoidgloomKiller enabled")
     }
 
