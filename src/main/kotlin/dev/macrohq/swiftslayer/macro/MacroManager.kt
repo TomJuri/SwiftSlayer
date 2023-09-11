@@ -17,7 +17,7 @@ class MacroManager {
         when (state) {
             State.ACTIVATE_QUEST -> {
                 if (!config.useBatphone) return
-                autoBatphone.enable(true)
+                autoBatphone.enable(false)
             }
             State.KILL_MOBS -> mobKiller.enable()
             State.KILL_BOSS -> {
@@ -27,6 +27,7 @@ class MacroManager {
                 else genericBossKiller.enable(boss)
             }
         }
+        state = State.entries[(state.ordinal + 1) % State.entries.size]
     }
 
     fun toggle() = if (!enabled) enable() else disable()

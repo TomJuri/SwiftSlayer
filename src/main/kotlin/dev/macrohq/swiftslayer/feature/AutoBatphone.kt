@@ -7,46 +7,46 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
 class AutoBatphone {
-    private var state = State.STARTING
-    private var canceling = false
+    private var state = State.SWITCH_TO_BATPHONE
     var enabled = false
         private set
 
     enum class State {
-        STARTING,
-        CLICKING,
-        OPENING,
-        CLICKING_SLAYER,
-        CLICKING_TIER,
-        CLICKING_CONFIRM,
-        CLICKING_CANCEL,
+        WAITING,
+        SWITCH_TO_BATPHONE,
+        USE_BATPHONE,
+        OPEN_GUI,
+        CLICK_SLAYER,
+        CLICK_TIER,
+        CONFIRM,
+        CANCEL,
     }
 
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
         if (!enabled) return
         when (state) {
-            State.STARTING -> {
-                if (InventoryUtil.holdItem("Maddox Batphone")) state = State.CLICKING
-                else disable()
+            State.SWITCH_TO_BATPHONE -> {
+                if (!InventoryUtil.holdItem("Maddox Batphone")) {
+                    Logger.error("Theres no Batphone on your hotbar!")
+                    disable()
+                    return
+                }
+                state = State.USE_BATPHONE
             }
 
-            State.CLICKING -> {
-                mc.playerController.sendUseItem(
-                    player,
-                    world,
-                    player.inventory.getStackInSlot(InventoryUtil.getHotbarSlotForItem("Maddox Batphone"))
-                )
-                state = State.OPENING
+            State.USE_BATPHONE -> {
+                KeyBindUtil.rightClick()
+                state = State.OPEN_GUI
             }
 
-            State.CLICKING_SLAYER -> {
+            State.CLICK_SLAYER -> {
                 if (player.openContainer is ContainerChest && InventoryUtil.getGUIName() != null && InventoryUtil.getGUIName()!!
                         .contains("Slayer")
                 ) {
                     if (SlayerUtil.getSlayerSlot() != -1) {
                         InventoryUtil.clickSlot(SlayerUtil.getSlayerSlot())
-                        state = State.CLICKING_TIER
+                        state = State.CLICK_TIER
                     } else {
                         Logger.info("Slayer Not found!")
                         disable()
@@ -54,13 +54,13 @@ class AutoBatphone {
                 }
             }
 
-            State.CLICKING_TIER -> {
+            State.CLICK_TIER -> {
                 if (player.openContainer is ContainerChest && InventoryUtil.getGUIName() != null && InventoryUtil.getGUIName()!!
                         .contains(SlayerUtil.getSlayerName()!!)
                 ) {
                     if (SlayerUtil.getTierSlot() != -1) {
                         InventoryUtil.clickSlot(SlayerUtil.getTierSlot())
-                        state = State.CLICKING_CONFIRM
+                        state = State.CONFIRM
                     } else {
                         Logger.info("Tier not found")
                         disable()
@@ -68,7 +68,7 @@ class AutoBatphone {
                 }
             }
 
-            State.CLICKING_CONFIRM -> {
+            State.CONFIRM -> {
                 if (player.openContainer is ContainerChest && InventoryUtil.getGUIName() != null
                     && InventoryUtil.getGUIName()!!.contains("Confirm") && InventoryUtil.getSlotInGUI("Confirm") != -1
                 ) {
@@ -77,15 +77,20 @@ class AutoBatphone {
                 }
             }
 
-            State.CLICKING_CANCEL -> {
+            State.CANCEL -> {
+                if (!InventoryUtil.clickSlot(InventoryUtil.getSlotInGUI("Ongoing Slayer Quest"))) {
+                    Logger.error("Failed to cancel slayer quest.")
+                    disable()
+                }
                 if (player.openContainer is ContainerChest && InventoryUtil.getGUIName() != null && InventoryUtil.getGUIName()!!
                         .contains("Slayer")
                 ) {
                     if (InventoryUtil.getSlotInGUI("Ongoing Slayer Quest") != -1) {
                         InventoryUtil.clickSlot(InventoryUtil.getSlotInGUI("Ongoing Slayer Quest"))
-                        state = State.CLICKING_CONFIRM
+                        state = State.CONFIRM
                     } else {
                         Logger.info("No Slayer Active.")
+                        disable()
                     }
                 }
             }
@@ -97,24 +102,29 @@ class AutoBatphone {
     @SubscribeEvent
     fun onChat(event: ClientChatReceivedEvent) {
         if (event.type.toInt() != 0) return
-        if (event.message.unformattedText.contains("[OPEN MENU]") && state == State.OPENING) {
+        if (event.message.unformattedText.contains("You already have an active Slayer Quest!")) disable()
+        if (event.message.unformattedText.contains("[OPEN MENU]")) {
             player.sendChatMessage(event.message.siblings.find { it.unformattedText.contains("[OPEN MENU]") }?.chatStyle?.chatClickEvent?.value)
-            state = if (canceling) State.CLICKING_CANCEL else State.CLICKING_SLAYER
+            state = if (canceling) State.CANCEL else State.CLICK_SLAYER
         }
     }
 
-    fun enable(cancelSlayer: Boolean = false) {
+    fun enable() {
         if (enabled) return
-        canceling = cancelSlayer
-        state = State.STARTING
+        state = State.SWITCH_TO_BATPHONE
         enabled = true
         Logger.info("Enabling Auto Batphone")
+    }
+
+    private fun tryAgain() {
+        InventoryUtil.closeGUI()
+        state = State.SWITCH_TO_BATPHONE
     }
 
     fun disable() {
         if (!enabled) return
         Logger.info("Disabling Auto Batphone")
-        state = State.STARTING
+        state = State.SWITCH_TO_BATPHONE
         enabled = false
     }
 }
