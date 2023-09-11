@@ -32,7 +32,7 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
         name = "MobKiller Weapon",
         category = "General",
         subcategory = "Slayer",
-        options = ["Spirit Sceptre", "Aspect of the Dragons", "Frozen Scythe"]
+        options = ["Spirit Sceptre", "Aspect of the Dragons", "Frozen Scythe", "Fire Veil Wand"]
     )
     var mobKillerWeapon = 0
 

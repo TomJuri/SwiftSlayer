@@ -17,6 +17,7 @@ class MobKiller {
     private var ticks: Int = 0
     private var stuckCounter: Int = 0
     private var lookTimer: Int = 0
+    private var fireVeilTime = 0L
     private lateinit var angle: RotationUtil.Rotation
 
     private enum class State {
@@ -46,7 +47,6 @@ class MobKiller {
             }
 
             State.FINDING -> {
-//                info("finding")
                 RenderUtil.entites.clear()
                 if (ticks >= 80) {
                     blacklist.clear()
@@ -63,14 +63,11 @@ class MobKiller {
             }
 
             State.PATHFINDING -> {
-//                info("pathfinding")
                 PathingUtil.goto(targetEntity!!.position.down())
                 state = State.PATHFINDING_VERIFY
             }
 
             State.PATHFINDING_VERIFY -> {
-//                info("path verif")
-//                info("stuckCounter: ${stuckCounter}")
                 if (PathingUtil.hasFailed || (targetEntity)!!.health <= 0 || stuckCounter >= 40) {
                     PathingUtil.stop()
                     stuckCounter = 0
@@ -78,7 +75,10 @@ class MobKiller {
                     state = State.FINDING
                     return
                 }
-                if ((PathingUtil.isDone || player.getDistanceToEntity(targetEntity) < attackDistance()) && player.canEntityBeSeen(targetEntity)) {
+                if ((PathingUtil.isDone || player.getDistanceToEntity(targetEntity) < attackDistance()) && player.canEntityBeSeen(
+                        targetEntity
+                    )
+                ) {
                     stop()
                     state = State.LOOKING
                 }
@@ -86,15 +86,15 @@ class MobKiller {
             }
 
             State.LOOKING -> {
-//                info("looking")
                 lookAtEntity(targetEntity!!)
                 state = State.LOOKING_VERIFY
                 return
             }
 
             State.LOOKING_VERIFY -> {
-//                info("look verif")
-                if (lookTimer++ >= 40) {state = State.LOOKING; lookTimer = 0}
+                if (lookTimer++ >= 40) {
+                    state = State.LOOKING; lookTimer = 0
+                }
                 if (lookDone()) {
                     RotationUtil.stop()
                     holdWeapon()
@@ -103,7 +103,6 @@ class MobKiller {
             }
 
             State.KILLING -> {
-//                info("kill")
                 useWeapon()
                 blacklist.add(targetEntity as EntityLiving)
                 state = State.FINDING
@@ -126,11 +125,12 @@ class MobKiller {
         Logger.error("Disabling")
     }
 
-    private fun lookAtEntity(entity: EntityLiving){
+    private fun lookAtEntity(entity: EntityLiving) {
         angle = angleForWeapon(entity)
         when (config.mobKillerWeapon) {
             0, 1 -> RotationUtil.ease(angle, 100)
             2 -> RotationUtil.lock(entity, 200, false)
+            3 -> {}
         }
     }
 
@@ -144,8 +144,14 @@ class MobKiller {
 
     private fun useWeapon() {
         when (config.mobKillerWeapon) {
-            0,2 -> KeyBindUtil.rightClick()
+            0, 2 -> KeyBindUtil.rightClick()
             1 -> KeyBindUtil.leftClick()
+            3 -> {
+                if ((System.currentTimeMillis() - fireVeilTime) > 5000) {
+                    fireVeilTime = System.currentTimeMillis()
+                    KeyBindUtil.rightClick()
+                }
+            }
             else -> {}
         }
     }
@@ -155,6 +161,7 @@ class MobKiller {
             0 -> 6
             1 -> 3
             2 -> 32
+            3 -> 4
             else -> 6
         }
     }
@@ -164,6 +171,7 @@ class MobKiller {
             0 -> InventoryUtil.holdItem("Spirit Sceptre")
             1 -> InventoryUtil.holdItem("Aspect of the Dragons")
             2 -> InventoryUtil.holdItem("Frozen Scythe")
+            3 -> InventoryUtil.holdItem("Fire Veil Wand")
         }
     }
 
@@ -171,17 +179,19 @@ class MobKiller {
         when (config.mobKillerWeapon) {
             0 -> {}
             1, 2 -> PathingUtil.stop()
+            3 -> {}
         }
     }
 
     private fun lookDone(): Boolean {
         val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw) - AngleUtil.yawTo360(angle.yaw))
         val pitchDiff = abs(mc.thePlayer.rotationPitch - angle.pitch)
-        when (config.mobKillerWeapon) {
-            0 -> return pitchDiff < 2
-            1 -> return yawDiff < 10 && pitchDiff < 5
-            2 -> return yawDiff < 3 && pitchDiff < 3
+        return when (config.mobKillerWeapon) {
+            0 -> pitchDiff < 2
+            1 -> yawDiff < 10 && pitchDiff < 5
+            2 -> yawDiff < 3 && pitchDiff < 3
+            3 -> true
+            else -> true
         }
-        return true
     }
 }
