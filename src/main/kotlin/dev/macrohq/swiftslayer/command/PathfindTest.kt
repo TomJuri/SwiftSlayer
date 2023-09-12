@@ -4,20 +4,17 @@ import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
 import dev.macrohq.swiftslayer.util.*
+import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
 
 @Command(value = "pathfindtest", aliases = ["pft"])
 class PathfindTest {
-    private var path = mutableListOf<BlockPos>()
     @Main
     private fun main() {
-        mobKiller.enable()
-//        batphoneHandler.enable(true)
-//        RenderUtil.markers.clear()
-//        RenderUtil.markers.addAll(AStarPathfinder(player.getStandingOnFloor(), swiftSlayer.removeLater!!).findPath(2000))
-//        RenderUtil.entites.clear()
-//        RenderUtil.entites.addAll(EntityUtil.getMobs(EntityZombie::class.java, 50000))
-//        PathingUtil.goto(swiftSlayer.removeLater!!)
+        revenant.enable()
+//        world.getLoadedEntityList().forEach {
+//            println(it)
+//        }
     }
 
     @SubCommand
@@ -43,5 +40,7 @@ class PathfindTest {
         PathingUtil.stop()
         RotationUtil.stop()
         autoBatphone.disable()
+        KeyBindUtil.stopClicking()
+        revenant.disable()
     }
 }

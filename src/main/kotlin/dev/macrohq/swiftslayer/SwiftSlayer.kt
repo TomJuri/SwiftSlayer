@@ -7,10 +7,7 @@ import dev.macrohq.swiftslayer.config.SwiftSlayerConfig
 import dev.macrohq.swiftslayer.feature.AutoBatphone
 import dev.macrohq.swiftslayer.feature.Failsafe
 import dev.macrohq.swiftslayer.gui.AuthFailedDisplay
-import dev.macrohq.swiftslayer.macro.EndermanBossKiller
-import dev.macrohq.swiftslayer.macro.GenericBossKiller
-import dev.macrohq.swiftslayer.macro.MacroManager
-import dev.macrohq.swiftslayer.macro.MobKiller
+import dev.macrohq.swiftslayer.macro.*
 import dev.macrohq.swiftslayer.pathfinding.PathExecutor
 import dev.macrohq.swiftslayer.util.AuthUtil
 import dev.macrohq.swiftslayer.util.RenderUtil
@@ -41,6 +38,7 @@ class SwiftSlayer {
     lateinit var autoBatphone: AutoBatphone private set
     lateinit var macroManager: MacroManager private set
     lateinit var genericBossKiller: GenericBossKiller private set
+    lateinit var revenant: Revenant private set
     var removeLater: BlockPos? = null
 
     @Mod.EventHandler
@@ -84,6 +82,7 @@ class SwiftSlayer {
                     autoBatphone = AutoBatphone()
                     macroManager = MacroManager()
                     genericBossKiller = GenericBossKiller()
+                    revenant = Revenant()
                     MinecraftForge.EVENT_BUS.register(this)
                     MinecraftForge.EVENT_BUS.register(pathExecutor)
                     MinecraftForge.EVENT_BUS.register(mobKiller)
@@ -91,6 +90,7 @@ class SwiftSlayer {
                     MinecraftForge.EVENT_BUS.register(macroManager)
                     MinecraftForge.EVENT_BUS.register(genericBossKiller)
                     MinecraftForge.EVENT_BUS.register(Failsafe())
+                    MinecraftForge.EVENT_BUS.register(revenant)
                     CommandManager.register(PathfindTest())
                     CommandManager.register(SwiftSlayerCommand())
                     return

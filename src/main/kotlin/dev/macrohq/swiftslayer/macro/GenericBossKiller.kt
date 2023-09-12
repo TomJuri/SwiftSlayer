@@ -20,8 +20,7 @@ class GenericBossKiller {
             disable()
             return
         }
-        if (player.worldObj.loadedEntityList.filter { it.getDistanceToEntity(target).toDouble() == 0.0 }
-                .firstOrNull() == null) return
+        if (player.worldObj.loadedEntityList.firstOrNull { it.getDistanceToEntity(target).toDouble() == 0.0 } == null) return
         if (!hasRotated) {
             if (config.bossKillerWeapon == 1) {
                 RotationUtil.lock(player.worldObj.loadedEntityList.filter {

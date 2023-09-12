@@ -3,8 +3,10 @@ package dev.macrohq.swiftslayer.macro
 import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.Logger.info
 import net.minecraft.entity.EntityLiving
+import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.entity.monster.EntityZombie
+import net.minecraftforge.client.event.RenderLivingEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import kotlin.math.abs
@@ -41,19 +43,6 @@ class MobKiller {
             stuckCounter++
         } else stuckCounter = 0
 
-        val armorstand =
-            player.worldObj.loadedEntityList.filterIsInstance<EntityArmorStand>().filter { SlayerUtil.isBoss(it) }
-                .firstOrNull()
-        if (armorstand != null) {
-            val boss = player.worldObj.loadedEntityList.filter { it.getDistanceToEntity(armorstand).toDouble() == 0.0 }
-                .firstOrNull()
-            if (boss != null) {
-                Logger.info("Boss spawned.")
-                disable()
-                return
-            }
-        }
-
         when (state) {
             State.STARTING -> {
                 state = State.FINDING
@@ -61,7 +50,6 @@ class MobKiller {
             }
 
             State.FINDING -> {
-//                info("finding")
                 RenderUtil.entites.clear()
                 if (ticks >= 80) {
                     blacklist.clear()
@@ -78,13 +66,11 @@ class MobKiller {
             }
 
             State.PATHFINDING -> {
-                info("pathing")
                 PathingUtil.goto(targetEntity!!.position.down())
                 state = State.PATHFINDING_VERIFY
             }
 
             State.PATHFINDING_VERIFY -> {
-//                info("pathing verify. dist: ${player.getDistanceToEntity(targetEntity)}")
                 if (PathingUtil.hasFailed || targetEntity!!.health <= 0 || stuckCounter >= 40) {
                     PathingUtil.stop()
                     stuckCounter = 0
@@ -100,14 +86,12 @@ class MobKiller {
             }
 
             State.LOOKING -> {
-                info("looking")
                 lookAtEntity(targetEntity!!)
                 state = State.LOOKING_VERIFY
                 return
             }
 
             State.LOOKING_VERIFY -> {
-                info("looking verify")
                 if (lookTimer++ >= 40) {
                     state = State.LOOKING;
                     lookTimer = 0
@@ -121,12 +105,10 @@ class MobKiller {
             }
 
             State.KILLING -> {
-                info("killing")
                 useWeapon()
                 blacklist.add(targetEntity as EntityLiving)
                 state = State.FINDING
             }
-
             else -> {}
         }
     }

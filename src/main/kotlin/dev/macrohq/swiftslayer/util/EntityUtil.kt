@@ -23,10 +23,8 @@ object EntityUtil {
         val pitchChange = abs(-player.rotationPitch + AngleUtil.getAngles(entity).pitch)
         val angleChange = yawChange + pitchChange
         val distance = (player.getDistanceToEntity(entity))
-//        val cost = getRevCost(entity)
         val cost = if (player.canEntityBeSeen(entity)) 0 else 3
         return (distance * 0.5f + angleChange * 0.2f + cost)
-//        return distance
     }
 
     fun getRevCost(entity: EntityLiving): Int {
@@ -34,8 +32,6 @@ object EntityUtil {
     }
 
     private fun inRange(entity: EntityLiving): Boolean {
-//        Logger.info("entity: ${entity is EntityWolf}")
-//        Logger.info("entityDistance: ${sqrt(entity.position.distanceSq(BlockPos(-382, 51, -7)))}")
         if (entity is EntityWolf) {
             return sqrt(entity.position.distanceSq(BlockPos(-382, 51, -7))) > 20
         } else if (entity is EntitySpider) {

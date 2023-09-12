@@ -30,3 +30,5 @@ val genericBossKiller
     get() = swiftSlayer.genericBossKiller
 val endermanBossKiller
     get() = swiftSlayer.endermanBossKiller
+val revenant
+    get() = swiftSlayer.revenant
