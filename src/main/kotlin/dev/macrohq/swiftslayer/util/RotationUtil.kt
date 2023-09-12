@@ -1,6 +1,7 @@
 package dev.macrohq.swiftslayer.util
 
 import cc.polyfrost.oneconfig.utils.dsl.runAsync
+import dev.macrohq.swiftslayer.util.Logger.info
 import net.minecraft.entity.Entity
 import kotlin.math.pow
 
@@ -11,8 +12,11 @@ object RotationUtil {
     private var endTime = 0L
     private var done = true
     private var lock: Pair<Entity, Double>? = null
+    private var isOverriden = false
 
-    fun ease(rotation: Rotation, durationMillis: Long) {
+    fun ease(rotation: Rotation, durationMillis: Long, override: Boolean = false) {
+        if(isOverriden) return
+        isOverriden = override
         done = false
         startRotation = Rotation(player.rotationYaw, player.rotationPitch)
         val neededChange = AngleUtil.getNeededChange(startRotation, rotation)
@@ -21,7 +25,8 @@ object RotationUtil {
         endTime = startTime + durationMillis
     }
 
-    fun lock(entity: Entity, durationMillis: Long, eyes: Boolean) {
+    fun lock(entity: Entity, durationMillis: Long, eyes: Boolean, override: Boolean = false) {
+        if(isOverriden) return
         done = false
         ease(
             AngleUtil.getAngles(
@@ -30,7 +35,7 @@ object RotationUtil {
                     if (eyes) entity.eyeHeight.toDouble() else 1.0,
                     0.0
                 )
-            ), durationMillis
+            ), durationMillis, override
         )
         lock = Pair(entity, if (eyes) entity.eyeHeight.toDouble() else 1.0)
     }
@@ -70,6 +75,7 @@ object RotationUtil {
     }
 
     fun stop() {
+        isOverriden = false
         done = true
         lock = null
     }

@@ -47,6 +47,7 @@ class MobKiller {
             }
 
             State.FINDING -> {
+//                info("finding")
                 RenderUtil.entites.clear()
                 if (ticks >= 80) {
                     blacklist.clear()
@@ -63,22 +64,21 @@ class MobKiller {
             }
 
             State.PATHFINDING -> {
+                info("pathing")
                 PathingUtil.goto(targetEntity!!.position.down())
                 state = State.PATHFINDING_VERIFY
             }
 
             State.PATHFINDING_VERIFY -> {
-                if (PathingUtil.hasFailed || (targetEntity)!!.health <= 0 || stuckCounter >= 40) {
+//                info("pathing verify. dist: ${player.getDistanceToEntity(targetEntity)}")
+                if (PathingUtil.hasFailed || targetEntity!!.health <= 0 || stuckCounter >= 40) {
                     PathingUtil.stop()
                     stuckCounter = 0
                     blacklist.add(targetEntity!!)
                     state = State.FINDING
                     return
                 }
-                if ((PathingUtil.isDone || player.getDistanceToEntity(targetEntity) < attackDistance()) && player.canEntityBeSeen(
-                        targetEntity
-                    )
-                ) {
+                if ((PathingUtil.isDone || player.getDistanceToEntity(targetEntity) < attackDistance()) && player.canEntityBeSeen(targetEntity)) {
                     stop()
                     state = State.LOOKING
                 }
@@ -86,16 +86,20 @@ class MobKiller {
             }
 
             State.LOOKING -> {
+                info("looking")
                 lookAtEntity(targetEntity!!)
                 state = State.LOOKING_VERIFY
                 return
             }
 
             State.LOOKING_VERIFY -> {
+                info("looking verify")
                 if (lookTimer++ >= 40) {
-                    state = State.LOOKING; lookTimer = 0
+                    state = State.LOOKING;
+                    lookTimer = 0
                 }
                 if (lookDone()) {
+                    lookTimer = 0
                     RotationUtil.stop()
                     holdWeapon()
                     state = State.KILLING
@@ -103,6 +107,7 @@ class MobKiller {
             }
 
             State.KILLING -> {
+                info("killing")
                 useWeapon()
                 blacklist.add(targetEntity as EntityLiving)
                 state = State.FINDING
@@ -128,8 +133,9 @@ class MobKiller {
     private fun lookAtEntity(entity: EntityLiving) {
         angle = angleForWeapon(entity)
         when (config.mobKillerWeapon) {
-            0, 1 -> RotationUtil.ease(angle, 100)
-            2 -> RotationUtil.lock(entity, 200, false)
+            0 -> RotationUtil.ease(angle, 200, true)
+            1 -> RotationUtil.ease(angle, 200, true)
+            2 -> RotationUtil.lock(entity, 200, false, override = true)
             3 -> {}
         }
     }

@@ -73,7 +73,8 @@ class PathExecutor {
     }
 
     fun enable(pathIn: List<BlockPos>) {
-        if (enabled || pathIn.isEmpty()) return
+        if (pathIn.isEmpty()) return
+        disable()
         Logger.info("Enabling PathExecutor.")
         path = pathIn
         next = path[0]

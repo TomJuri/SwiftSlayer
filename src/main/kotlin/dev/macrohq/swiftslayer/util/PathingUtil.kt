@@ -10,7 +10,6 @@ object PathingUtil {
         private set
 
     fun goto(pos: BlockPos) {
-        if(!isDone) return
         hasFailed = false
         runAsync {
             RenderUtil.lines.clear()
@@ -19,7 +18,6 @@ object PathingUtil {
                 hasFailed = true
                 Logger.error("Could not find path!!")
             } else {
-//                path.forEach { RenderUtil.lines.add(it.toVec3Top()) }
                 pathExecutor.enable(path)
             }
         }
