@@ -13,7 +13,7 @@ object InventoryUtil {
         return inventory
     }
 
-    fun getGUIInventorySlot(): List<Slot?> {
+    fun getGUIInventorySlots(): List<Slot?> {
         val inventory = getOpenContainerSlots()
         return inventory.slice(0..inventory.size - 37)
     }
@@ -38,7 +38,7 @@ object InventoryUtil {
     }
 
     fun getSlotInGUI(name: String): Int {
-        return getGUIInventorySlot().find { it?.stack?.displayName?.contains(name) == true }?.slotIndex ?: -1
+        return getGUIInventorySlots().find { it?.stack?.displayName?.contains(name) == true }?.slotIndex ?: -1
     }
 
     fun getHotbarSlotForItem(name: String): Int {
@@ -51,7 +51,7 @@ object InventoryUtil {
     }
 
     fun clickSlot(slot: Int, button: Int = 0, clickType: Int = 0): Boolean {
-        if (player.openContainer !is ContainerChest || player.openContainer.getSlot(slot) == null || !player.openContainer.getSlot(
+        if (player.openContainer !is ContainerChest || slot == -1 || player.openContainer.getSlot(slot) == null || !player.openContainer.getSlot(
                 slot
             ).hasStack
         ) return false
@@ -60,8 +60,7 @@ object InventoryUtil {
     }
 
     fun closeGUI() {
-        if (player.openContainer != null)
-            player.closeScreen()
+        if (player.openContainer != null) player.closeScreen()
     }
 
     fun getGUIName(): String? {

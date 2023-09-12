@@ -17,7 +17,7 @@ class MacroManager {
         when (state) {
             State.ACTIVATE_QUEST -> {
                 if (!config.useBatphone) return
-                autoBatphone.enable(false)
+                autoBatphone.enable()
             }
             State.KILL_MOBS -> mobKiller.enable()
             State.KILL_BOSS -> {
