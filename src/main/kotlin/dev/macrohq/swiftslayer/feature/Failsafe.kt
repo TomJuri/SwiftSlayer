@@ -35,6 +35,7 @@ class Failsafe {
                 if (world.getBlockState(player.position.add(i, 1, j)).block.equals(Blocks.bedrock)) count++
             }
         }
+        if (count < 4) return
         Logger.error("You have probably been bedrock trapped! $count bedrock blocks found!")
         SoundUtil.playSound("/assets/swiftslayer/pipe.wav", config.failsafeVolume)
     }

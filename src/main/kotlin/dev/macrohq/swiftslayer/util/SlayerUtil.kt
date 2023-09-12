@@ -1,7 +1,7 @@
 package dev.macrohq.swiftslayer.util
 
 object SlayerUtil {
-    fun getSlayerName(): String?{
+    fun getSlayerName(): String? {
         return when(config.slayer){
             0 -> "Revenant Horror"
             1 -> "Tarantula Broodfather"
