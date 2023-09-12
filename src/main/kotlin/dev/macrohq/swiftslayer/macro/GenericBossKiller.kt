@@ -2,6 +2,7 @@ package dev.macrohq.swiftslayer.macro
 
 import dev.macrohq.swiftslayer.util.*
 import net.minecraft.entity.item.EntityArmorStand
+import net.minecraft.entity.monster.EntityZombie
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
@@ -20,11 +21,16 @@ class GenericBossKiller {
             disable()
             return
         }
-        if (player.worldObj.loadedEntityList.filter { it.getDistanceToEntity(target).toDouble() == 0.0 }
-                .firstOrNull() == null) return
+        Logger.info(
+            player.worldObj.loadedEntityList.filterIsInstance<EntityZombie>()
+                .minByOrNull { it.getDistanceToEntity(target) }!!.getDistanceToEntity(target).toString()
+        )
+        if (player.worldObj.loadedEntityList.filterIsInstance<EntityZombie>()
+                .filter { it.getDistanceToEntity(target).toDouble() == 0.0 }.firstOrNull() == null
+        ) return
         if (!hasRotated) {
             if (config.bossKillerWeapon == 1) {
-                RotationUtil.lock(player.worldObj.loadedEntityList.filter {
+                RotationUtil.lock(player.worldObj.loadedEntityList.filterIsInstance<EntityZombie>().filter {
                     it.getDistanceToEntity(target).toDouble() == 0.0
                 }.firstOrNull()!!, 500, false)
             } else {
