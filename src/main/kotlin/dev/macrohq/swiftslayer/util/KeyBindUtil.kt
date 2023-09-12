@@ -13,6 +13,7 @@ object KeyBindUtil {
     }
 
     fun leftClick(clicksPerSecond: Int) {
+        if (leftClicking) return
         leftClicking = true
         runAsync {
             while (leftClicking) {
@@ -27,6 +28,7 @@ object KeyBindUtil {
     }
 
     fun rightClick(clicksPerSecond: Int) {
+        if (rightClicking) return
         rightClicking = true
         runAsync {
             while (rightClicking) {

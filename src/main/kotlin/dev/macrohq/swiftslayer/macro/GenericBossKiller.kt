@@ -1,7 +1,7 @@
 package dev.macrohq.swiftslayer.macro
 
 import dev.macrohq.swiftslayer.util.*
-import net.minecraft.entity.EntityLiving
+import net.minecraft.entity.item.EntityArmorStand
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
@@ -9,7 +9,7 @@ class GenericBossKiller {
 
     var enabled = false
         private set
-    private lateinit var target: EntityLiving
+    private lateinit var target: EntityArmorStand
     private var hasRotated = false
 
     @SubscribeEvent
@@ -20,28 +20,36 @@ class GenericBossKiller {
             disable()
             return
         }
+        if (player.worldObj.loadedEntityList.filter { it.getDistanceToEntity(target).toDouble() == 0.0 }
+                .firstOrNull() == null) return
         if (!hasRotated) {
             if (config.bossKillerWeapon == 1) {
-                RotationUtil.lock(target, 500, true)
+                RotationUtil.lock(player.worldObj.loadedEntityList.filter {
+                    it.getDistanceToEntity(target).toDouble() == 0.0
+                }.firstOrNull()!!, 500, false)
             } else {
                 RotationUtil.ease(RotationUtil.Rotation(player.rotationYaw, 90f), 500)
             }
             hasRotated = true
         }
-        if (player.getDistanceToEntity(target) <= 5) {
-            if (config.bossKillerWeapon == 1)
+        if (target.getDistanceToEntity(player) <= 3) {
+            if (config.bossKillerWeapon == 1) {
+                player.inventory.currentItem = 0
                 KeyBindUtil.leftClick(10)
-            else
+            } else {
                 KeyBindUtil.rightClick(10)
+            }
         } else {
             KeyBindUtil.stopClicking()
         }
     }
 
-    fun enable(target: EntityLiving) {
+    fun enable() {
         if (enabled) return
         Logger.info("Enabling GenericBossKiller")
-        this.target = target
+        RotationUtil.stop()
+        target = player.worldObj.loadedEntityList.filterIsInstance<EntityArmorStand>().filter { SlayerUtil.isBoss(it) }
+            .firstOrNull()!!
         enabled = true
     }
 

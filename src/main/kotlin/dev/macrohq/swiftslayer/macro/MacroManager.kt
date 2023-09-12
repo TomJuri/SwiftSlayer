@@ -1,7 +1,6 @@
 package dev.macrohq.swiftslayer.macro
 
 import dev.macrohq.swiftslayer.util.*
-import net.minecraft.entity.EntityLiving
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
@@ -21,10 +20,8 @@ class MacroManager {
             }
             State.KILL_MOBS -> mobKiller.enable()
             State.KILL_BOSS -> {
-                val boss =
-                    player.worldObj.loadedEntityList.filterIsInstance<EntityLiving>().maxByOrNull { it.maxHealth }!!
-                if (config.slayer == 3) endermanBossKiller.enable(boss)
-                else genericBossKiller.enable(boss)
+                //if (config.slayer == 3) endermanBossKiller.enable()
+                /* else*/ genericBossKiller.enable()
             }
         }
         state = State.entries[(state.ordinal + 1) % State.entries.size]
@@ -40,6 +37,7 @@ class MacroManager {
         }
         Logger.info("Enabling macro.")
         UngrabUtil.ungrabMouse()
+        state = State.ACTIVATE_QUEST
         enabled = true
     }
 
@@ -51,6 +49,7 @@ class MacroManager {
         mobKiller.disable()
         genericBossKiller.disable()
         endermanBossKiller.disable()
+        PathingUtil.stop()
         UngrabUtil.regrabMouse()
     }
 

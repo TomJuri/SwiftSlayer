@@ -3,6 +3,7 @@ package dev.macrohq.swiftslayer.macro
 import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.Logger.info
 import net.minecraft.entity.EntityLiving
+import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.entity.monster.EntityZombie
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
@@ -39,6 +40,19 @@ class MobKiller {
         if (player.lastTickPosition().add(0, -1, 0) == player.getStandingOnFloor()) {
             stuckCounter++
         } else stuckCounter = 0
+
+        val armorstand =
+            player.worldObj.loadedEntityList.filterIsInstance<EntityArmorStand>().filter { SlayerUtil.isBoss(it) }
+                .firstOrNull()
+        if (armorstand != null) {
+            val boss = player.worldObj.loadedEntityList.filter { it.getDistanceToEntity(armorstand).toDouble() == 0.0 }
+                .firstOrNull()
+            if (boss != null) {
+                Logger.info("Boss spawned.")
+                disable()
+                return
+            }
+        }
 
         when (state) {
             State.STARTING -> {
