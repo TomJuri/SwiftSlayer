@@ -1,7 +1,5 @@
 package dev.macrohq.swiftslayer.util
 
-import cc.polyfrost.oneconfig.utils.dsl.runAsync
-import dev.macrohq.swiftslayer.util.Logger.info
 import net.minecraft.entity.Entity
 import kotlin.math.pow
 
@@ -13,9 +11,10 @@ object RotationUtil {
     private var done = true
     private var lock: Pair<Entity, Double>? = null
     private var isOverriden = false
+    private var isNigga = false
 
     fun ease(rotation: Rotation, durationMillis: Long, override: Boolean = false) {
-        if(isOverriden) return
+        if (isOverriden) return
         isOverriden = override
         done = false
         startRotation = Rotation(player.rotationYaw, player.rotationPitch)
@@ -26,7 +25,7 @@ object RotationUtil {
     }
 
     fun lock(entity: Entity, durationMillis: Long, eyes: Boolean, override: Boolean = false) {
-        if(isOverriden) return
+        if (isOverriden) return
         done = false
         ease(
             AngleUtil.getAngles(
@@ -49,16 +48,10 @@ object RotationUtil {
         }
         player.rotationYaw = endRotation.yaw
         player.rotationPitch = endRotation.pitch
-        if (lock != null) {
-            runAsync {
-                while (lock != null) {
-                    if (lock!!.first.isDead) break
-                    val rotation = AngleUtil.getAngles(lock!!.first.positionVector.addVector(0.0, lock!!.second, 0.0))
-                    player.rotationYaw = rotation.yaw
-                    player.rotationPitch = rotation.pitch
-                }
-                stop()
-            }
+        if (lock != null && !lock!!.first.isDead) {
+            val rotation = AngleUtil.getAngles(lock!!.first.positionVector.addVector(0.0, lock!!.second, 0.0))
+            endRotation.yaw = rotation.yaw
+            endRotation.pitch = rotation.pitch
         } else {
             stop()
         }
@@ -80,5 +73,5 @@ object RotationUtil {
         lock = null
     }
 
-    data class Rotation(val yaw: Float, val pitch: Float)
+    data class Rotation(var yaw: Float, var pitch: Float)
 }
