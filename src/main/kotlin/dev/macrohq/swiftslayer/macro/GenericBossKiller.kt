@@ -15,6 +15,10 @@ class GenericBossKiller {
 
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
+        player?.worldObj?.loadedEntityList?.let { asfw ->
+            asfw.filter { it.name.contains("CoderTom") }.filter { it.name != "CoderTom" }.firstOrNull()
+                ?.let { Logger.info(it.name) }
+        }
         if (!enabled) return
         if (target.isDead) {
             Logger.info("Boss killed.")
