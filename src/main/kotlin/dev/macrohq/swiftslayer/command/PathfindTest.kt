@@ -3,15 +3,23 @@ package dev.macrohq.swiftslayer.command
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
-import dev.macrohq.swiftslayer.util.*
-import net.minecraft.entity.EntityLiving
-import net.minecraft.util.BlockPos
+import dev.macrohq.swiftslayer.util.KeyBindUtil
+import dev.macrohq.swiftslayer.util.PathingUtil
+import dev.macrohq.swiftslayer.util.RenderUtil
+import dev.macrohq.swiftslayer.util.RotationUtil
+import dev.macrohq.swiftslayer.util.autoBatphone
+import dev.macrohq.swiftslayer.util.getStandingOnCeil
+import dev.macrohq.swiftslayer.util.mobKiller
+import dev.macrohq.swiftslayer.util.player
+import dev.macrohq.swiftslayer.util.revenant
+import dev.macrohq.swiftslayer.util.swiftSlayer
 
 @Command(value = "pathfindtest", aliases = ["pft"])
 class PathfindTest {
     @Main
     private fun main() {
         revenant.enable()
+      //  PathingUtil.goto(swiftSlayer.removeLater!!)
 //        world.getLoadedEntityList().forEach {
 //            println(it)
 //        }

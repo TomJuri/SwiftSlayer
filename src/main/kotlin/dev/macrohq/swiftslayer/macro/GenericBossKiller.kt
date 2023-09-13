@@ -1,74 +1,69 @@
 package dev.macrohq.swiftslayer.macro
 
-import dev.macrohq.swiftslayer.util.*
-import net.minecraft.entity.item.EntityArmorStand
-import net.minecraft.entity.monster.EntityZombie
+import dev.macrohq.swiftslayer.util.KeyBindUtil
+import dev.macrohq.swiftslayer.util.Logger
+import dev.macrohq.swiftslayer.util.PathingUtil
+import dev.macrohq.swiftslayer.util.RotationUtil
+import dev.macrohq.swiftslayer.util.SlayerUtil
+import dev.macrohq.swiftslayer.util.config
+import dev.macrohq.swiftslayer.util.getStandingOnCeil
+import dev.macrohq.swiftslayer.util.player
+import net.minecraft.entity.EntityLiving
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
 class GenericBossKiller {
 
-    var enabled = false
-        private set
-    private lateinit var target: EntityArmorStand
-    private var hasRotated = false
+  var enabled = false
+    private set
+  private lateinit var target: EntityLiving
+  private var hasRotated = false
 
-    @SubscribeEvent
-    fun onTick(event: ClientTickEvent) {
-        player?.worldObj?.loadedEntityList?.let { asfw ->
-            asfw.filter { it.name.contains("CoderTom") }.filter { it.name != "CoderTom" }.firstOrNull()
-                ?.let { Logger.info(it.name) }
-        }
-        if (!enabled) return
-        if (target.isDead) {
-            Logger.info("Boss killed.")
-            disable()
-            return
-        }
-        Logger.info(
-            player.worldObj.loadedEntityList.filterIsInstance<EntityZombie>()
-                .minByOrNull { it.getDistanceToEntity(target) }!!.getDistanceToEntity(target).toString()
-        )
-        if (player.worldObj.loadedEntityList.filterIsInstance<EntityZombie>()
-                .filter { it.getDistanceToEntity(target).toDouble() == 0.0 }.firstOrNull() == null
-        ) return
-        if (!hasRotated) {
-            if (config.bossKillerWeapon == 1) {
-                RotationUtil.lock(player.worldObj.loadedEntityList.filterIsInstance<EntityZombie>().filter {
-                    it.getDistanceToEntity(target).toDouble() == 0.0
-                }.firstOrNull()!!, 500, false)
-            } else {
-                RotationUtil.ease(RotationUtil.Rotation(player.rotationYaw, 90f), 500)
-            }
-            hasRotated = true
-        }
-        if (target.getDistanceToEntity(player) <= 3) {
-            if (config.bossKillerWeapon == 1) {
-                player.inventory.currentItem = 0
-                KeyBindUtil.leftClick(10)
-            } else {
-                KeyBindUtil.rightClick(10)
-            }
-        } else {
-            KeyBindUtil.stopClicking()
-        }
+  @SubscribeEvent
+  fun onTick(event: ClientTickEvent) {
+    if (!enabled) return
+    if (!::target.isInitialized) {
+      val t = SlayerUtil.getBoss()
+      if (t != null) target = t.first
+      else return
     }
-
-    fun enable() {
-        if (enabled) return
-        Logger.info("Enabling GenericBossKiller")
-        RotationUtil.stop()
-        target = player.worldObj.loadedEntityList.filterIsInstance<EntityArmorStand>().filter { SlayerUtil.isBoss(it) }
-            .firstOrNull()!!
-        enabled = true
+    if (target.isDead) {
+      Logger.info("Boss killed.")
+      disable()
+      return
     }
-
-    fun disable() {
-        if (!enabled) return
-        Logger.info("Disabling GenericBossKiller")
-        enabled = false
+    if (player.getDistanceToEntity(target) <= 1.5) PathingUtil.stop()
+    if (player.getDistanceToEntity(target) > 1.5 && PathingUtil.isDone) PathingUtil.goto(target.getStandingOnCeil())
+    if (config.bossKillerWeapon == 1) {
+      player.inventory.currentItem = 0
+      if (player.getDistanceToEntity(target) < 2) {
+        RotationUtil.lock(target, 500, true, true)
+        KeyBindUtil.leftClick(10)
+      } else {
         RotationUtil.stop()
         KeyBindUtil.stopClicking()
-        hasRotated = false
+      }
     }
+  }
+
+  fun enable() {
+    if (enabled) return
+    Logger.info("Enabling GenericBossKiller")
+    RotationUtil.stop()
+    enabled = true
+    hasRotated = false
+  }
+
+  fun disable() {
+    if (!enabled) return
+    Logger.info("Disabling GenericBossKiller")
+    enabled = false
+    RotationUtil.stop()
+    KeyBindUtil.stopClicking()
+  }
+
+  private enum class State {
+    GOTO_BOSS,
+
+  }
 }

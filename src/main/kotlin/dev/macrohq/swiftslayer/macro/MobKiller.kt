@@ -1,12 +1,22 @@
 package dev.macrohq.swiftslayer.macro
 
-import dev.macrohq.swiftslayer.util.*
-import dev.macrohq.swiftslayer.util.Logger.info
+import dev.macrohq.swiftslayer.util.AngleUtil
+import dev.macrohq.swiftslayer.util.EntityUtil
+import dev.macrohq.swiftslayer.util.InventoryUtil
+import dev.macrohq.swiftslayer.util.KeyBindUtil
+import dev.macrohq.swiftslayer.util.Logger
+import dev.macrohq.swiftslayer.util.PathingUtil
+import dev.macrohq.swiftslayer.util.RenderUtil
+import dev.macrohq.swiftslayer.util.RotationUtil
+import dev.macrohq.swiftslayer.util.SlayerUtil
+import dev.macrohq.swiftslayer.util.config
+import dev.macrohq.swiftslayer.util.getStandingOnFloor
+import dev.macrohq.swiftslayer.util.lastTickPosition
+import dev.macrohq.swiftslayer.util.mc
+import dev.macrohq.swiftslayer.util.player
+import dev.macrohq.swiftslayer.util.world
 import net.minecraft.entity.EntityLiving
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.entity.monster.EntityZombie
-import net.minecraftforge.client.event.RenderLivingEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import kotlin.math.abs
@@ -38,6 +48,11 @@ class MobKiller {
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (player == null || world == null) return
         if (!enabled) return
+        if (SlayerUtil.getBoss() != null) {
+            // disable when boss spawns dont remove again :angiest:
+            disable()
+            return
+        }
         ticks++
         if (player.lastTickPosition().add(0, -1, 0) == player.getStandingOnFloor()) {
             stuckCounter++
