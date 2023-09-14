@@ -1,5 +1,6 @@
 package dev.macrohq.swiftslayer.macro
 
+import dev.macrohq.swiftslayer.util.AngleUtil
 import dev.macrohq.swiftslayer.util.KeyBindUtil
 import dev.macrohq.swiftslayer.util.Logger
 import dev.macrohq.swiftslayer.util.PathingUtil
@@ -36,8 +37,14 @@ class GenericBossKiller {
     if (player.getDistanceToEntity(target) > 1.5 && PathingUtil.isDone) PathingUtil.goto(target.getStandingOnCeil())
     if (config.bossKillerWeapon == 1) {
       player.inventory.currentItem = 0
+      if (AngleUtil.getYawChange(target) > 30 || AngleUtil.getYawChange(target) < -30) {
+        RotationUtil.lock(target, 350, true, true)
+      } else {
+        RotationUtil.stop()
+        player.rotationYaw = AngleUtil.getAngles(target).yaw
+        player.rotationPitch = AngleUtil.getAngles(target).pitch
+      }
       if (player.getDistanceToEntity(target) < 2) {
-        RotationUtil.lock(target, 500, true, true)
         KeyBindUtil.leftClick(10)
       } else {
         RotationUtil.stop()

@@ -15,6 +15,19 @@ object SlayerUtil {
   private val miniBosses = listOf("Revenant Sycophant", "Revenant Champion", "Deformed Revenant", "Atoned Champion", "Atoned Revenant", "Tarantula Vermin", "Tarantula Beast", "Mutant Tarantula", "Pack Enforcer", "Sven Follower", "Sven Alpha", "Voidling Devotee", "Voidling Radical", "Voidcrazed Maniac", "Flare Demon", "Kindleheart Demon", "Burningsoul Demon")
   private val bossTypes = listOf(EntityZombie::class, EntitySpider::class, EntityWolf::class, EntityEnderman::class, EntityBlaze::class)
 
+  fun getActive(): String? {
+    for (boss in bosses) {
+      for (line in ScoreboardUtil.getScoreboardLines()) {
+        if (line.replace("\uD83D\uDC79", "").contains(boss)) return line
+      }
+    }
+    return null
+  }
+
+  fun getState(): SlayerState? = if (ScoreboardUtil.getScoreboardLines()
+      .any { it.contains("Slay the boss!") }
+  ) SlayerState.BOSS_ALIVE else if (ScoreboardUtil.getScoreboardLines().any { it.contains("Boss slain!") }) SlayerState.BOSS_DEAD else null
+
   fun getMiniBoss() = player.worldObj.loadedEntityList.filter { it::class in bossTypes }.minByOrNull { it0 ->
     it0.getDistanceToEntity(player.worldObj.loadedEntityList.filterIsInstance<EntityArmorStand>().filter { isMiniBoss(it) }.minByOrNull { it.getDistanceToEntity(player) })
   } as EntityLiving
@@ -57,5 +70,25 @@ object SlayerUtil {
       4 -> InventoryUtil.getSlotInGUI("${getSlayerName()} V")
       else -> -1
     }
+  }
+
+  enum class Slayer {
+    REVENANT_HORROR,
+    TARANTULA_BROODFATHER,
+    SVEN_PACKMASTER,
+    VOIDGLOOM_SERAPH
+  }
+
+  enum class SlayerTier {
+    I,
+    II,
+    III,
+    IV,
+    V
+  }
+
+  enum class SlayerState {
+    BOSS_ALIVE,
+    BOSS_DEAD,
   }
 }

@@ -4,9 +4,11 @@ import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
 import dev.macrohq.swiftslayer.util.KeyBindUtil
+import dev.macrohq.swiftslayer.util.Logger
 import dev.macrohq.swiftslayer.util.PathingUtil
 import dev.macrohq.swiftslayer.util.RenderUtil
 import dev.macrohq.swiftslayer.util.RotationUtil
+import dev.macrohq.swiftslayer.util.SlayerUtil
 import dev.macrohq.swiftslayer.util.autoBatphone
 import dev.macrohq.swiftslayer.util.getStandingOnCeil
 import dev.macrohq.swiftslayer.util.mobKiller
@@ -18,7 +20,8 @@ import dev.macrohq.swiftslayer.util.swiftSlayer
 class PathfindTest {
     @Main
     private fun main() {
-        revenant.enable()
+        Logger.info(SlayerUtil.getState().toString())
+        //revenant.enable()
       //  PathingUtil.goto(swiftSlayer.removeLater!!)
 //        world.getLoadedEntityList().forEach {
 //            println(it)
