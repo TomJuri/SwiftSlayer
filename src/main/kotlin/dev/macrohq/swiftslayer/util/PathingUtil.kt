@@ -16,7 +16,7 @@ object PathingUtil {
             val path = AStarPathfinder(player.getStandingOnCeil(), pos).findPath(1000)
             if (path.isEmpty()) {
                 hasFailed = true
-                Logger.error("Could not find path!!")
+                Logger.log("Could not find path!!")
             } else {
                 pathExecutor.enable(path)
             }

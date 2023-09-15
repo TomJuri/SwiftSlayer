@@ -2,12 +2,14 @@ package dev.macrohq.swiftslayer.macro
 
 import dev.macrohq.swiftslayer.util.Logger
 import dev.macrohq.swiftslayer.util.PathingUtil
+import dev.macrohq.swiftslayer.util.SlayerUtil
 import dev.macrohq.swiftslayer.util.UngrabUtil
 import dev.macrohq.swiftslayer.util.autoBatphone
 import dev.macrohq.swiftslayer.util.config
 import dev.macrohq.swiftslayer.util.endermanBossKiller
 import dev.macrohq.swiftslayer.util.genericBossKiller
 import dev.macrohq.swiftslayer.util.mobKiller
+import dev.macrohq.swiftslayer.util.tracker
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
@@ -22,7 +24,9 @@ class MacroManager {
     if (!enabled || autoBatphone.enabled || mobKiller.enabled || genericBossKiller.enabled || endermanBossKiller.enabled) return
     when (state) {
       State.ACTIVATE_QUEST -> {
-        if (!config.useBatphone) return
+        if (SlayerUtil.getActive() == null || SlayerUtil.getActive()!!.first.name != SlayerUtil.getSlayerName()!!.uppercase()
+            .replace(" ", "_") || SlayerUtil.getActive()!!.second.name != SlayerUtil.getTier() || SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_DEAD
+        )
         autoBatphone.enable()
       }
 
@@ -44,6 +48,7 @@ class MacroManager {
       return
     }
     Logger.info("Enabling macro.")
+    tracker.reset()
     UngrabUtil.ungrabMouse()
     state = State.ACTIVATE_QUEST
     enabled = true

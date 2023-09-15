@@ -20,7 +20,7 @@ import dev.macrohq.swiftslayer.util.swiftSlayer
 class PathfindTest {
     @Main
     private fun main() {
-        Logger.info(SlayerUtil.getState().toString())
+        Logger.info(SlayerUtil.getActive().toString())
         //revenant.enable()
       //  PathingUtil.goto(swiftSlayer.removeLater!!)
 //        world.getLoadedEntityList().forEach {

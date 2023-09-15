@@ -6,6 +6,7 @@ import dev.macrohq.swiftslayer.command.SwiftSlayerCommand
 import dev.macrohq.swiftslayer.config.SwiftSlayerConfig
 import dev.macrohq.swiftslayer.feature.AutoBatphone
 import dev.macrohq.swiftslayer.feature.Failsafe
+import dev.macrohq.swiftslayer.feature.Tracker
 import dev.macrohq.swiftslayer.gui.AuthFailedDisplay
 import dev.macrohq.swiftslayer.macro.EndermanBossKiller
 import dev.macrohq.swiftslayer.macro.GenericBossKiller
@@ -57,6 +58,7 @@ class SwiftSlayer {
     lateinit var macroManager: MacroManager private set
     lateinit var genericBossKiller: GenericBossKiller private set
     lateinit var revenant: Revenant private set
+    lateinit var tracker: Tracker private set
     var removeLater: BlockPos? = null
 
     @Mod.EventHandler
@@ -101,6 +103,7 @@ class SwiftSlayer {
                     macroManager = MacroManager()
                     genericBossKiller = GenericBossKiller()
                     revenant = Revenant()
+                    tracker = Tracker()
                     MinecraftForge.EVENT_BUS.register(this)
                     MinecraftForge.EVENT_BUS.register(pathExecutor)
                     MinecraftForge.EVENT_BUS.register(mobKiller)
@@ -109,6 +112,7 @@ class SwiftSlayer {
                     MinecraftForge.EVENT_BUS.register(genericBossKiller)
                     MinecraftForge.EVENT_BUS.register(Failsafe())
                     MinecraftForge.EVENT_BUS.register(revenant)
+                    MinecraftForge.EVENT_BUS.register(tracker)
                     CommandManager.register(PathfindTest())
                     CommandManager.register(SwiftSlayerCommand())
                     return
@@ -120,6 +124,8 @@ class SwiftSlayer {
         }
         throw AuthFailedDisplay("eee")
     }
+
+    fun isTrackerInitialized() = ::tracker.isInitialized
 
     @SubscribeEvent
     fun onRenderWorldLast(event: RenderWorldLastEvent) {

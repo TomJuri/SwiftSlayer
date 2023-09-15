@@ -32,3 +32,5 @@ val endermanBossKiller
     get() = swiftSlayer.endermanBossKiller
 val revenant
     get() = swiftSlayer.revenant
+val tracker
+    get() = swiftSlayer.tracker

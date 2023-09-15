@@ -2,6 +2,7 @@ package dev.macrohq.swiftslayer.config
 
 import cc.polyfrost.oneconfig.config.Config
 import cc.polyfrost.oneconfig.config.annotations.Dropdown
+import cc.polyfrost.oneconfig.config.annotations.HUD
 import cc.polyfrost.oneconfig.config.annotations.KeyBind
 import cc.polyfrost.oneconfig.config.annotations.Slider
 import cc.polyfrost.oneconfig.config.annotations.Switch
@@ -10,6 +11,7 @@ import cc.polyfrost.oneconfig.config.data.Mod
 import cc.polyfrost.oneconfig.config.data.ModType
 import cc.polyfrost.oneconfig.libs.universal.UKeyboard
 import dev.macrohq.swiftslayer.util.macroManager
+
 
 class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftslayer.json") {
     @Dropdown(
@@ -88,6 +90,9 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
         subcategory = "QOL"
     )
     var useAOTV = false
+
+    @HUD(name = "HUD", category = "HUD")
+    var hud = SwiftSlayerHud()
 
     init {
         initialize()

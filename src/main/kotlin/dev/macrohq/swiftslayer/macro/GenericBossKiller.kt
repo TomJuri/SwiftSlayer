@@ -17,32 +17,32 @@ class GenericBossKiller {
 
   var enabled = false
     private set
-  private lateinit var target: EntityLiving
+  private var target: EntityLiving? = null
   private var hasRotated = false
 
   @SubscribeEvent
   fun onTick(event: ClientTickEvent) {
     if (!enabled) return
-    if (!::target.isInitialized) {
+    if (target == null) {
       val t = SlayerUtil.getBoss()
       if (t != null) target = t.first
       else return
     }
-    if (target.isDead) {
+    if (target!!.isDead && SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_DEAD) {
       Logger.info("Boss killed.")
       disable()
       return
     }
     if (player.getDistanceToEntity(target) <= 1.5) PathingUtil.stop()
-    if (player.getDistanceToEntity(target) > 1.5 && PathingUtil.isDone) PathingUtil.goto(target.getStandingOnCeil())
+    if (player.getDistanceToEntity(target) > 1.5 && PathingUtil.isDone) PathingUtil.goto(target!!.getStandingOnCeil())
     if (config.bossKillerWeapon == 1) {
       player.inventory.currentItem = 0
-      if (AngleUtil.getYawChange(target) > 30 || AngleUtil.getYawChange(target) < -30) {
-        RotationUtil.lock(target, 350, true, true)
+      if (AngleUtil.getYawChange(target!!) > 30 || AngleUtil.getYawChange(target!!) < -30) {
+        RotationUtil.lock(target!!, 350, true, true)
       } else {
         RotationUtil.stop()
-        player.rotationYaw = AngleUtil.getAngles(target).yaw
-        player.rotationPitch = AngleUtil.getAngles(target).pitch
+        player.rotationYaw = AngleUtil.getAngles(target!!).yaw
+        player.rotationPitch = AngleUtil.getAngles(target!!).pitch
       }
       if (player.getDistanceToEntity(target) < 2) {
         KeyBindUtil.leftClick(10)
@@ -57,6 +57,7 @@ class GenericBossKiller {
     if (enabled) return
     Logger.info("Enabling GenericBossKiller")
     RotationUtil.stop()
+    target = null
     enabled = true
     hasRotated = false
   }

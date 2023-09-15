@@ -48,7 +48,6 @@ class PathExecutor {
     pathFailCounter = 0
 
     if (isOnPath() && hasReachedEnd()) {
-      Logger.info("Reached end of path.")
       disable()
       return
     }
@@ -87,7 +86,6 @@ class PathExecutor {
   fun enable(pathIn: List<BlockPos>) {
     if (pathIn.isEmpty()) return
     disable()
-    Logger.info("Enabling PathExecutor.")
     path = pathIn
     next = path[0]
     directionYaw = player.rotationYaw
@@ -98,7 +96,6 @@ class PathExecutor {
 
   fun disable() {
     RotationUtil.stop()
-    Logger.info("Disabling PathExecutor.")
     enabled = false
     gameSettings.keyBindSprint.setPressed(false)
     gameSettings.keyBindForward.setPressed(false)

@@ -20,7 +20,7 @@ object SlayerUtil {
       for (line in ScoreboardUtil.getScoreboardLines()) {
         // rev has some weird invisible emoji in the name don't remove this replace thingy
         if (!line.replace("\uD83D\uDC79", "").contains(boss)) continue
-        return Pair(Slayer.valueOf(boss.uppercase().replace(" ", "_")), SlayerTier.entries.first { line.contains(" ${it.name}) }") })
+        return Pair(Slayer.valueOf(boss.uppercase().replace(" ", "_")), SlayerTier.entries.first { "$line ".contains(" ${it.name} ") })
       }
     }
     return null
@@ -71,6 +71,17 @@ object SlayerUtil {
       3 -> InventoryUtil.getSlotInGUI("${getSlayerName()} IV")
       4 -> InventoryUtil.getSlotInGUI("${getSlayerName()} V")
       else -> -1
+    }
+  }
+
+  fun getTier(): String? {
+    return when (config.slayerTier) {
+      0 -> "I"
+      1 -> "II"
+      2 -> "III"
+      3 -> "IV"
+      4 -> "V"
+      else -> null
     }
   }
 
