@@ -1,5 +1,6 @@
 package dev.macrohq.swiftslayer.util
 
+import dev.macrohq.swiftslayer.util.Logger.info
 import net.minecraft.entity.Entity
 import kotlin.math.pow
 
@@ -42,16 +43,14 @@ object RotationUtil {
     fun onRenderWorldLast() {
         if (done) return
         if (System.currentTimeMillis() <= endTime) {
-            player.rotationYaw = interpolate(startRotation.yaw, endRotation.yaw)
-            player.rotationPitch = interpolate(startRotation.pitch, endRotation.pitch)
-            return
+            player.rotationYaw = interpolate(player.rotationYaw, endRotation.yaw)
+            player.rotationPitch = interpolate(player.rotationPitch, endRotation.pitch)
+            if(lock==null) return
         }
-        player.rotationYaw = endRotation.yaw
-        player.rotationPitch = endRotation.pitch
         if (lock != null && !lock!!.first.isDead) {
-            val rotation = AngleUtil.getAngles(lock!!.first.positionVector.addVector(0.0, lock!!.second, 0.0))
-            endRotation.yaw = rotation.yaw
-            endRotation.pitch = rotation.pitch
+            endRotation = AngleUtil.getAngles(lock!!.first.positionVector.addVector(0.0, lock!!.second, 0.0))
+            startTime = System.currentTimeMillis();
+            endTime = startTime + 150
         } else {
             stop()
         }
