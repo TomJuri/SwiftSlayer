@@ -16,7 +16,6 @@ import dev.macrohq.swiftslayer.util.mc
 import dev.macrohq.swiftslayer.util.player
 import dev.macrohq.swiftslayer.util.world
 import net.minecraft.entity.EntityLiving
-import net.minecraft.entity.monster.EntitySpider
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import kotlin.math.abs
@@ -69,7 +68,7 @@ class MobKiller {
                     blacklist.clear()
                     ticks = 0
                 }
-                val targetEntityList = EntityUtil.getMobs(EntitySpider::class.java, 32000).toMutableList()
+                val targetEntityList = EntityUtil.getMobs(SlayerUtil.getMobClass()!! as Class<out EntityLiving>, 32000).toMutableList()
                 targetEntityList.removeAll(blacklist)
 
                 if (targetEntityList.isEmpty()) return
