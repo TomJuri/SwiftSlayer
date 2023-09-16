@@ -90,7 +90,7 @@ object RenderUtil {
         renderText(
             entity.positionVector.addVector(0.0, 1.2, 0.0), "${getCost(entity as EntityLiving)}, ${
                 EntityUtil.getMobs(
-                    EntityZombie::class.java, 50000
+                    EntityZombie::class.java
                 ).indexOf(entity)
             }"
         )

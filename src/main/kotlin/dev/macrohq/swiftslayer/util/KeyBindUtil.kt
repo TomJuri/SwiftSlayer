@@ -2,6 +2,7 @@ package dev.macrohq.swiftslayer.util
 
 import cc.polyfrost.oneconfig.utils.dsl.runAsync
 import dev.macrohq.swiftslayer.mixin.MinecraftInvoker
+import kotlin.random.Random
 
 object KeyBindUtil {
 
@@ -18,7 +19,7 @@ object KeyBindUtil {
         runAsync {
             while (leftClicking) {
                 leftClick()
-                Thread.sleep(1000 / clicksPerSecond.toLong())
+              Thread.sleep(900 / clicksPerSecond.toLong() + Random.nextLong(0, 100))
             }
         }
     }
@@ -33,7 +34,7 @@ object KeyBindUtil {
         runAsync {
             while (rightClicking) {
                 rightClick()
-                Thread.sleep(1000 / clicksPerSecond.toLong())
+              Thread.sleep(900 / clicksPerSecond.toLong() + Random.nextLong(0, 100))
             }
         }
     }

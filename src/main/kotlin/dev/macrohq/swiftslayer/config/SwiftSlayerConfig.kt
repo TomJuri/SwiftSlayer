@@ -46,6 +46,15 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     )
     var bossKillerWeapon = 0
 
+  @Slider(
+    name = "Melee Weapon Slot",
+    category = "General",
+    subcategory = "Slayer",
+    min = 1f,
+    max = 9f
+  )
+  var meleeWeaponSlot = 1
+
     @Slider(
         name = "Failsafe volume",
         category = "General",
