@@ -63,6 +63,14 @@ object SlayerUtil {
     return InventoryUtil.getSlotInGUI(getSlayerName()!!)
   }
 
+  fun getMobClass() = when (config.slayer) {
+    0 -> EntityZombie::class.java
+    1 -> EntitySpider::class.java
+    2 -> EntityWolf::class.java
+    3 -> EntityEnderman::class.java
+    else -> null
+  }
+
   fun getTierSlot(): Int {
     return when (config.slayerTier) {
       0 -> InventoryUtil.getSlotInGUI("${getSlayerName()} I")

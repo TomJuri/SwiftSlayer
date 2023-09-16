@@ -77,6 +77,7 @@ class SwiftSlayerHud : BasicHud(true, 1f, 1f, 3.5f, true, true, 1F, 0F, 0F, OneC
     lines!!.add(Tuple(tracker.getXPPerHour().toString(), "/assets/swiftslayer/XPPerHour.png"))
     lines!!.add(Tuple(tracker.getTotalBosses().toString(), "/assets/swiftslayer/TotalBosses.png"))
     lines!!.add(Tuple(tracker.getBossesPerHour().toString(), "/assets/swiftslayer/BossesPerHour.png"))
+    lines!!.add(Tuple(tracker.getLevelUpIn(), "/assets/swiftslayer/LevelUpIn.png"))
     lines!!.add(Tuple(tracker.getTimeRunning(), "/assets/swiftslayer/TimeRunning.png"))
   }
 }
