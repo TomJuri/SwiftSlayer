@@ -30,9 +30,14 @@ object SlayerUtil {
       .any { it.contains("Slay the boss!") }
   ) SlayerState.BOSS_ALIVE else if (ScoreboardUtil.getScoreboardLines().any { it.contains("Boss slain!") }) SlayerState.BOSS_DEAD else null
 
-  fun getMiniBoss() = player.worldObj.loadedEntityList.filter { it::class in bossTypes }.minByOrNull { it0 ->
-    it0.getDistanceToEntity(player.worldObj.loadedEntityList.filterIsInstance<EntityArmorStand>().filter { isMiniBoss(it) }.minByOrNull { it.getDistanceToEntity(player) })
-  } as EntityLiving
+  fun getMiniBoss(): EntityLiving? {
+    val closestMiniBossArmorStand = player.worldObj.loadedEntityList.filterIsInstance<EntityArmorStand>().filter { isMiniBoss(it) }
+      .minByOrNull { it.getDistanceToEntity(player) }
+      ?: return null
+    val entity = player.worldObj.loadedEntityList.filter { it::class.java == getMobClass() }.minByOrNull { it.getDistanceToEntity(closestMiniBossArmorStand) }
+    if (entity != null) return entity as EntityLiving
+    return null
+  }
 
   fun getBoss(): Pair<EntityLiving, EntityArmorStand>? {
     val spawnedBy = player.worldObj.loadedEntityList.firstOrNull {
@@ -47,6 +52,12 @@ object SlayerUtil {
   }
 
   fun isBoss(entity: EntityArmorStand) = bosses.any { StringUtils.stripControlCodes(entity.name).contains(it) }
+  fun isBoss(entity: EntityLiving): Boolean {
+    val bossArmorStands = player.worldObj.loadedEntityList.filterIsInstance<EntityArmorStand>().filter { isBoss(it) }
+    if (bossArmorStands.isEmpty()) return false
+    val closestBossArmorStand = bossArmorStands.minByOrNull { it.getDistanceToEntity(entity) }
+    return closestBossArmorStand != null
+  }
   fun isMiniBoss(entity: EntityArmorStand) = miniBosses.any { StringUtils.stripControlCodes(entity.name).contains(it) }
 
   fun getSlayerName(): String? {
@@ -63,12 +74,12 @@ object SlayerUtil {
     return InventoryUtil.getSlotInGUI(getSlayerName()!!)
   }
 
-  fun getMobClass() = when (config.slayer) {
+  fun getMobClass(): Class<out EntityLiving> = when (config.slayer) {
     0 -> EntityZombie::class.java
     1 -> EntitySpider::class.java
     2 -> EntityWolf::class.java
     3 -> EntityEnderman::class.java
-    else -> null
+    else -> EntityZombie::class.java
   }
 
   fun getTierSlot(): Int {

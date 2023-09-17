@@ -29,7 +29,6 @@ class MacroManager {
         )
         autoBatphone.enable()
       }
-
       State.KILL_MOBS -> mobKiller.enable()
       State.KILL_BOSS -> {
         //if (config.slayer == 3) endermanBossKiller.enable()

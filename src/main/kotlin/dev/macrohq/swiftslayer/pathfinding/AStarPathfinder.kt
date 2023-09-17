@@ -116,11 +116,12 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
         }
 
         fun isWalkable(): Boolean {
+            if (notWalkable.contains(world.getBlockState(position).block)) return false
             var collision = false
-            var headhit = false
+            var headHit = false
             if (this.parent != null && this.parent.position.y < this.position.y) {
                 if (!allowedBlocks.contains(world.getBlockState(this.parent.position.add(0, 3, 0)).block)) {
-                    headhit = true
+                    headHit = true
                 }
             }
             if (parent != null && parent.position.x != position.x && parent.position.z != position.z) {
@@ -133,7 +134,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
                     && allowedBlocks.contains(world.getBlockState(position.up().up()).block)
                     && world.getBlockState(position).block.material.isSolid
                     && !collision
-                    && !headhit
+                    && !headHit
         }
 
         fun isIn(nodes: List<Node>): Boolean {
@@ -167,6 +168,10 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
             Blocks.detector_rail,
             Blocks.activator_rail,
             Blocks.golden_rail,
+        )
+
+        private val notWalkable = listOf(
+            Blocks.iron_bars
         )
     }
 }

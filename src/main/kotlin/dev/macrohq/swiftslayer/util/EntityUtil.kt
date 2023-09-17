@@ -2,33 +2,22 @@ package dev.macrohq.swiftslayer.util
 
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.monster.EntitySpider
-import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.entity.passive.EntityWolf
 import net.minecraft.util.BlockPos
-import net.minecraft.util.MathHelper
 import kotlin.math.abs
+import kotlin.math.atan2
 import kotlin.math.sqrt
 
 object EntityUtil {
-    fun getMobs(entityClass: Class<out EntityLiving>, health: Int): List<EntityLiving> {
-        val entities = world.getLoadedEntityList().filterIsInstance(entityClass).filter {
-            it.maxHealth == 1024f && it.health <= health && inRange(it)
-        }
-        return entities.sortedBy { getCost(it) }
-    }
-
-    fun getCost(entity: EntityLiving): Float {
-        val yawChange =
-            abs(MathHelper.wrapAngleTo180_float(AngleUtil.getAngles(entity).yaw - AngleUtil.yawTo360(player.rotationYaw))) / 180f
-        val pitchChange = abs(-player.rotationPitch + AngleUtil.getAngles(entity).pitch)
-        val angleChange = yawChange + pitchChange
-        val distance = (player.getDistanceToEntity(entity))
-        val cost = if (player.canEntityBeSeen(entity)) 0 else 3
-        return (distance * 0.5f + angleChange * 0.2f + cost)
-    }
-
-    fun getRevCost(entity: EntityLiving): Int {
-        return 1
+    fun getMobs(entityClass: Class<out EntityLiving>): List<EntityLiving> {
+        val entities = world.getLoadedEntityList().filterIsInstance(entityClass).filter { it.maxHealth > 100 }.filter { inRange(it) }.filter { !SlayerUtil.isBoss(it) }
+        val newEntities = mutableListOf<EntityLiving>()
+        if (SlayerUtil.getMiniBoss() != null) newEntities.add(SlayerUtil.getMiniBoss()!!)
+        if (entities.none { player.canEntityBeSeen(it) && isInFov(it) })
+            newEntities.addAll(entities.sortedBy { it.getDistanceToEntity(player) })
+        else
+            newEntities.addAll(entities.filter { player.canEntityBeSeen(it) && isInFov(it) }.sortedBy { it.getDistanceToEntity(player) })
+        return newEntities
     }
 
     private fun inRange(entity: EntityLiving): Boolean {
@@ -39,5 +28,14 @@ object EntityUtil {
                     sqrt(entity.position.distanceSq(BlockPos(-284, 48, 151))) > 20)
         }
         return true
+    }
+
+    private fun isInFov(entity: EntityLiving): Boolean {
+        val deltaX = entity.posX - player.posX
+        val deltaZ = entity.posZ - player.posZ
+        val angle = atan2(deltaZ, deltaX) - atan2(player.lookVec.zCoord, player.lookVec.xCoord)
+        val fov = Math.toRadians(110.0)
+        if (abs(angle) < fov / 2.0) return true
+        return false
     }
 }

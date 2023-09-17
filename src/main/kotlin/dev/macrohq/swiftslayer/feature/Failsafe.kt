@@ -1,7 +1,12 @@
 package dev.macrohq.swiftslayer.feature
 
 import dev.macrohq.swiftslayer.event.ReceivePacketEvent
-import dev.macrohq.swiftslayer.util.*
+import dev.macrohq.swiftslayer.util.Logger
+import dev.macrohq.swiftslayer.util.SoundUtil
+import dev.macrohq.swiftslayer.util.config
+import dev.macrohq.swiftslayer.util.macroManager
+import dev.macrohq.swiftslayer.util.player
+import dev.macrohq.swiftslayer.util.world
 import net.minecraft.init.Blocks
 import net.minecraft.network.play.server.S09PacketHeldItemChange
 import net.minecraftforge.client.event.ClientChatReceivedEvent
@@ -16,6 +21,7 @@ class Failsafe {
         if (!macroManager.enabled) return
         Logger.error("The server you were on probably restarted. Disabling.")
         SoundUtil.playSound("/assets/swiftslayer/pipe.wav", config.failsafeVolume)
+        macroManager.disable()
     }
 
     @SubscribeEvent
@@ -24,6 +30,7 @@ class Failsafe {
         if (event.packet !is S09PacketHeldItemChange) return
         Logger.error("You Item was changed this is probably a staff check!")
         SoundUtil.playSound("/assets/swiftslayer/pipe.wav", config.failsafeVolume)
+        macroManager.disable()
     }
 
     @SubscribeEvent
@@ -38,6 +45,7 @@ class Failsafe {
         if (count < 4) return
         Logger.error("You have probably been bedrock trapped! $count bedrock blocks found!")
         SoundUtil.playSound("/assets/swiftslayer/pipe.wav", config.failsafeVolume)
+        macroManager.disable()
     }
 
     @SubscribeEvent
