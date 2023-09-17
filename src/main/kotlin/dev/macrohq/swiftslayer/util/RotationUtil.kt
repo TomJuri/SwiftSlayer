@@ -43,11 +43,12 @@ object RotationUtil {
     fun onRenderWorldLast() {
         if (done) return
         if (System.currentTimeMillis() <= endTime) {
-            player.rotationYaw = interpolate(player.rotationYaw, endRotation.yaw)
-            player.rotationPitch = interpolate(player.rotationPitch, endRotation.pitch)
-            if(lock==null) return
+            player.rotationYaw = interpolate(startRotation.yaw, endRotation.yaw)
+            player.rotationPitch = interpolate(startRotation.pitch, endRotation.pitch)
+            if(lock == null) return
         }
         if (lock != null && !lock!!.first.isDead) {
+            startRotation = Rotation(player.rotationYaw, player.rotationPitch)
             endRotation = AngleUtil.getAngles(lock!!.first.positionVector.addVector(0.0, lock!!.second, 0.0))
             startTime = System.currentTimeMillis();
             endTime = startTime + 150
