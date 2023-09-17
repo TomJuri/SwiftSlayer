@@ -19,8 +19,12 @@ class Tracker {
   fun getLevelUpIn(): String {
     val xpPerHour = getXPPerHour()
     if (xpPerHour.toInt() == 0 || xpNeededForNextLevel.toFloat() == 0f) return "00:00:00"
-    val millis = (xpNeededForNextLevel / xpPerHour) * 60 * 60 * 1000
-    return String.format("%02d:%02d:%02d", millis / 3600000, millis % 3600000 / 60000, millis % 60000 / 1000)
+    val decimalHours = (xpNeededForNextLevel / xpPerHour.toFloat())
+    val hours = decimalHours.toInt()
+    val timeleft = decimalHours - hours
+    val minutes = (timeleft * 60).toInt()
+    val seconds = ((timeleft * 60 - minutes) * 60).toInt()
+    return String.format("%02d:%02d:%02d", hours, minutes, seconds)
   }
   fun getTimeRunning(): String {
     val millis = System.currentTimeMillis() - startTime

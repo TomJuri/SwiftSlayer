@@ -183,7 +183,7 @@ class MobKiller {
     private fun holdWeapon() {
         when (config.mobKillerWeapon) {
             0 -> InventoryUtil.holdItem("Spirit Sceptre")
-            1 -> InventoryUtil.holdItem("Aspect of the Dragons")
+            1 -> player.inventory.currentItem = config.meleeWeaponSlot - 1
             2 -> InventoryUtil.holdItem("Frozen Scythe")
             3 -> InventoryUtil.holdItem("Fire Veil Wand")
         }

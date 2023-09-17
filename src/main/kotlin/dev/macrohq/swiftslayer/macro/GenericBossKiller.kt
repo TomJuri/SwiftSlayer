@@ -8,9 +8,11 @@ import dev.macrohq.swiftslayer.util.PathingUtil
 import dev.macrohq.swiftslayer.util.RotationUtil
 import dev.macrohq.swiftslayer.util.SlayerUtil
 import dev.macrohq.swiftslayer.util.config
+import dev.macrohq.swiftslayer.util.gameSettings
 import dev.macrohq.swiftslayer.util.getStandingOnCeil
 import dev.macrohq.swiftslayer.util.macroManager
 import dev.macrohq.swiftslayer.util.player
+import dev.macrohq.swiftslayer.util.setPressed
 import net.minecraft.entity.EntityLiving
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
@@ -25,17 +27,15 @@ class GenericBossKiller {
   @SubscribeEvent
   fun onTick(event: ClientTickEvent) {
     if (!enabled) return
-    if (target == null) {
-      val t = SlayerUtil.getBoss()
-      if (t != null) target = t.first
-      else return
-    }
+    target = SlayerUtil.getBoss()?.first
+    if (target == null) return
     if (SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_DEAD) {
       Logger.info("Boss killed.")
+      gameSettings.keyBindSneak.setPressed(false)
       disable()
       return
     }
-
+    gameSettings.keyBindSneak.setPressed(true)
     if (AngleUtil.getAngles(target!!).pitch < 70) {
       RotationUtil.lock(target!!, 350, true, true)
     } else {
@@ -75,6 +75,7 @@ class GenericBossKiller {
     if (enabled) return
     Logger.info("Enabling GenericBossKiller")
     RotationUtil.stop()
+    PathingUtil.stop()
     target = null
     enabled = true
     hasRotated = false
@@ -85,6 +86,7 @@ class GenericBossKiller {
     Logger.info("Disabling GenericBossKiller")
     enabled = false
     RotationUtil.stop()
+    PathingUtil.stop()
     KeyBindUtil.stopClicking()
   }
 
