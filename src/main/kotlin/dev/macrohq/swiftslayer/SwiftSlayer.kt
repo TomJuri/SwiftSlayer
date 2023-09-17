@@ -6,6 +6,7 @@ import dev.macrohq.swiftslayer.command.SwiftSlayerCommand
 import dev.macrohq.swiftslayer.config.SwiftSlayerConfig
 import dev.macrohq.swiftslayer.feature.AutoBatphone
 import dev.macrohq.swiftslayer.feature.Failsafe
+import dev.macrohq.swiftslayer.feature.SupportItem
 import dev.macrohq.swiftslayer.feature.Tracker
 import dev.macrohq.swiftslayer.gui.AuthFailedDisplay
 import dev.macrohq.swiftslayer.macro.EndermanBossKiller
@@ -113,6 +114,7 @@ class SwiftSlayer {
                     MinecraftForge.EVENT_BUS.register(Failsafe())
                     MinecraftForge.EVENT_BUS.register(revenant)
                     MinecraftForge.EVENT_BUS.register(tracker)
+                    MinecraftForge.EVENT_BUS.register(SupportItem())
                     CommandManager.register(PathfindTest())
                     CommandManager.register(SwiftSlayerCommand())
                     return

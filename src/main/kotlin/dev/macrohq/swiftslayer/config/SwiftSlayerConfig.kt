@@ -14,37 +14,37 @@ import dev.macrohq.swiftslayer.util.macroManager
 
 
 class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftslayer.json") {
-    @Dropdown(
-        name = "Slayer",
-        category = "General",
-        subcategory = "Slayers",
-        options = ["Revenant Horror", "Tarantula Broodfather", "Sven Packmaster", "Voidgloom Seraph"]
-    )
-    var slayer = 0
+  @Dropdown(
+    name = "Slayer",
+    category = "General",
+    subcategory = "Slayers",
+    options = ["Revenant Horror", "Tarantula Broodfather", "Sven Packmaster", "Voidgloom Seraph"]
+  )
+  var slayer = 0
 
-    @Dropdown(
-        name = "Tier",
-        category = "General",
-        subcategory = "Slayers",
-        options = ["1", "2", "3", "4", "5"]
-    )
-    var slayerTier = 4
+  @Dropdown(
+    name = "Tier",
+    category = "General",
+    subcategory = "Slayers",
+    options = ["1", "2", "3", "4", "5"]
+  )
+  var slayerTier = 4
 
-    @Dropdown(
-        name = "MobKiller Weapon",
-        category = "General",
-        subcategory = "Slayer",
-      options = ["Spirit Sceptre", "Melee", "Frozen Scythe", "Fire Veil Wand"]
-    )
-    var mobKillerWeapon = 0
+  @Dropdown(
+    name = "MobKiller Weapon",
+    category = "General",
+    subcategory = "Slayer",
+    options = ["Spirit Sceptre", "Melee", "Frozen Scythe", "Fire Veil Wand"]
+  )
+  var mobKillerWeapon = 0
 
-    @Dropdown(
-        name = "BossKiller Weapon",
-        category = "General",
-        subcategory = "Slayer",
-        options = ["Hyperion", "Melee"]
-    )
-    var bossKillerWeapon = 0
+  @Dropdown(
+    name = "BossKiller Weapon",
+    category = "General",
+    subcategory = "Slayer",
+    options = ["Hyperion", "Melee"]
+  )
+  var bossKillerWeapon = 0
 
   @Slider(
     name = "Melee Weapon Slot",
@@ -55,56 +55,79 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
   )
   var meleeWeaponSlot = 1
 
-    @Slider(
-        name = "Failsafe volume",
-        category = "General",
-        subcategory = "Failsafe",
-        min = 0f,
-        max = 100f,
-        step = 5
-    )
-    val failsafeVolume = 100
+  @Switch(
+    name = "Use healing wand",
+    category = "General",
+    subcategory = "Support Items"
+  )
+  var useHealing = false
 
-    @KeyBind(
-        name = "Toggle Macro",
-        category = "General",
-        subcategory = "Macro"
-    )
-    var toggleMacro = OneKeyBind(UKeyboard.KEY_X)
+  @Slider(
+    name = "Use healing at % health",
+    category = "General",
+    subcategory = "Support Items",
+    min = 10f,
+    max = 90f,
+  )
+  var useHealingAt = 25
 
-    @Switch(
-        name = "Debug Mode",
-        category = "General",
-        subcategory = "Debug"
-    )
-    var debugMode = false
+  @Switch(
+    name = "Use weird tuba",
+    category = "General",
+    subcategory = "Support Items"
+  )
+  var useTuba = false
 
-    @Switch(
-        name = "Use Batphone",
-        category = "General",
-        subcategory = "Slayer"
-    )
-    var useBatphone = false
+  @Slider(
+    name = "Failsafe volume",
+    category = "General",
+    subcategory = "Failsafe",
+    min = 0f,
+    max = 100f,
+    step = 5
+  )
+  val failsafeVolume = 100
 
-    @Switch(
-        name = "Ungrab Mouse",
-        category = "General",
-        subcategory = "QOL"
-    )
-    var ungrabMouse = true
+  @KeyBind(
+    name = "Toggle Macro",
+    category = "General",
+    subcategory = "Macro"
+  )
+  var toggleMacro = OneKeyBind(UKeyboard.KEY_X)
 
-    @Switch(
-        name = "Aotv",
-        category = "General",
-        subcategory = "QOL"
-    )
-    var useAOTV = false
+  @Switch(
+    name = "Debug Mode",
+    category = "General",
+    subcategory = "Debug"
+  )
+  var debugMode = false
 
-    @HUD(name = "HUD", category = "HUD")
-    var hud = SwiftSlayerHud()
+  @Switch(
+    name = "Use Batphone",
+    category = "General",
+    subcategory = "Slayer"
+  )
+  var useBatphone = false
 
-    init {
-        initialize()
-        registerKeyBind(toggleMacro) { macroManager.toggle() }
-    }
+  @Switch(
+    name = "Ungrab Mouse",
+    category = "General",
+    subcategory = "QOL"
+  )
+  var ungrabMouse = true
+
+  @Switch(
+    name = "Aotv",
+    category = "General",
+    subcategory = "QOL"
+  )
+  var useAOTV = false
+
+  @HUD(name = "HUD", category = "HUD")
+  var hud = SwiftSlayerHud()
+
+  init {
+    initialize()
+    registerKeyBind(toggleMacro) { macroManager.toggle() }
+  }
 }

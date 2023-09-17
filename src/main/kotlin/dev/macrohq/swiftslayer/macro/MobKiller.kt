@@ -135,7 +135,7 @@ class MobKiller {
         PathingUtil.stop()
         RotationUtil.stop()
         state = State.NONE
-        Logger.error("Disabling")
+      Logger.info("Disabling MobKiller.")
     }
 
     private fun lookAtEntity(entity: EntityLiving) {

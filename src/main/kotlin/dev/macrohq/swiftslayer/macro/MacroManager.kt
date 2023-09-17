@@ -1,5 +1,6 @@
 package dev.macrohq.swiftslayer.macro
 
+import dev.macrohq.swiftslayer.util.KeyBindUtil
 import dev.macrohq.swiftslayer.util.Logger
 import dev.macrohq.swiftslayer.util.PathingUtil
 import dev.macrohq.swiftslayer.util.SlayerUtil
@@ -17,7 +18,8 @@ class MacroManager {
 
   var enabled = false
     private set
-  private var state = State.ACTIVATE_QUEST
+  var state = State.ACTIVATE_QUEST
+    private set
 
   @SubscribeEvent
   fun onTick(event: ClientTickEvent) {
@@ -61,11 +63,12 @@ class MacroManager {
     mobKiller.disable()
     genericBossKiller.disable()
     endermanBossKiller.disable()
+    KeyBindUtil.stopClicking()
     PathingUtil.stop()
     UngrabUtil.regrabMouse()
   }
 
-  private enum class State {
+  enum class State {
     ACTIVATE_QUEST,
     KILL_MOBS,
     KILL_BOSS
