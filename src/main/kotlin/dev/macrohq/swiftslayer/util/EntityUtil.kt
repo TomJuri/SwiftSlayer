@@ -3,6 +3,7 @@ package dev.macrohq.swiftslayer.util
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.monster.EntitySpider
 import net.minecraft.entity.passive.EntityWolf
+import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -10,13 +11,11 @@ import kotlin.math.sqrt
 
 object EntityUtil {
     fun getMobs(entityClass: Class<out EntityLiving>): List<EntityLiving> {
-        val entities = world.getLoadedEntityList().filterIsInstance(entityClass).filter { it.maxHealth > 100 }.filter { inRange(it) }.filter { !SlayerUtil.isBoss(it) }
+        val entities = world.getLoadedEntityList().filterIsInstance(entityClass).filter { it.maxHealth > 100 }
+            .filter { world.getBlockState(it.getStandingOnCeil()).block != Blocks.air }.filter { !SlayerUtil.isBoss(it) }
         val newEntities = mutableListOf<EntityLiving>()
         if (SlayerUtil.getMiniBoss() != null) newEntities.add(SlayerUtil.getMiniBoss()!!)
-        if (entities.none { player.canEntityBeSeen(it) && isInFov(it) })
             newEntities.addAll(entities.sortedBy { it.getDistanceToEntity(player) })
-        else
-            newEntities.addAll(entities.filter { player.canEntityBeSeen(it) && isInFov(it) }.sortedBy { it.getDistanceToEntity(player) })
         return newEntities
     }
 

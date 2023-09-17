@@ -56,7 +56,7 @@ class GenericBossKiller {
     if (config.bossKillerWeapon == 1) {
       if (player.inventory.currentItem != config.meleeWeaponSlot - 1)
         player.inventory.currentItem = config.meleeWeaponSlot - 1
-      KeyBindUtil.leftClick(10)
+      KeyBindUtil.leftClick(8)
 
       // Hyperion
     } else if (config.bossKillerWeapon == 0) {
