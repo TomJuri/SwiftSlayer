@@ -9,7 +9,6 @@ import dev.macrohq.swiftslayer.util.SlayerUtil
 import dev.macrohq.swiftslayer.util.config
 import dev.macrohq.swiftslayer.util.gameSettings
 import dev.macrohq.swiftslayer.util.getStandingOnCeil
-import dev.macrohq.swiftslayer.util.macroManager
 import dev.macrohq.swiftslayer.util.player
 import dev.macrohq.swiftslayer.util.setPressed
 import net.minecraft.entity.EntityLiving
@@ -52,9 +51,9 @@ class GenericBossKiller {
 
       // Hyperion
     } else if (config.bossKillerWeapon == 1) {
-      if (!InventoryUtil.holdItem("Spirit Sceptre")) {
+      if (!InventoryUtil.holdItem("Heroic Spirit Sceptre")) {
         Logger.error("Hyperion not found in hotbar.")
-        macroManager.disable()
+        // macroManager.disable()
         return
       }
       RotationUtil.stop()
