@@ -1,6 +1,5 @@
 package dev.macrohq.swiftslayer.util
 
-import dev.macrohq.swiftslayer.util.Logger.info
 import net.minecraft.entity.Entity
 import kotlin.math.pow
 
@@ -12,7 +11,6 @@ object RotationUtil {
     private var done = true
     private var lock: Pair<Entity, Double>? = null
     private var isOverriden = false
-    private var isNigga = false
 
     fun ease(rotation: Rotation, durationMillis: Long, override: Boolean = false) {
         if (isOverriden) return
@@ -25,19 +23,19 @@ object RotationUtil {
         endTime = startTime + durationMillis
     }
 
-    fun lock(entity: Entity, durationMillis: Long, eyes: Boolean, override: Boolean = false) {
+    fun lock(entity: Entity, durationMillis: Long, override: Boolean = false) {
         if (isOverriden) return
         done = false
         ease(
             AngleUtil.getAngles(
                 entity.positionVector.addVector(
                     0.0,
-                    if (eyes) entity.eyeHeight.toDouble() else 1.0,
+                    1.2,
                     0.0
                 )
             ), durationMillis, override
         )
-        lock = Pair(entity, if (eyes) entity.eyeHeight.toDouble() else 1.0)
+        lock = Pair(entity, 1.2)
     }
 
     fun onRenderWorldLast() {

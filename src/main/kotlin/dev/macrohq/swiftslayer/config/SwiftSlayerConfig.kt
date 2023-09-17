@@ -18,7 +18,7 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     name = "Slayer",
     category = "General",
     subcategory = "Slayers",
-    options = ["Revenant Horror", "Tarantula Broodfather", "Sven Packmaster", "Voidgloom Seraph"]
+    options = ["Revenant Horror", "Tarantula Broodfather", "Sven Packmaster"/*, "Voidgloom Seraph"*/]
   )
   var slayer = 0
 
@@ -42,7 +42,7 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     name = "BossKiller Weapon",
     category = "General",
     subcategory = "Slayer",
-    options = ["Hyperion", "Melee"]
+    options = ["Melee", "Hyperion"]
   )
   var bossKillerWeapon = 0
 

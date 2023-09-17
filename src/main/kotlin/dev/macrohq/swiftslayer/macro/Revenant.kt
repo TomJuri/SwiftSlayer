@@ -1,7 +1,14 @@
 package dev.macrohq.swiftslayer.macro
 
-import dev.macrohq.swiftslayer.util.*
+import dev.macrohq.swiftslayer.util.KeyBindUtil
 import dev.macrohq.swiftslayer.util.Logger.info
+import dev.macrohq.swiftslayer.util.PathingUtil
+import dev.macrohq.swiftslayer.util.RenderUtil
+import dev.macrohq.swiftslayer.util.RotationUtil
+import dev.macrohq.swiftslayer.util.config
+import dev.macrohq.swiftslayer.util.mobKiller
+import dev.macrohq.swiftslayer.util.player
+import dev.macrohq.swiftslayer.util.world
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.entity.monster.EntityZombie
@@ -69,8 +76,8 @@ class Revenant {
             }
             State.LOOKING -> {
                 info("looking")
-                if(config.bossKillerWeapon==0) RotationUtil.ease(RotationUtil.Rotation(player.rotationYaw, 90f), 200)
-                else RotationUtil.lock(mob!!, 200, false,true)
+                if (config.bossKillerWeapon == 1) RotationUtil.ease(RotationUtil.Rotation(player.rotationYaw, 90f), 200)
+                else RotationUtil.lock(mob!!, 200, true)
                 state = State.KILLING
             }
             State.KILLING -> {
@@ -78,7 +85,7 @@ class Revenant {
 //                info("distance to entity: ${player.getDistanceToEntity(mob!!)}")
 //                info("mobhealth: ${mob!!.health}")
                 if(player.getDistanceToEntity(mob!!)<5 && mob!!.health > 0) {
-                    if (config.bossKillerWeapon == 0) KeyBindUtil.rightClick(10)
+                    if (config.bossKillerWeapon == 1) KeyBindUtil.rightClick(10)
                     else KeyBindUtil.leftClick(10)
                 }
                 else{

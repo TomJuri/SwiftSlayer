@@ -13,6 +13,7 @@ import dev.macrohq.swiftslayer.util.tracker
 import net.minecraft.util.Tuple
 import org.lwjgl.util.Color
 
+// thanks to tama and yuro for suffering days before making this work
 class SwiftSlayerHud : BasicHud(true, 1f, 1f, 3.5f, true, true, 1F, 0F, 0F, OneColor(0, 0, 0, 150), false, 2F, OneColor(0, 0, 0, 240)) {
 
   private var lines: ArrayList<Tuple<String, String>>? = ArrayList()

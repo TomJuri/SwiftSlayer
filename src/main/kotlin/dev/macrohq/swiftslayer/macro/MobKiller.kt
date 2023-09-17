@@ -143,7 +143,7 @@ class MobKiller {
         when (config.mobKillerWeapon) {
             0 -> RotationUtil.ease(angle, 200, true)
             1 -> RotationUtil.ease(angle, 200, true)
-            2 -> RotationUtil.lock(entity, 200, false, override = true)
+          2 -> RotationUtil.lock(entity, 200, true)
             3 -> {}
         }
     }

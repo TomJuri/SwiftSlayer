@@ -29,20 +29,4 @@ object PathingUtil {
     hasFailed = false
     pathExecutor.disable()
   }
-
-  fun getDifferentPosition(): BlockPos? {
-    val pos = player.getStandingOnCeil()
-    for (x in 2..10) {
-      for (y in 0..3) {
-        for (z in 2..10) {
-          val newPos = pos.add(x, y, z)
-          if (player.worldObj.getBlockState(newPos).block.isCollidable && !player.worldObj.getBlockState(newPos.up()).block.isCollidable && !player.worldObj.getBlockState(
-              newPos.up().up()
-            ).block.isCollidable
-          ) return newPos
-        }
-      }
-    }
-    return null
-  }
 }

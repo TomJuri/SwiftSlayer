@@ -3,37 +3,35 @@ package dev.macrohq.swiftslayer.util
 import net.minecraft.util.MouseHelper
 import org.lwjgl.input.Mouse
 
-object UngrabUtil {
-
-    private var isUngrabbed = false
+object UnGrabUtil {
+  private var isUnGrabbed = false
     private var oldMouseHelper: MouseHelper? = null
-    private var doesGameWantUngrabbed = false
+  private var doesGameWantUnGrabbed = false
 
-    fun ungrabMouse() {
-        if (isUngrabbed || !config.ungrabMouse) return
+  fun unGrabMouse() {
+    if (isUnGrabbed || !config.ungrabMouse) return
         gameSettings.pauseOnLostFocus = false
         if (oldMouseHelper == null) oldMouseHelper = mc.mouseHelper
-        doesGameWantUngrabbed = !Mouse.isGrabbed()
+    doesGameWantUnGrabbed = !Mouse.isGrabbed()
         oldMouseHelper!!.ungrabMouseCursor()
         mc.inGameHasFocus = true
         mc.mouseHelper = object : MouseHelper() {
             override fun mouseXYChange() {}
             override fun grabMouseCursor() {
-                doesGameWantUngrabbed = false
+              doesGameWantUnGrabbed = false
             }
-
             override fun ungrabMouseCursor() {
-                doesGameWantUngrabbed = true
+              doesGameWantUnGrabbed = true
             }
         }
-        isUngrabbed = true
+    isUnGrabbed = true
     }
 
-    fun regrabMouse() {
-        if (!isUngrabbed) return
+  fun grabMouse() {
+    if (!isUnGrabbed) return
         mc.mouseHelper = oldMouseHelper
-        if (!doesGameWantUngrabbed) mc.mouseHelper.grabMouseCursor()
+    if (!doesGameWantUnGrabbed) mc.mouseHelper.grabMouseCursor()
         oldMouseHelper = null
-        isUngrabbed = false
+    isUnGrabbed = false
     }
 }

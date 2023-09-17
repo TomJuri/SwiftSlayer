@@ -4,7 +4,7 @@ import dev.macrohq.swiftslayer.util.KeyBindUtil
 import dev.macrohq.swiftslayer.util.Logger
 import dev.macrohq.swiftslayer.util.PathingUtil
 import dev.macrohq.swiftslayer.util.SlayerUtil
-import dev.macrohq.swiftslayer.util.UngrabUtil
+import dev.macrohq.swiftslayer.util.UnGrabUtil
 import dev.macrohq.swiftslayer.util.autoBatphone
 import dev.macrohq.swiftslayer.util.config
 import dev.macrohq.swiftslayer.util.endermanBossKiller
@@ -50,7 +50,7 @@ class MacroManager {
     }
     Logger.info("Enabling macro.")
     tracker.reset()
-    UngrabUtil.ungrabMouse()
+    UnGrabUtil.unGrabMouse()
     state = State.ACTIVATE_QUEST
     enabled = true
   }
@@ -65,7 +65,7 @@ class MacroManager {
     endermanBossKiller.disable()
     KeyBindUtil.stopClicking()
     PathingUtil.stop()
-    UngrabUtil.regrabMouse()
+    UnGrabUtil.grabMouse()
   }
 
   enum class State {

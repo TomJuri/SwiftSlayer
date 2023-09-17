@@ -1,6 +1,5 @@
 package dev.macrohq.swiftslayer.macro
 
-import dev.macrohq.swiftslayer.util.AngleUtil
 import dev.macrohq.swiftslayer.util.InventoryUtil
 import dev.macrohq.swiftslayer.util.KeyBindUtil
 import dev.macrohq.swiftslayer.util.Logger
@@ -22,7 +21,6 @@ class GenericBossKiller {
   var enabled = false
     private set
   private var target: EntityLiving? = null
-  private var hasRotated = false
 
   @SubscribeEvent
   fun onTick(event: ClientTickEvent) {
@@ -36,31 +34,25 @@ class GenericBossKiller {
       return
     }
     gameSettings.keyBindSneak.setPressed(true)
-    if (AngleUtil.getAngles(target!!).pitch < 70) {
-      RotationUtil.lock(target!!, 350, true, true)
-    } else {
-      KeyBindUtil.stopClicking()
-      val diffPos = PathingUtil.getDifferentPosition()
-      if (diffPos == null || !PathingUtil.isDone) return
-      RotationUtil.stop()
-      PathingUtil.goto(diffPos)
-      return
-    }
 
-    if (player.getDistanceToEntity(target) > 1.5 && PathingUtil.isDone) {
+    // stay close to boss
+    RotationUtil.lock(target!!, 850, true)
+    if (player.getDistanceToEntity(target) > 2) {
+      if (!PathingUtil.isDone) return
       PathingUtil.goto(target!!.getStandingOnCeil())
       return
+    } else {
+      PathingUtil.stop()
     }
 
     // Melee
-    if (config.bossKillerWeapon == 1) {
-      if (player.inventory.currentItem != config.meleeWeaponSlot - 1)
-        player.inventory.currentItem = config.meleeWeaponSlot - 1
+    if (config.bossKillerWeapon == 0) {
+      player.inventory.currentItem = config.meleeWeaponSlot - 1
       KeyBindUtil.leftClick(8)
 
       // Hyperion
-    } else if (config.bossKillerWeapon == 0) {
-      if (!InventoryUtil.holdItem("Hyperion")) {
+    } else if (config.bossKillerWeapon == 1) {
+      if (!InventoryUtil.holdItem("Spirit Sceptre")) {
         Logger.error("Hyperion not found in hotbar.")
         macroManager.disable()
         return
@@ -78,7 +70,6 @@ class GenericBossKiller {
     PathingUtil.stop()
     target = null
     enabled = true
-    hasRotated = false
   }
 
   fun disable() {
@@ -88,10 +79,5 @@ class GenericBossKiller {
     RotationUtil.stop()
     PathingUtil.stop()
     KeyBindUtil.stopClicking()
-  }
-
-  private enum class State {
-    GOTO_BOSS,
-
   }
 }
