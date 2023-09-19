@@ -8,9 +8,9 @@ import net.minecraft.entity.monster.EntitySpider
 import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.entity.passive.EntityWolf
 import net.minecraft.util.StringUtils
+import javax.naming.InvalidNameException
 
 object SlayerUtil {
-
   private val bosses = listOf("Revenant Horror", "Atoned Horror", "Tarantula Broodfather", "Sven Packmaster", "Voidgloom Seraph", "Inferno Demonlord")
   private val miniBosses = listOf("Revenant Sycophant", "Revenant Champion", "Deformed Revenant", "Atoned Champion", "Atoned Revenant", "Tarantula Vermin", "Tarantula Beast", "Mutant Tarantula", "Pack Enforcer", "Sven Follower", "Sven Alpha", "Voidling Devotee", "Voidling Radical", "Voidcrazed Maniac", "Flare Demon", "Kindleheart Demon", "Burningsoul Demon")
   private val bossTypes = listOf(EntityZombie::class, EntitySpider::class, EntityWolf::class, EntityEnderman::class, EntityBlaze::class)
@@ -103,6 +103,14 @@ object SlayerUtil {
       3 -> "IV"
       4 -> "V"
       else -> null
+    }
+  }
+
+  fun getRevWeaponSlot(): Int{
+    return when(config.revWeapon){
+      0 -> InventoryUtil.getHotbarSlotForItem("Spirit Sceptre")
+      1 -> InventoryUtil.getHotbarSlotForItem("Axe of the Shredded")
+      else -> 0
     }
   }
 

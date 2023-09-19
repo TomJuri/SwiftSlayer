@@ -46,9 +46,6 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
             path.add(0, currentNode.position)
             currentNode = currentNode.parent
         }
-        RenderUtil.markers.clear()
-        RenderUtil.lines.clear()
-        RenderUtil.markers.addAll(path)
 
         val smooth = mutableListOf<BlockPos>()
         if (path.isNotEmpty()) {

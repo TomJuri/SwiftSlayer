@@ -47,10 +47,6 @@ class MobKiller {
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (player == null || world == null) return
         if (!enabled) return
-        if (SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_ALIVE) {
-            disable()
-            return
-        }
         ticks++
         if (player.lastTickPosition().add(0, -1, 0) == player.getStandingOnFloor()) {
             stuckCounter++

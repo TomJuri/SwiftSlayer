@@ -103,6 +103,16 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     @HUD(name = "HUD", category = "HUD")
     var hud = SwiftSlayerHud()
 
+    /*
+    * Revenant Horror
+    */
+    @Dropdown(
+        name = "Main Weapon",
+        category = "Revenant Horror",
+        options = ["Hyperion", "Axe of the Shredded", "Melee[Slot 1]"]
+    )
+    var revWeapon = 0
+
     init {
         initialize()
         registerKeyBind(toggleMacro) { macroManager.toggle() }

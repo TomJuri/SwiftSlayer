@@ -38,16 +38,13 @@ object BlockUtil {
         var blockFail = 0
         var lastBlockY = blocks[0].y
         var lastFullBlock = world.isBlockFullCube(blocks[0])
-        var isLastBlockSlab = isStairSlab(blocks[0])
         var isLastBlockAir = world.isAirBlock(blocks[0])
         blocks.remove(blocks[0])
         blocks.forEach{
             if(!AStarPathfinder.Node(it, null).isWalkable() && !world.isAirBlock(it)){
                 return false
             }
-//            if(!(isLastBlockSlab && world.isBlockFullCube(it))) return false
             if(isLastBlockAir && world.isBlockFullCube(it) && !isStairSlab(it)) return false
-//            if(!(isLastBlockAir && isStairSlab(it))) return false
             if(lastFullBlock && world.isBlockFullCube(it) &&  it.y > lastBlockY) return false
             if(world.isAirBlock(it)) blockFail++
             else blockFail=0
@@ -55,7 +52,6 @@ object BlockUtil {
 
             lastBlockY = it.y
             lastFullBlock = world.isBlockFullCube(it)
-            isLastBlockSlab = isStairSlab(it)
             isLastBlockAir = world.isAirBlock(it)
         }
         return true

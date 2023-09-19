@@ -27,7 +27,7 @@ class PathExecutor {
     private set
   var directionYaw = 0f
     private set
-  private var path = listOf<BlockPos>()
+  var path = listOf<BlockPos>()
   private var next: BlockPos? = null
   private var pathFailCounter = 0
   private var aotving = false
@@ -54,9 +54,7 @@ class PathExecutor {
 
     if (isOnPath()) {
       next = path[path.indexOf(getStandingOn()!!) + 1]
-      RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f), 500)
-      RenderUtil.markers.clear()
-      RenderUtil.markers.add(next!!)
+      RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f), 500, false)
     }
 
     if (canAOTV()) {
@@ -95,7 +93,7 @@ class PathExecutor {
   }
 
   fun disable() {
-    RotationUtil.stop()
+//    RotationUtil.stop()
     enabled = false
     gameSettings.keyBindSprint.setPressed(false)
     gameSettings.keyBindForward.setPressed(false)

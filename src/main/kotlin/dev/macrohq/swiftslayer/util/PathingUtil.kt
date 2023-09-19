@@ -18,9 +18,8 @@ object PathingUtil {
         hasFailed = true
         Logger.log("Could not find path!!")
       } else {
-        RenderUtil.lines.clear()
+        Logger.info("enabled patehxeutor")
         pathExecutor.enable(path)
-        RenderUtil.lines.addAll(path.map { it.toVec3() })
       }
     }
   }

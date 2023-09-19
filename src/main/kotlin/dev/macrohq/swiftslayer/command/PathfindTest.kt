@@ -3,29 +3,38 @@ package dev.macrohq.swiftslayer.command
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
-import dev.macrohq.swiftslayer.util.KeyBindUtil
-import dev.macrohq.swiftslayer.util.Logger
-import dev.macrohq.swiftslayer.util.PathingUtil
-import dev.macrohq.swiftslayer.util.RenderUtil
-import dev.macrohq.swiftslayer.util.RotationUtil
-import dev.macrohq.swiftslayer.util.SlayerUtil
-import dev.macrohq.swiftslayer.util.autoBatphone
-import dev.macrohq.swiftslayer.util.getStandingOnCeil
-import dev.macrohq.swiftslayer.util.mobKiller
-import dev.macrohq.swiftslayer.util.player
-import dev.macrohq.swiftslayer.util.revenant
-import dev.macrohq.swiftslayer.util.swiftSlayer
+import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder
+import dev.macrohq.swiftslayer.util.*
+import dev.macrohq.swiftslayer.util.Logger.info
+import net.minecraft.entity.monster.EntityZombie
+import net.minecraft.util.BlockPos
 
 @Command(value = "pathfindtest", aliases = ["pft"])
 class PathfindTest {
     @Main
     private fun main() {
-        Logger.info(SlayerUtil.getActive().toString())
-        //revenant.enable()
-      //  PathingUtil.goto(swiftSlayer.removeLater!!)
-//        world.getLoadedEntityList().forEach {
-//            println(it)
+//        val entity = EntityUtil.getMobs(EntityZombie::class.java)[0] as EntityZombie
+//        val blocks = BlockUtil.neighbourGenerator(entity.position.down(), 6, 1, 6)
+//        val betterBlocks = mutableListOf<BlockPos>()
+//        val parentPos = entity.position.down()
+//        for(block in blocks){
+//            if(!AStarPathfinder.Node(block, null).isWalkable()) continue
+//            if(block.distanceSq(parentPos) !in 16.0..25.0) continue
+//
+//            betterBlocks.add(block)
+//
 //        }
+//        RenderUtil.entites.clear()
+//        RenderUtil.markers.clear()
+//
+//        RenderUtil.entites.add(entity)
+//        RenderUtil.markers.add(betterBlocks.minBy { player.getDistanceSqToCenter(it) })
+        revenant.enable()
+//        RenderUtil.filledBox.clear()
+//        RenderUtil.lines.clear()
+//        val blocks = AStarPathfinder(player.getStandingOnFloor(), swiftSlayer.removeLater!!).findPath(1000)
+//        RenderUtil.filledBox.addAll(blocks)
+//        blocks.forEach { RenderUtil.lines.add(it.toVec3Top()) }
     }
 
     @SubCommand
