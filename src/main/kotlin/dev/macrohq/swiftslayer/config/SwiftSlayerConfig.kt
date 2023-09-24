@@ -34,9 +34,16 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     name = "MobKiller Weapon",
     category = "General",
     subcategory = "Slayer",
-    options = ["Spirit Sceptre", "Melee", "Frozen Scythe", "Fire Veil Wand"]
+    options = ["Spirit Sceptre", "Melee", "Fire Veil Wand"]
   )
   var mobKillerWeapon = 0
+
+  @Switch(
+    name = "Ignore Mini bosses",
+    category = "General",
+    subcategory = "Slayer",
+  )
+  var ignoreMiniBosses = false
 
   @Dropdown(
     name = "BossKiller Weapon",
@@ -77,6 +84,13 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     subcategory = "Support Items"
   )
   var useTuba = false
+
+  @Switch(
+    name = "Deploy Power Orb",
+    category = "General",
+    subcategory = "Support Items"
+  )
+  var deployOrb = false
 
   @Slider(
     name = "Failsafe volume",

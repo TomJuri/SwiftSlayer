@@ -9,203 +9,192 @@ import dev.macrohq.swiftslayer.util.PathingUtil
 import dev.macrohq.swiftslayer.util.RenderUtil
 import dev.macrohq.swiftslayer.util.RotationUtil
 import dev.macrohq.swiftslayer.util.SlayerUtil
+import dev.macrohq.swiftslayer.util.Timer
 import dev.macrohq.swiftslayer.util.config
-import dev.macrohq.swiftslayer.util.getStandingOnFloor
-import dev.macrohq.swiftslayer.util.lastTickPosition
+import dev.macrohq.swiftslayer.util.getStandingOnCeil
+import dev.macrohq.swiftslayer.util.lastTickPositionCeil
 import dev.macrohq.swiftslayer.util.mc
 import dev.macrohq.swiftslayer.util.player
-import dev.macrohq.swiftslayer.util.world
 import net.minecraft.entity.EntityLiving
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import kotlin.math.abs
+import kotlin.math.sqrt
 
 class MobKiller {
-    private var blacklist = mutableListOf<EntityLiving>()
-    var enabled = false
-        private set
-    private var state: State = State.NONE
-    private var targetEntity: EntityLiving? = null
-    private var ticks: Int = 0
-    private var stuckCounter: Int = 0
-    private var lookTimer: Int = 0
-    private var fireVeilTime = 0L
-    private lateinit var angle: RotationUtil.Rotation
+  private var blacklist = mutableListOf<EntityLiving>()
+  var enabled = false
+    private set
+  private var state: State = State.CHOOSE_TARGET
+  private var targetEntity: EntityLiving? = null
+  private var blacklistResetTimer = Timer(0)
+  private var stuckTimer = Timer(Long.MAX_VALUE)
+  private var lookTimer = Timer(Long.MAX_VALUE)
+  private var fireVeilTimer = Timer(Long.MAX_VALUE)
+  private lateinit var angle: RotationUtil.Rotation
 
-    private enum class State {
-        NONE,
-        STARTING,
-        FINDING,
-        PATHFINDING,
-        PATHFINDING_VERIFY,
-        LOOKING,
-        LOOKING_VERIFY,
-        KILLING,
+  @SubscribeEvent
+  fun onTick(event: TickEvent.ClientTickEvent) {
+    if (!enabled) return
+    InventoryUtil.closeGUI()
+    if (SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_ALIVE) {
+      disable()
+      return
     }
 
-    @SubscribeEvent
-    fun onTick(event: TickEvent.ClientTickEvent) {
-        if (player == null || world == null) return
-        if (!enabled) return
-        if (SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_ALIVE) {
-            disable()
-            return
+    if (sqrt(player.lastTickPositionCeil().distanceSq(player.getStandingOnCeil())) > 1)
+      stuckTimer = Timer(1500)
+
+    if (blacklistResetTimer.isDone) {
+      blacklist.clear()
+      blacklistResetTimer = Timer(1000)
+    }
+
+    when (state) {
+      State.CHOOSE_TARGET -> {
+        RenderUtil.entites.clear()
+        val targetEntityList = EntityUtil.getMobs(SlayerUtil.getMobClass()).toMutableList()
+        targetEntityList.removeAll(blacklist)
+        if (targetEntityList.isEmpty()) return
+        targetEntity = targetEntityList[0]
+        RenderUtil.entites.add(targetEntity!!)
+      }
+
+      State.GOTO_TARGET -> PathingUtil.goto(targetEntity!!.getStandingOnCeil())
+
+      State.VERIFY_PATHFINDING -> {
+        if (PathingUtil.hasFailed || targetEntity!!.isDead || stuckTimer.isDone) {
+          PathingUtil.stop()
+          stuckTimer = Timer(1500)
+          blacklist.add(targetEntity!!)
+          state = State.CHOOSE_TARGET
+          return
         }
-        ticks++
-        if (player.lastTickPosition().add(0, -1, 0) == player.getStandingOnFloor()) {
-            stuckCounter++
-        } else stuckCounter = 0
-
-        when (state) {
-            State.STARTING -> {
-                state = State.FINDING
-                return
-            }
-
-            State.FINDING -> {
-                RenderUtil.entites.clear()
-                if (ticks >= 80) {
-                    blacklist.clear()
-                    ticks = 0
-                }
-                val targetEntityList = EntityUtil.getMobs(SlayerUtil.getMobClass()).toMutableList()
-                targetEntityList.removeAll(blacklist)
-                if (targetEntityList.isEmpty()) return
-
-                targetEntity = targetEntityList[0]
-                RenderUtil.entites.add(targetEntity as EntityLiving)
-                state = State.PATHFINDING
-            }
-
-            State.PATHFINDING -> {
-                PathingUtil.goto(targetEntity!!.position.down())
-                state = State.PATHFINDING_VERIFY
-            }
-
-            State.PATHFINDING_VERIFY -> {
-                if (PathingUtil.hasFailed || targetEntity!!.health <= 0 || stuckCounter >= 40) {
-                    PathingUtil.stop()
-                    stuckCounter = 0
-                    blacklist.add(targetEntity!!)
-                    state = State.FINDING
-                    return
-                }
-                if ((PathingUtil.isDone || player.getDistanceToEntity(targetEntity) < attackDistance()) && player.canEntityBeSeen(targetEntity)) {
-                    stop()
-                    state = State.LOOKING
-                }
-                return
-            }
-
-            State.LOOKING -> {
-                lookAtEntity(targetEntity!!)
-                state = State.LOOKING_VERIFY
-                return
-            }
-
-            State.LOOKING_VERIFY -> {
-                if (lookTimer++ >= 40) {
-                    state = State.LOOKING;
-                    lookTimer = 0
-                }
-                if (lookDone()) {
-                    lookTimer = 0
-                    RotationUtil.stop()
-                    holdWeapon()
-                    state = State.KILLING
-                }
-            }
-
-            State.KILLING -> {
-                useWeapon()
-                blacklist.add(targetEntity as EntityLiving)
-                state = State.FINDING
-            }
-            else -> {}
+        if ((PathingUtil.isDone || player.getDistanceToEntity(targetEntity) < attackDistance()) && player.canEntityBeSeen(targetEntity)) {
+          stopWalking()
+          state = State.LOOK_AT_TARGET
         }
-    }
+        return
+      }
 
-    fun enable() {
-        enabled = true
-        state = State.STARTING
-    }
-
-    fun disable() {
-        enabled = false
-        PathingUtil.stop()
+      State.LOOK_AT_TARGET -> {
         RotationUtil.stop()
-        state = State.NONE
-      Logger.info("Disabling MobKiller.")
-    }
+        lookAtEntity(targetEntity!!)
+        lookTimer = Timer(1500)
+      }
 
-    private fun lookAtEntity(entity: EntityLiving) {
-        angle = angleForWeapon(entity)
-        when (config.mobKillerWeapon) {
-            0 -> RotationUtil.ease(angle, 200, true)
-            1 -> RotationUtil.ease(angle, 200, true)
-          2 -> RotationUtil.lock(entity, 200, true)
-            3 -> {}
+      State.VERIFY_LOOKING -> {
+        if (lookTimer.isDone) {
+          state = State.LOOK_AT_TARGET
+          lookTimer = Timer(Long.MAX_VALUE)
+          state = State.CHOOSE_TARGET
+          blacklist.add(targetEntity!!)
+          RotationUtil.stop()
+          return
         }
-    }
+        if (lookDone()) {
+          lookTimer = Timer(Long.MAX_VALUE)
+          RotationUtil.stop()
+          holdWeapon()
+        } else {
+          return
+        }
+      }
 
-    private fun angleForWeapon(entity: EntityLiving): RotationUtil.Rotation {
-        return when (config.mobKillerWeapon) {
-            0 -> RotationUtil.Rotation(AngleUtil.getAngles(targetEntity!!).yaw, 45f)
-            1, 2 -> AngleUtil.getAngles(entity.positionVector.addVector(0.0, 1.0, 0.0))
-            else -> RotationUtil.Rotation(0f, 0f)
-        }
+      State.KILL_TARGET -> {
+        useWeapon()
+        blacklist.add(targetEntity as EntityLiving)
+      }
     }
+    state = State.entries[(state.ordinal + 1) % State.entries.size]
+  }
 
-    private fun useWeapon() {
-        when (config.mobKillerWeapon) {
-            0, 2 -> KeyBindUtil.rightClick()
-            1 -> KeyBindUtil.leftClick()
-            3 -> {
-                if ((System.currentTimeMillis() - fireVeilTime) > 5000) {
-                    fireVeilTime = System.currentTimeMillis()
-                    KeyBindUtil.rightClick()
-                }
-            }
-            else -> {}
-        }
-    }
+  fun enable() {
+    Logger.info("Enabling MobKiller.")
+    enabled = true
+    stuckTimer = Timer(Long.MAX_VALUE)
+    lookTimer = Timer(Long.MAX_VALUE)
+    fireVeilTimer = Timer(Long.MAX_VALUE)
+    blacklistResetTimer = Timer(0)
+    state = State.CHOOSE_TARGET
+  }
 
-    private fun attackDistance(): Int {
-        return when (config.mobKillerWeapon) {
-            0 -> 6
-            1 -> 3
-            2 -> 32
-            3 -> 4
-            else -> 6
-        }
-    }
+  fun disable() {
+    Logger.info("Disabling MobKiller.")
+    enabled = false
+    PathingUtil.stop()
+    RotationUtil.stop()
+  }
 
-    private fun holdWeapon() {
-        when (config.mobKillerWeapon) {
-            0 -> InventoryUtil.holdItem("Spirit Sceptre")
-            1 -> player.inventory.currentItem = config.meleeWeaponSlot - 1
-            2 -> InventoryUtil.holdItem("Frozen Scythe")
-            3 -> InventoryUtil.holdItem("Fire Veil Wand")
-        }
+  private fun lookAtEntity(entity: EntityLiving) {
+    angle = angleForWeapon(entity)
+    when (config.mobKillerWeapon) {
+      0 -> RotationUtil.ease(angle, 200, true)
+      1 -> RotationUtil.ease(angle, 200, true)
+      2 -> {}
     }
+  }
 
-    private fun stop() {
-        when (config.mobKillerWeapon) {
-            0 -> {}
-            1, 2 -> PathingUtil.stop()
-            3 -> {}
-        }
+  private fun angleForWeapon(entity: EntityLiving): RotationUtil.Rotation {
+    return when (config.mobKillerWeapon) {
+      0 -> RotationUtil.Rotation(AngleUtil.getAngles(targetEntity!!).yaw, 45f)
+      1 -> AngleUtil.getAngles(entity.positionVector.addVector(0.0, 0.8, 0.0))
+      else -> RotationUtil.Rotation(0f, 0f)
     }
+  }
 
-    private fun lookDone(): Boolean {
-        val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw) - AngleUtil.yawTo360(angle.yaw))
-        val pitchDiff = abs(mc.thePlayer.rotationPitch - angle.pitch)
-        return when (config.mobKillerWeapon) {
-            0 -> pitchDiff < 2
-            1 -> yawDiff < 10 && pitchDiff < 5
-            2 -> yawDiff < 3 && pitchDiff < 3
-            3 -> true
-            else -> true
+  private fun useWeapon() {
+    when (config.mobKillerWeapon) {
+      0 -> KeyBindUtil.rightClick()
+      1 -> KeyBindUtil.leftClick()
+      2 -> {
+        if (fireVeilTimer.isDone) {
+          fireVeilTimer = Timer(4900)
+          KeyBindUtil.rightClick()
         }
+      }
+
+      else -> {}
     }
+  }
+
+  private fun attackDistance(): Int {
+    return when (config.mobKillerWeapon) {
+      0 -> 6
+      1 -> 3
+      2 -> 4
+      else -> 6
+    }
+  }
+
+  private fun holdWeapon() {
+    when (config.mobKillerWeapon) {
+      0 -> InventoryUtil.holdItem("Spirit Sceptre")
+      1 -> player.inventory.currentItem = config.meleeWeaponSlot - 1
+      2 -> InventoryUtil.holdItem("Fire Veil Wand")
+    }
+  }
+
+  private fun stopWalking() {
+    when (config.mobKillerWeapon) {
+      0 -> {}
+      1 -> PathingUtil.stop()
+      2 -> {}
+    }
+  }
+
+  private fun lookDone(): Boolean {
+    val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw) - AngleUtil.yawTo360(angle.yaw))
+    val pitchDiff = abs(mc.thePlayer.rotationPitch - angle.pitch)
+    return when (config.mobKillerWeapon) {
+      0 -> pitchDiff < 2
+      1 -> yawDiff < 10 && pitchDiff < 5
+      2 -> true
+      else -> true
+    }
+  }
+
+  private enum class State {
+    CHOOSE_TARGET, GOTO_TARGET, VERIFY_PATHFINDING, LOOK_AT_TARGET, VERIFY_LOOKING, KILL_TARGET,
+  }
 }

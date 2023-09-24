@@ -60,7 +60,16 @@ object SlayerUtil {
     }
     return false
   }
+
   fun isMiniBoss(entity: EntityArmorStand) = miniBosses.any { StringUtils.stripControlCodes(entity.name).contains(it) }
+  fun isMiniBoss(entity: EntityLiving): Boolean {
+    val miniBossArmorStands = player.worldObj.loadedEntityList.filterIsInstance<EntityArmorStand>().filter { isMiniBoss(it) }
+    miniBossArmorStands.forEach { miniBossArmorStand ->
+      val closest = player.worldObj.loadedEntityList.minByOrNull { it.getDistanceToEntity(miniBossArmorStand) }
+      if (closest == entity) return true
+    }
+    return false
+  }
 
   fun getSlayerName(): String? {
     return when (config.slayer) {

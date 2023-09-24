@@ -14,4 +14,4 @@ fun BlockPos.toVec3() = Vec3(x.toDouble() + 0.5, y.toDouble() + 0.5, z.toDouble(
 fun BlockPos.toVec3Top(): Vec3 = toVec3().addVector(0.0,0.5,0.0)
 fun Vec3.toBlockPos(): BlockPos = BlockPos(xCoord, yCoord, zCoord)
 
-fun EntityLivingBase.lastTickPosition() = BlockPos(lastTickPosX, lastTickPosY, lastTickPosZ)
+fun EntityLivingBase.lastTickPositionCeil() = BlockPos(lastTickPosX, ceil(lastTickPosY) - 1, lastTickPosZ)

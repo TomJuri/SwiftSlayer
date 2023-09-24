@@ -8,7 +8,8 @@ object RotationUtil {
     private var endRotation = Rotation(0f, 0f)
     private var startTime = 0L
     private var endTime = 0L
-    private var done = true
+    var done = true
+        private set
     private var lock: Pair<Entity, Double>? = null
     private var isOverriden = false
 
@@ -30,12 +31,12 @@ object RotationUtil {
             AngleUtil.getAngles(
                 entity.positionVector.addVector(
                     0.0,
-                    1.2,
+                    0.8,
                     0.0
                 )
             ), durationMillis, override
         )
-        lock = Pair(entity, 1.2)
+        lock = Pair(entity, 0.8)
     }
 
     fun onRenderWorldLast() {
@@ -50,9 +51,9 @@ object RotationUtil {
             endRotation = AngleUtil.getAngles(lock!!.first.positionVector.addVector(0.0, lock!!.second, 0.0))
             startTime = System.currentTimeMillis();
             endTime = startTime + 150
-        } else {
-            stop()
+            return
         }
+        stop()
     }
 
     private fun interpolate(start: Float, end: Float): Float {

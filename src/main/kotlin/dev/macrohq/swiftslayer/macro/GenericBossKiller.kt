@@ -7,11 +7,12 @@ import dev.macrohq.swiftslayer.util.PathingUtil
 import dev.macrohq.swiftslayer.util.RotationUtil
 import dev.macrohq.swiftslayer.util.SlayerUtil
 import dev.macrohq.swiftslayer.util.config
-import dev.macrohq.swiftslayer.util.gameSettings
 import dev.macrohq.swiftslayer.util.getStandingOnCeil
 import dev.macrohq.swiftslayer.util.player
-import dev.macrohq.swiftslayer.util.setPressed
+import dev.macrohq.swiftslayer.util.world
 import net.minecraft.entity.EntityLiving
+import net.minecraft.init.Blocks
+import net.minecraft.util.BlockPos
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
@@ -28,18 +29,19 @@ class GenericBossKiller {
     if (target == null) return
     if (SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_DEAD) {
       Logger.info("Boss killed.")
-      gameSettings.keyBindSneak.setPressed(false)
       disable()
       return
     }
-    gameSettings.keyBindSneak.setPressed(true)
 
-    // stay close to boss
     RotationUtil.lock(target!!, 850, true)
-    if (player.getDistanceToEntity(target) > 2) {
-      if (!PathingUtil.isDone) return
-      PathingUtil.goto(target!!.getStandingOnCeil())
-      return
+
+    var y = target!!.getStandingOnCeil().y
+    while (world.getBlockState(BlockPos(target!!.posX, y.toDouble(), target!!.posZ)).block == Blocks.air) {
+      y--
+    }
+
+    if (player.getDistanceToEntity(target!!) > 4.5) {
+      PathingUtil.goto(BlockPos(target!!.posX, y.toDouble(), target!!.posZ))
     } else {
       PathingUtil.stop()
     }

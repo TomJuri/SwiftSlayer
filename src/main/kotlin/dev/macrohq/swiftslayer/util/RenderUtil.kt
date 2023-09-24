@@ -4,15 +4,12 @@ import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLiving
-import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.util.BlockPos
-import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import org.lwjgl.opengl.GL11
 import java.awt.Color
-import kotlin.math.abs
 import kotlin.math.sqrt
 
 object RenderUtil {
@@ -87,24 +84,6 @@ object RenderUtil {
             entity.posX + 0.5, entity.posY + 2, entity.posZ + 0.5
         )
         drawFilledBox(event!!, aabb, color, esp)
-        renderText(
-            entity.positionVector.addVector(0.0, 1.2, 0.0), "${getCost(entity as EntityLiving)}, ${
-                EntityUtil.getMobs(
-                    EntityZombie::class.java
-                ).indexOf(entity)
-            }"
-        )
-    }
-
-    // Only for debugging
-    fun getCost(entity: EntityLiving): String {
-        val yawChange =
-            abs(MathHelper.wrapAngleTo180_float(AngleUtil.getAngles(entity).yaw - AngleUtil.yawTo360(player.rotationYaw))) / 180.0
-        val pitchChange = abs(-player.rotationPitch + AngleUtil.getAngles(entity).pitch)
-        val angleChange = yawChange + pitchChange
-        val distance = (player.getDistanceToEntity(entity))
-        return "dist: ${(distance * 200).toInt() / 200.0 * 0.5f}, ang: ${(angleChange * 200).toInt() / 200.0 * 0.2f}"
-//        return distance
     }
 
     fun drawPoints(event: RenderWorldLastEvent, point: Vec3, color: Color) {
@@ -285,7 +264,7 @@ object RenderUtil {
         GlStateManager.disableBlend()
         GlStateManager.enableAlpha()
         GlStateManager.enableTexture2D()
-        //        GlStateManager.enableDepth();
+        GlStateManager.enableDepth();
         GlStateManager.depthMask(true)
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f)
         GlStateManager.popMatrix()

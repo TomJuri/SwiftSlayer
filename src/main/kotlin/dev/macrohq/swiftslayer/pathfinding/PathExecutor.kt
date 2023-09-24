@@ -10,7 +10,7 @@ import dev.macrohq.swiftslayer.util.RotationUtil
 import dev.macrohq.swiftslayer.util.config
 import dev.macrohq.swiftslayer.util.gameSettings
 import dev.macrohq.swiftslayer.util.getStandingOnCeil
-import dev.macrohq.swiftslayer.util.lastTickPosition
+import dev.macrohq.swiftslayer.util.lastTickPositionCeil
 import dev.macrohq.swiftslayer.util.mc
 import dev.macrohq.swiftslayer.util.player
 import dev.macrohq.swiftslayer.util.setPressed
@@ -78,7 +78,11 @@ class PathExecutor {
 
     val rotation = RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f)
     directionYaw = rotation.yaw
-    gameSettings.keyBindSprint.setPressed(true)
+    if (player.rotationYaw in abs(directionYaw) - 45..abs(directionYaw) + 45) {
+      gameSettings.keyBindSprint.setPressed(true)
+    } else {
+      gameSettings.keyBindSprint.setPressed(false)
+    }
     gameSettings.keyBindForward.setPressed(true)
     gameSettings.keyBindJump.setPressed(shouldJump())
   }
@@ -95,7 +99,7 @@ class PathExecutor {
   }
 
   fun disable() {
-    RotationUtil.stop()
+    // RotationUtil.stop()
     enabled = false
     gameSettings.keyBindSprint.setPressed(false)
     gameSettings.keyBindForward.setPressed(false)
@@ -119,6 +123,6 @@ class PathExecutor {
   private fun isOnPath() = getStandingOn() != null
   private fun getStandingOn() = path.find { it.x == player.getStandingOnCeil().x && it.z == player.getStandingOnCeil().z }
   private fun hasReachedEnd() = player.getStandingOnCeil().x == path[path.size - 1].x && player.getStandingOnCeil().z == path[path.size - 1].z
-  private fun hasAOTVed() = sqrt(player.lastTickPosition().distanceSq(player.getStandingOnCeil())) > 4
+  private fun hasAOTVed() = sqrt(player.lastTickPositionCeil().distanceSq(player.getStandingOnCeil())) > 4
 
 }

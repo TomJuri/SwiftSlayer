@@ -4,6 +4,7 @@ import dev.macrohq.swiftslayer.macro.MacroManager
 import dev.macrohq.swiftslayer.util.InventoryUtil
 import dev.macrohq.swiftslayer.util.KeyBindUtil
 import dev.macrohq.swiftslayer.util.Logger
+import dev.macrohq.swiftslayer.util.SlayerUtil
 import dev.macrohq.swiftslayer.util.Timer
 import dev.macrohq.swiftslayer.util.config
 import dev.macrohq.swiftslayer.util.macroManager
@@ -19,6 +20,7 @@ class SupportItem {
   private var health = -1
   private var healingTimer = Timer(0)
   private var tubaTimer = Timer(0)
+  private var orbTimer = Timer(0)
 
   @SubscribeEvent
   fun onTick(event: ClientTickEvent) {
@@ -46,6 +48,17 @@ class SupportItem {
         player.inventory.currentItem = previousItem
       } else {
         Logger.error("No Wand of Healing found in hotbar!")
+      }
+    }
+    if (config.deployOrb && SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_ALIVE && orbTimer.isDone) {
+      val previousItem = player.inventory.currentItem
+      if (InventoryUtil.holdItem("Flux")) {
+        Logger.info("Using Power Orb.")
+        KeyBindUtil.rightClick()
+        orbTimer = Timer(30_000)
+        player.inventory.currentItem = previousItem
+      } else {
+        Logger.error("No Power Orb found in hotbar!")
       }
     }
   }
