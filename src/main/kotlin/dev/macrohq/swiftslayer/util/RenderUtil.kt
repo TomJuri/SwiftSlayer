@@ -15,6 +15,8 @@ import kotlin.math.sqrt
 object RenderUtil {
     var markers = mutableListOf<BlockPos>()
     var filledBox = mutableListOf<BlockPos>()
+
+    @Volatile
     var lines = mutableListOf<Vec3>()
     var entites = mutableListOf<EntityLiving>()
     var points = mutableListOf<Vec3>()

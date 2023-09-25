@@ -25,17 +25,12 @@ class SupportItem {
   @SubscribeEvent
   fun onTick(event: ClientTickEvent) {
     if (!macroManager.enabled) return
-    if (config.useTuba && tubaTimer.isDone && macroManager.state == MacroManager.State.KILL_BOSS) {
-      val previousItem = player.inventory.currentItem
-      if (InventoryUtil.holdItem("Tuba")) {
-        Logger.info("Using Weird Tuba.")
-        KeyBindUtil.rightClick()
-        tubaTimer = Timer(21000)
-        player.inventory.currentItem = previousItem
-      } else {
-        Logger.error("No Weird Tuba found in hotbar!")
-      }
-    }
+    healing()
+    tuba()
+    orb()
+  }
+
+  private fun healing() {
     if (config.useHealing) {
       if (health == -1 || maxHealth == -1) return
       val healthPercent = health.toFloat() / maxHealth.toFloat()
@@ -50,6 +45,23 @@ class SupportItem {
         Logger.error("No Wand of Healing found in hotbar!")
       }
     }
+  }
+
+  private fun tuba() {
+    if (config.useTuba && tubaTimer.isDone && macroManager.state == MacroManager.State.KILL_BOSS) {
+      val previousItem = player.inventory.currentItem
+      if (InventoryUtil.holdItem("Tuba")) {
+        Logger.info("Using Weird Tuba.")
+        KeyBindUtil.rightClick()
+        tubaTimer = Timer(21000)
+        player.inventory.currentItem = previousItem
+      } else {
+        Logger.error("No Weird Tuba found in hotbar!")
+      }
+    }
+  }
+
+  private fun orb() {
     if (config.deployOrb && SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_ALIVE && orbTimer.isDone) {
       val previousItem = player.inventory.currentItem
       if (InventoryUtil.holdItem("Flux")) {

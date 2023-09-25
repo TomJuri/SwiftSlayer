@@ -117,11 +117,11 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
   var debugMode = false
 
   @Switch(
-    name = "Use Batphone",
+    name = "Autoslayer",
     category = "General",
     subcategory = "Slayer"
   )
-  var useBatphone = false
+  var autoSlayer = false
 
   @Switch(
     name = "Ungrab Mouse",

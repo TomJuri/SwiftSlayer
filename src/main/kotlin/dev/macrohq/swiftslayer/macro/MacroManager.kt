@@ -26,10 +26,14 @@ class MacroManager {
     if (!enabled || autoBatphone.enabled || mobKiller.enabled || genericBossKiller.enabled || endermanBossKiller.enabled) return
     when (state) {
       State.ACTIVATE_QUEST -> {
-        if (SlayerUtil.getActive() == null || SlayerUtil.getActive()!!.first.name != SlayerUtil.getSlayerName()!!.uppercase()
-            .replace(" ", "_") || SlayerUtil.getActive()!!.second.name != SlayerUtil.getTier() || SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_DEAD
-        )
-        autoBatphone.enable()
+        if (SlayerUtil.getActive() == null ||
+          SlayerUtil.getActive()!!.first.name != SlayerUtil.getSlayerName()!!.uppercase().replace(" ", "_") ||
+          SlayerUtil.getActive()!!.second.name != SlayerUtil.getTier() ||
+          SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_DEAD
+        ) {
+          if (!config.autoSlayer)
+            autoBatphone.enable()
+        }
       }
       State.KILL_MOBS -> mobKiller.enable()
       State.KILL_BOSS -> {

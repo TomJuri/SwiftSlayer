@@ -78,11 +78,7 @@ class PathExecutor {
 
     val rotation = RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f)
     directionYaw = rotation.yaw
-    if (player.rotationYaw in abs(directionYaw) - 45..abs(directionYaw) + 45) {
-      gameSettings.keyBindSprint.setPressed(true)
-    } else {
-      gameSettings.keyBindSprint.setPressed(false)
-    }
+    gameSettings.keyBindSprint.setPressed(AngleUtil.yawTo360(player.rotationYaw) in AngleUtil.yawTo360(player.rotationYaw) - 45..AngleUtil.yawTo360(player.rotationYaw) + 45)
     gameSettings.keyBindForward.setPressed(true)
     gameSettings.keyBindJump.setPressed(shouldJump())
   }
@@ -99,7 +95,6 @@ class PathExecutor {
   }
 
   fun disable() {
-    // RotationUtil.stop()
     enabled = false
     gameSettings.keyBindSprint.setPressed(false)
     gameSettings.keyBindForward.setPressed(false)

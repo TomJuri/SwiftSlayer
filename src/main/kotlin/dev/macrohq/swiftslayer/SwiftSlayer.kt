@@ -95,7 +95,7 @@ class SwiftSlayer {
             if (response.body() != null) {
                 val decoded: String = AuthUtil.rsaDecrypt(response.body()!!.string(), privateKey)
                 val split = decoded.split("\\|".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-                if ("success" == split[0] && AuthUtil.getHWID() == split[1] && mc.session.playerID.equals(split[2]) && System.currentTimeMillis() - split[3].toLong() < 20000) {
+                if ("success" == split[0] && AuthUtil.getHWID() == split[1] && mc.session.playerID.equals(split[2]) && System.currentTimeMillis() - split[3].toLong() < 25000) {
                     config = SwiftSlayerConfig()
                     pathExecutor = PathExecutor()
                     mobKiller = MobKiller()
