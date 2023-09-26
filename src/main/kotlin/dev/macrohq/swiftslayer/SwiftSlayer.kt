@@ -16,6 +16,7 @@ import dev.macrohq.swiftslayer.macro.MobKiller
 import dev.macrohq.swiftslayer.macro.Revenant
 import dev.macrohq.swiftslayer.pathfinding.PathExecutor
 import dev.macrohq.swiftslayer.util.AuthUtil
+import dev.macrohq.swiftslayer.util.KeyBindUtil
 import dev.macrohq.swiftslayer.util.RenderUtil
 import dev.macrohq.swiftslayer.util.RotationUtil
 import dev.macrohq.swiftslayer.util.mc
@@ -134,5 +135,6 @@ class SwiftSlayer {
         // this is here because im not sure if objects can have events cuz they are kinda static
         RotationUtil.onRenderWorldLast()
         RenderUtil.onRenderWorldLast(event)
+        KeyBindUtil.onRenderWorldLast()
     }
 }

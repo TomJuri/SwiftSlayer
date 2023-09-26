@@ -2,6 +2,7 @@ package dev.macrohq.swiftslayer.util
 
 import cc.polyfrost.oneconfig.utils.dsl.runAsync
 import dev.macrohq.swiftslayer.mixin.MinecraftInvoker
+import net.minecraft.client.settings.KeyBinding
 import kotlin.random.Random
 
 object KeyBindUtil {
@@ -51,5 +52,9 @@ object KeyBindUtil {
             Thread.sleep(100)
             gameSettings.keyBindJump.setPressed(false)
         }
+    }
+
+    fun onRenderWorldLast() {
+        if (mc.currentScreen != null) KeyBinding.unPressAllKeys()
     }
 }
