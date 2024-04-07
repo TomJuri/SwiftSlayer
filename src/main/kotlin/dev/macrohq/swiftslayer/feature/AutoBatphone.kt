@@ -4,15 +4,17 @@ import dev.macrohq.swiftslayer.util.*
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
+import dev.macrohq.swiftslayer.SwiftSlayer
 
 class AutoBatphone {
+
     private var state = State.SWITCH_TO_BATPHONE
     private var nextState = State.USE_BATPHONE
     var enabled = false
         private set
-    private var timeout: Timer? = null
+    private var timeout = Timer(500)
     private var cancel = false
-
+    private var timerDelay: Long = SwiftSlayer.instance.config.getRandomGUIMacroDelay()
     enum class State {
         WAITING,
         SWITCH_TO_BATPHONE,
@@ -25,53 +27,57 @@ class AutoBatphone {
         CONFIRM,
     }
 
+
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
         if (!enabled) return
-        if (timeout != null && timeout!!.isDone) {
-            Logger.error("State timed out!")
-            tryAgain()
-            return
-        }
-        
+
+       if(!timeout.isDone) {
+           return;
+       }
+
         when (state) {
             State.SWITCH_TO_BATPHONE -> {
+                timeout = Timer(SwiftSlayer.instance.config.getRandomGUIMacroDelay())
                 if (!InventoryUtil.holdItem("Maddox Batphone")) {
                     Logger.error("Theres no Batphone on your hotbar!")
                     disable()
                     return
                 }
                 state = State.USE_BATPHONE
-                timeout = Timer(3000)
+
             }
 
             State.USE_BATPHONE -> {
+                timeout = Timer(SwiftSlayer.instance.config.getRandomGUIMacroDelay())
                 KeyBindUtil.rightClick()
-                timeout = Timer(10_000)
-                state = State.WAITING
+
+                state = State.BATPHONE_OPEN
             }
 
             State.BATPHONE_OPEN -> {
-                if (timeout == null) timeout = Timer(3_000)
+                timeout = Timer(SwiftSlayer.instance.config.getRandomGUIMacroDelay())
                 if (InventoryUtil.getSlotInGUI("Close") == -1) return
                 state =
                     if (InventoryUtil.getSlotInGUI("Close") != -1 && InventoryUtil.getSlotInGUI("Ongoing Slayer Quest") != -1) State.CANCEL
                     else if (InventoryUtil.getSlotInGUI("Close") != -1 && InventoryUtil.getSlotInGUI("Slayer Quest Complete") != -1) State.ACCEPT_REWARDS
                     else State.CLICK_SLAYER
+
             }
 
             State.CANCEL -> {
-                if (timeout == null) timeout = Timer(3_000)
+                timeout = Timer(SwiftSlayer.instance.config.getRandomGUIMacroDelay())
                 if (!InventoryUtil.clickSlot(InventoryUtil.getSlotInGUI("Ongoing Slayer Quest"))) {
                     Logger.log("Failed to cancel slayer quest.")
                     return
                 }
                 state = State.CONFIRM
                 cancel = true
+
             }
 
             State.ACCEPT_REWARDS -> {
-                if (timeout == null) timeout = Timer(3_000)
+                timeout = Timer(SwiftSlayer.instance.config.getRandomGUIMacroDelay())
                 if (!InventoryUtil.clickSlot(InventoryUtil.getSlotInGUI("Slayer Quest Complete"))) {
                     Logger.log("Failed to accept rewards.")
                     return
@@ -80,7 +86,7 @@ class AutoBatphone {
             }
 
             State.CLICK_SLAYER -> {
-                if (timeout == null) timeout = Timer(3_000)
+                timeout = Timer(SwiftSlayer.instance.config.getRandomGUIMacroDelay())
                 if (!InventoryUtil.clickSlot(SlayerUtil.getSlayerSlot())) {
                     Logger.log("Failed to click slayer!")
                     return
@@ -89,7 +95,7 @@ class AutoBatphone {
             }
 
             State.CLICK_TIER -> {
-                if (timeout == null) timeout = Timer(3_000)
+                timeout = Timer(SwiftSlayer.instance.config.getRandomGUIMacroDelay())
                 if (!InventoryUtil.clickSlot(SlayerUtil.getTierSlot())) {
                     Logger.log("Failed to click tier!")
                     return
@@ -98,7 +104,7 @@ class AutoBatphone {
             }
 
             State.CONFIRM -> {
-                if (timeout == null) timeout = Timer(3_000)
+                timeout = Timer(SwiftSlayer.instance.config.getRandomGUIMacroDelay())
                 if (!InventoryUtil.clickSlot(InventoryUtil.getSlotInGUI("Confirm"))) {
                     Logger.log("Failed to click confirm!")
                     return
@@ -124,7 +130,7 @@ class AutoBatphone {
         if (enabled) return
         state = State.SWITCH_TO_BATPHONE
         cancel = false
-        timeout = null
+        timeout = Timer(SwiftSlayer.instance.config.getRandomGUIMacroDelay())
         Logger.info("Enabling Auto Batphone")
         enabled = true
     }
@@ -133,7 +139,7 @@ class AutoBatphone {
         Logger.info("Something went wrong, trying again...")
         InventoryUtil.closeGUI()
         state = State.SWITCH_TO_BATPHONE
-        timeout = null
+        timeout = Timer(SwiftSlayer.instance.config.getRandomGUIMacroDelay())
         cancel = false
     }
 

@@ -1,11 +1,7 @@
 package dev.macrohq.swiftslayer.config
 
 import cc.polyfrost.oneconfig.config.Config
-import cc.polyfrost.oneconfig.config.annotations.Dropdown
-import cc.polyfrost.oneconfig.config.annotations.HUD
-import cc.polyfrost.oneconfig.config.annotations.KeyBind
-import cc.polyfrost.oneconfig.config.annotations.Slider
-import cc.polyfrost.oneconfig.config.annotations.Switch
+import cc.polyfrost.oneconfig.config.annotations.*
 import cc.polyfrost.oneconfig.config.core.OneKeyBind
 import cc.polyfrost.oneconfig.config.data.Mod
 import cc.polyfrost.oneconfig.config.data.ModType
@@ -14,6 +10,7 @@ import dev.macrohq.swiftslayer.util.macroManager
 
 
 class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftslayer.json") {
+
   @Dropdown(
     name = "Slayer",
     category = "General",
@@ -139,6 +136,29 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
 
   @HUD(name = "HUD", category = "HUD")
   var hud = SwiftSlayerHud()
+
+  @Slider(
+    name = "GUI Delay",
+    category = "General",
+    subcategory = "GUI Delays",
+    description = "The delay between clicking during GUI macros (in milliseconds)",
+    min = 250f,
+    max = 2000f
+  )
+  var macroGuiDelay: Float = 400f
+  @Slider(
+    name = "Additional random GUI Delay",
+    category = "General",
+    subcategory = "GUI Delays",
+    description = "The maximum random time added to the delay time between clicking during GUI macros (in milliseconds)",
+    min = 0f,
+    max = 2000f
+  )
+  var macroGuiDelayRandomness: Float = 350f
+
+  fun getRandomGUIMacroDelay(): Long {
+    return (macroGuiDelay + Math.random().toFloat() * macroGuiDelayRandomness).toLong()
+  }
 
   init {
     initialize()
