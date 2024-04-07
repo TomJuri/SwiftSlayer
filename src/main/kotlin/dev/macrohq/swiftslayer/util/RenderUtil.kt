@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL11
 import java.awt.Color
 import kotlin.math.sqrt
 
+// Todo: Make this class dependent
 object RenderUtil {
     var markers = mutableListOf<BlockPos>()
     var filledBox = mutableListOf<BlockPos>()

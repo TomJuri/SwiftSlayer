@@ -3,33 +3,24 @@ package dev.macrohq.swiftslayer
 import cc.polyfrost.oneconfig.utils.commands.CommandManager
 import dev.macrohq.swiftslayer.command.PathfindTest
 import dev.macrohq.swiftslayer.command.SwiftSlayerCommand
+import dev.macrohq.swiftslayer.command.TestCommand
 import dev.macrohq.swiftslayer.config.SwiftSlayerConfig
-import dev.macrohq.swiftslayer.feature.AutoBatphone
-import dev.macrohq.swiftslayer.feature.Failsafe
-import dev.macrohq.swiftslayer.feature.SupportItem
-import dev.macrohq.swiftslayer.feature.Tracker
-import dev.macrohq.swiftslayer.gui.AuthFailedDisplay
+import dev.macrohq.swiftslayer.feature.*
 import dev.macrohq.swiftslayer.macro.EndermanBossKiller
 import dev.macrohq.swiftslayer.macro.GenericBossKiller
 import dev.macrohq.swiftslayer.macro.MacroManager
 import dev.macrohq.swiftslayer.macro.MobKiller
 import dev.macrohq.swiftslayer.macro.Revenant
 import dev.macrohq.swiftslayer.pathfinding.PathExecutor
-import dev.macrohq.swiftslayer.util.AuthUtil
 import dev.macrohq.swiftslayer.util.KeyBindUtil
 import dev.macrohq.swiftslayer.util.RenderUtil
 import dev.macrohq.swiftslayer.util.RotationUtil
-import dev.macrohq.swiftslayer.util.mc
 import net.minecraft.util.BlockPos
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import java.security.interfaces.RSAPrivateKey
-import java.security.interfaces.RSAPublicKey
 
 /* fun main() {
     val keyPairGenerator = KeyPairGenerator.getInstance("RSA")
@@ -86,6 +77,14 @@ class SwiftSlayer {
         MinecraftForge.EVENT_BUS.register(SupportItem())
         CommandManager.register(PathfindTest())
         CommandManager.register(SwiftSlayerCommand())
+
+        val cmd = TestCommand()
+        CommandManager.register(cmd)
+        MinecraftForge.EVENT_BUS.register(cmd)
+
+        // New Structure
+        FeatureManager.getInstance().loadFeatures().forEach(MinecraftForge.EVENT_BUS::register)
+
     }
 
     fun isTrackerInitialized() = ::tracker.isInitialized

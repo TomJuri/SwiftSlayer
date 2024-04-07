@@ -3,20 +3,26 @@ package dev.macrohq.swiftslayer.util
 import net.minecraft.util.ChatComponentText
 
 object Logger {
-    fun info(message: Any) {
-        send("a$message")
-    }
+  private var lastDebugMessage = ""
 
-    fun error(message: Any) {
-        send("c$message")
-    }
+  fun info(message: Any) {
+    this.send("a§l$message")
+  }
 
-    fun log(message: Any) {
-        send("7$message", true)
-    }
+  fun note(message: Any) {
+    this.send("e$message")
+  }
 
-    private fun send(message: String, debug: Boolean = false) {
-        if (debug && !config.debugMode) return
-        player.addChatMessage(ChatComponentText("§aSwift§bSlayer §8» §$message"))
-    }
+  fun error(message: Any) {
+    this.send("c$message")
+  }
+
+  fun log(message: Any) {
+    if (!config.debugMode || message == this.lastDebugMessage) return
+    this.lastDebugMessage = message.toString()
+    this.send("7$message");
+  }
+  private fun send(message: String) {
+    player.addChatMessage(ChatComponentText("§aSwift§bSlayer §8» §$message"))
+  }
 }
