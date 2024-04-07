@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
 class AutoBatphone {
     private var state = State.SWITCH_TO_BATPHONE
+    private var nextState = State.USE_BATPHONE
     var enabled = false
         private set
     private var timeout: Timer? = null
@@ -32,6 +33,7 @@ class AutoBatphone {
             tryAgain()
             return
         }
+        
         when (state) {
             State.SWITCH_TO_BATPHONE -> {
                 if (!InventoryUtil.holdItem("Maddox Batphone")) {
@@ -40,6 +42,7 @@ class AutoBatphone {
                     return
                 }
                 state = State.USE_BATPHONE
+                timeout = Timer(3000)
             }
 
             State.USE_BATPHONE -> {
@@ -108,11 +111,11 @@ class AutoBatphone {
         }
     }
 
+
     @SubscribeEvent
     fun onChat(event: ClientChatReceivedEvent) {
         if (event.type.toInt() != 0) return
-        if (event.message.unformattedText.contains("[OPEN MENU]") && state == State.WAITING) {
-            player.sendChatMessage(event.message.siblings.find { it.unformattedText.contains("[OPEN MENU]") }?.chatStyle?.chatClickEvent?.value)
+        if (event.message.unformattedText.contains("[NPC]") && state == State.WAITING) {
             state = State.BATPHONE_OPEN
         }
     }

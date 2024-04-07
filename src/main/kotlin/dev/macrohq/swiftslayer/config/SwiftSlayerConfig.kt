@@ -34,7 +34,7 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     name = "MobKiller Weapon",
     category = "General",
     subcategory = "Slayer",
-    options = ["Spirit Sceptre", "Melee", "Fire Veil Wand"]
+    options = ["Spirit Sceptre", "Melee", "Fire Veil Wand", "Right click Meele"]
   )
   var mobKillerWeapon = 0
 
