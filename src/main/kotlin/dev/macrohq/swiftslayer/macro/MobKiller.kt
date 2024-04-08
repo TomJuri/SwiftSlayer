@@ -1,5 +1,10 @@
 package dev.macrohq.swiftslayer.macro
 
+import dev.macrohq.swiftslayer.SwiftSlayer
+import dev.macrohq.swiftslayer.feature.helper.Angle
+import dev.macrohq.swiftslayer.feature.helper.Target
+import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
+import dev.macrohq.swiftslayer.feature.implementation.LockType
 import dev.macrohq.swiftslayer.util.AngleUtil
 import dev.macrohq.swiftslayer.util.EntityUtil
 import dev.macrohq.swiftslayer.util.InventoryUtil
@@ -7,7 +12,6 @@ import dev.macrohq.swiftslayer.util.KeyBindUtil
 import dev.macrohq.swiftslayer.util.Logger
 import dev.macrohq.swiftslayer.util.PathingUtil
 import dev.macrohq.swiftslayer.util.RenderUtil
-import dev.macrohq.swiftslayer.util.RotationUtil
 import dev.macrohq.swiftslayer.util.SlayerUtil
 import dev.macrohq.swiftslayer.util.Timer
 import dev.macrohq.swiftslayer.util.config
@@ -31,7 +35,7 @@ class MobKiller {
   private var stuckTimer = Timer(Long.MAX_VALUE)
   private var lookTimer = Timer(Long.MAX_VALUE)
   private var fireVeilTimer = Timer(Long.MAX_VALUE)
-  private lateinit var angle: RotationUtil.Rotation
+  private lateinit var angle: Target
 
   @SubscribeEvent
   fun onTick(event: TickEvent.ClientTickEvent) {
@@ -78,7 +82,7 @@ class MobKiller {
       }
 
       State.LOOK_AT_TARGET -> {
-        RotationUtil.stop()
+        AutoRotation.getInstance().disable()
         lookAtEntity(targetEntity!!)
         lookTimer = Timer(1500)
       }
@@ -89,12 +93,12 @@ class MobKiller {
           lookTimer = Timer(Long.MAX_VALUE)
           state = State.CHOOSE_TARGET
           blacklist.add(targetEntity!!)
-          RotationUtil.stop()
+          AutoRotation.getInstance().disable()
           return
         }
         if (lookDone()) {
           lookTimer = Timer(Long.MAX_VALUE)
-          RotationUtil.stop()
+          AutoRotation.getInstance().disable()
           holdWeapon()
         } else {
           return
@@ -123,25 +127,26 @@ class MobKiller {
     Logger.info("Disabling MobKiller.")
     enabled = false
     PathingUtil.stop()
-    RotationUtil.stop()
+    AutoRotation.getInstance().disable()
   }
 
   private fun lookAtEntity(entity: EntityLiving) {
-    angle = angleForWeapon(entity)
+    angle = Target(angleForWeapon(entity))
     when (config.mobKillerWeapon) {
-      0 -> RotationUtil.ease(angle, 200, true)
-      1 -> RotationUtil.ease(angle, 200, true)
+
+      0 -> AutoRotation.getInstance().easeTo(angle, SwiftSlayer.instance.config.getRandomRotationTime().toInt(), LockType.NONE, true)
+      1 -> AutoRotation.getInstance().easeTo(angle, SwiftSlayer.instance.config.getRandomRotationTime().toInt(), LockType.NONE, true )
       2 -> {}
-      3 -> RotationUtil.ease(angle, 200, true);
+      3 -> AutoRotation.getInstance().easeTo(angle, SwiftSlayer.instance.config.getRandomRotationTime().toInt(), LockType.NONE, true)
     }
   }
 
-  private fun angleForWeapon(entity: EntityLiving): RotationUtil.Rotation {
+  private fun angleForWeapon(entity: EntityLiving): Angle {
     return when (config.mobKillerWeapon) {
-      0 -> RotationUtil.Rotation(AngleUtil.getAngles(targetEntity!!).yaw, 45f)
-      1 -> AngleUtil.getAngles(entity.positionVector.addVector(0.0, 0.8, 0.0))
-      3 -> AngleUtil.getAngles(entity.positionVector.addVector(0.0, 0.8, 0.0));
-      else -> RotationUtil.Rotation(0f, 0f)
+      0 -> AngleUtil.getAngle(entity.positionVector.addVector(0.0, 0.8, 0.0));
+      1 -> AngleUtil.getAngle(entity.positionVector.addVector(0.0, 0.8, 0.0))
+      3 -> AngleUtil.getAngle(entity.positionVector.addVector(0.0, 0.8, 0.0));
+      else -> Angle(0f,0f)
     }
   }
 
@@ -190,8 +195,8 @@ class MobKiller {
   }
 
   private fun lookDone(): Boolean {
-    val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw) - AngleUtil.yawTo360(angle.yaw))
-    val pitchDiff = abs(mc.thePlayer.rotationPitch - angle.pitch)
+    val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw) - AngleUtil.yawTo360(angle.getAngle().yaw))
+    val pitchDiff = abs(mc.thePlayer.rotationPitch - angle.getAngle().pitch)
     return when (config.mobKillerWeapon) {
       0 -> pitchDiff < 2
       1 -> yawDiff < 10 && pitchDiff < 5

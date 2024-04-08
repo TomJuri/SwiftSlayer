@@ -1,6 +1,10 @@
 package dev.macrohq.swiftslayer.pathfinding
 
+import dev.macrohq.swiftslayer.feature.helper.Angle
+import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
+import dev.macrohq.swiftslayer.feature.implementation.LockType
 import dev.macrohq.swiftslayer.util.AngleUtil
+import dev.macrohq.swiftslayer.feature.helper.Target
 import dev.macrohq.swiftslayer.util.InventoryUtil
 import dev.macrohq.swiftslayer.util.KeyBindUtil
 import dev.macrohq.swiftslayer.util.Logger
@@ -54,7 +58,8 @@ class PathExecutor {
 
     if (isOnPath()) {
       next = path[path.indexOf(getStandingOn()!!) + 1]
-      RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f), 500)
+      // RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f), 500)
+      AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(next!!.toVec3Top()).yaw, 20f)), 300, LockType.NONE, false)
       RenderUtil.markers.clear()
       RenderUtil.markers.add(next!!)
     }
@@ -76,7 +81,8 @@ class PathExecutor {
       aotving = false
     }
 
-    val rotation = RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f)
+   // val rotation = RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f)
+    val rotation = Angle(AngleUtil.getAngle(next!!.toVec3Top()).yaw, 20f)
     directionYaw = rotation.yaw
     gameSettings.keyBindSprint.setPressed(AngleUtil.yawTo360(player.rotationYaw) in AngleUtil.yawTo360(player.rotationYaw) - 45..AngleUtil.yawTo360(player.rotationYaw) + 45)
     gameSettings.keyBindForward.setPressed(true)

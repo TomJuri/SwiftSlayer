@@ -23,6 +23,7 @@ class AutoRotation: AbstractFeature() {
 
   private var lockType: LockType = LockType.NONE
   private var smoothLockTime = 0
+  private var isOverriden = false
 
   companion object{
     private var instance: AutoRotation? = null
@@ -34,7 +35,9 @@ class AutoRotation: AbstractFeature() {
     }
   }
 
-  fun easeTo(target: Target, time: Int, lockType: LockType = LockType.NONE, smoothLockTime: Int = 200, easeFunction: (Float) -> Float = EaseUtil.easingFunctions.random()){
+  fun easeTo(target: Target, time: Int, lockType: LockType = LockType.NONE, override: Boolean, smoothLockTime: Int = 200, easeFunction: (Float) -> Float = EaseUtil.easingFunctions.random()){
+    if(AutoRotation.getInstance().isOverriden) return;
+    AutoRotation.getInstance().isOverriden = override;
     this.enabled = true
     this.forceEnable = true
     this.lockType = lockType
@@ -74,7 +77,7 @@ class AutoRotation: AbstractFeature() {
     enabled = false
     forceEnable =  false
     easeFunction = null
-
+    isOverriden = false
     startAngle = null
     target = null
 
@@ -107,7 +110,7 @@ class AutoRotation: AbstractFeature() {
       player.rotationYaw += angChange.yaw
       player.rotationPitch += angChange.pitch
     } else {
-      this.easeTo(this.target!!, 200, LockType.SMOOTH, this.smoothLockTime)
+      this.easeTo(this.target!!, 200, LockType.SMOOTH, false, this.smoothLockTime)
     }
   }
 }

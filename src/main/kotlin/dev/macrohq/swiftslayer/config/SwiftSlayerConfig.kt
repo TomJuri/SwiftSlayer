@@ -160,6 +160,30 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     return (macroGuiDelay + Math.random().toFloat() * macroGuiDelayRandomness).toLong()
   }
 
+  @Slider(
+    name = "Rotation time",
+    category = "General",
+    subcategory = "Rotation delays",
+    description = "The time for rotations",
+    min = 200f,
+    max = 500f
+  )
+  var macroRotationTime: Float = 250f
+
+  @Slider(
+    name = "Rotation time randomness",
+    category = "General",
+    subcategory = "Rotation delays",
+    description = "Additional randomness ADDED to the rotation time",
+    min = 300f,
+    max = 700f
+  )
+  var macroRotationTimeRandomness: Float = 350f
+
+  fun getRandomRotationTime(): Long {
+    return (macroRotationTime + Math.random().toFloat() * macroRotationTimeRandomness).toLong()
+  }
+
   init {
     initialize()
     registerKeyBind(toggleMacro) { macroManager.toggle() }

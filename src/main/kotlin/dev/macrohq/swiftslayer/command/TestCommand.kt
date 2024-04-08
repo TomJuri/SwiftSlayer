@@ -28,7 +28,7 @@ class TestCommand {
   private fun rotate(lock: Boolean = false) {
     if (rotationTargetBlock == null) return
     if(!AutoRotation.getInstance().enabled) {
-      AutoRotation.getInstance().easeTo(Target(rotationTargetBlock!!), 500, if (lock) LockType.INSTANT else LockType.NONE)
+      AutoRotation.getInstance().easeTo(Target(rotationTargetBlock!!), 500, if (lock) LockType.SMOOTH else LockType.NONE, false, 400)
     }else{
       AutoRotation.getInstance().disable();
     }

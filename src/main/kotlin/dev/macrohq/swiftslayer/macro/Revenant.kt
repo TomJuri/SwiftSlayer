@@ -1,14 +1,12 @@
 package dev.macrohq.swiftslayer.macro
 
-import dev.macrohq.swiftslayer.util.KeyBindUtil
+import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
 import dev.macrohq.swiftslayer.util.Logger.info
-import dev.macrohq.swiftslayer.util.PathingUtil
-import dev.macrohq.swiftslayer.util.RenderUtil
-import dev.macrohq.swiftslayer.util.RotationUtil
-import dev.macrohq.swiftslayer.util.config
-import dev.macrohq.swiftslayer.util.mobKiller
-import dev.macrohq.swiftslayer.util.player
-import dev.macrohq.swiftslayer.util.world
+import dev.macrohq.swiftslayer.feature.helper.Angle
+import dev.macrohq.swiftslayer.feature.implementation.LockType
+import dev.macrohq.swiftslayer.feature.helper.Target
+import dev.macrohq.swiftslayer.util.*
+
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.entity.monster.EntityZombie
@@ -76,8 +74,8 @@ class Revenant {
             }
             State.LOOKING -> {
                 info("looking")
-                if (config.bossKillerWeapon == 1) RotationUtil.ease(RotationUtil.Rotation(player.rotationYaw, 90f), 200)
-                else RotationUtil.lock(mob!!, 200, true)
+                if (config.bossKillerWeapon == 1) AutoRotation.getInstance().easeTo(Target(Angle(player.rotationYaw, 90f)), 300, LockType.NONE, true)
+                else AutoRotation.getInstance().easeTo(Target(AngleUtil.getAngle(mob!!)), 500, LockType.NONE, true)
                 state = State.KILLING
             }
             State.KILLING -> {

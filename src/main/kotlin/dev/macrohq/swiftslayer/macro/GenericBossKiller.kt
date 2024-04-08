@@ -1,15 +1,10 @@
 package dev.macrohq.swiftslayer.macro
 
-import dev.macrohq.swiftslayer.util.InventoryUtil
-import dev.macrohq.swiftslayer.util.KeyBindUtil
-import dev.macrohq.swiftslayer.util.Logger
-import dev.macrohq.swiftslayer.util.PathingUtil
-import dev.macrohq.swiftslayer.util.RotationUtil
-import dev.macrohq.swiftslayer.util.SlayerUtil
-import dev.macrohq.swiftslayer.util.config
-import dev.macrohq.swiftslayer.util.getStandingOnCeil
-import dev.macrohq.swiftslayer.util.player
-import dev.macrohq.swiftslayer.util.world
+import dev.macrohq.swiftslayer.feature.helper.Target
+import dev.macrohq.swiftslayer.feature.helper.Angle
+import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
+import dev.macrohq.swiftslayer.feature.implementation.LockType
+import dev.macrohq.swiftslayer.util.*
 import net.minecraft.entity.EntityLiving
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
@@ -33,7 +28,7 @@ class GenericBossKiller {
       return
     }
 
-    RotationUtil.lock(target!!, 850, true)
+    AutoRotation.getInstance().easeTo(Target(target!!), 700, LockType.INSTANT, true)
 
     var y = target!!.getStandingOnCeil().y
     while (world.getBlockState(BlockPos(target!!.posX, y.toDouble(), target!!.posZ)).block == Blocks.air) {
@@ -58,8 +53,9 @@ class GenericBossKiller {
         // macroManager.disable()
         return
       }
-      RotationUtil.stop()
-      RotationUtil.ease(RotationUtil.Rotation(player.rotationYaw, 90f), 350, true)
+      AutoRotation.getInstance().disable()
+      //RotationUtil.ease(RotationUtil.Rotation(player.rotationYaw, 90f), 350, true)
+      AutoRotation.getInstance().easeTo(Target(Angle(player.rotationYaw, 90f)), 500, LockType.NONE, true)
       KeyBindUtil.rightClick(8)
     }
   }
@@ -67,7 +63,7 @@ class GenericBossKiller {
   fun enable() {
     if (enabled) return
     Logger.info("Enabling GenericBossKiller")
-    RotationUtil.stop()
+    AutoRotation.getInstance().disable()
     PathingUtil.stop()
     target = null
     enabled = true
@@ -77,7 +73,7 @@ class GenericBossKiller {
     if (!enabled) return
     Logger.info("Disabling GenericBossKiller")
     enabled = false
-    RotationUtil.stop()
+    AutoRotation.getInstance().disable()
     PathingUtil.stop()
     KeyBindUtil.stopClicking()
   }
