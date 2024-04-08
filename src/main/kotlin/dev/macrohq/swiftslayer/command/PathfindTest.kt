@@ -20,12 +20,11 @@ import dev.macrohq.swiftslayer.util.swiftSlayer
 class PathfindTest {
     @Main
     private fun main() {
-        Logger.info(SlayerUtil.getActive().toString())
-        //revenant.enable()
-      //  PathingUtil.goto(swiftSlayer.removeLater!!)
-//        world.getLoadedEntityList().forEach {
-//            println(it)
-//        }
+        if(swiftSlayer.removeLater == null) {
+            Logger.error("Please set a location first.")
+            return
+        }
+        PathingUtil.goto(swiftSlayer.removeLater!!)
     }
 
     @SubCommand
@@ -47,11 +46,6 @@ class PathfindTest {
 
     @SubCommand
     private fun stop() {
-        mobKiller.disable()
         PathingUtil.stop()
-        RotationUtil.stop()
-        autoBatphone.disable()
-        KeyBindUtil.stopClicking()
-        revenant.disable()
     }
 }
