@@ -3,12 +3,16 @@
   "package": "dev.macrohq.swiftslayer.mixin",
   "client": [
     "FMLHandshakeMessageMixin",
-    "MinecraftInvoker"
+    "MinecraftInvoker",
+    "entity.MixinAbstractClientPlayer"
   ],
   "verbose": true,
   "mixins": [
-    "EntityMixin",
     "NetworkManagerMixin",
-    "RenderGuardianMixin"
+    "RenderGuardianMixin",
+    "entity.MixinEntity",
+    "entity.MixinEntityLivingBase",
+    "entity.MixinEntityPlayer",
+    "entity.MixinEntityPlayerSP"
   ]
 }
