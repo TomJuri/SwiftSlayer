@@ -107,7 +107,7 @@ class AutoRotation: AbstractFeature() {
       player.rotationYaw += angChange.yaw
       player.rotationPitch += angChange.pitch
     } else {
-      this.easeTo(this.target!!, 200, LockType.SMOOTH, this.smoothLockTime)
+      this.easeTo(this.target!!, this.smoothLockTime, LockType.SMOOTH, this.smoothLockTime)
     }
   }
 }
