@@ -58,9 +58,7 @@ object BlockUtil {
         return blocks
     }
 
-    fun getColumns(centerPos: BlockPos, width: Int, height: Int, depth: Int): MutableList<BlockPos> {
-         
-    }
+    
     fun getCornerBlocks(centerBlock: BlockPos, radiusX: Int, radiusY: Int, radiusZ: Int): Pair<BlockPos, BlockPos> {
         val topLeft = BlockPos(centerBlock.x - radiusX, centerBlock.y - radiusY, centerBlock.z - radiusZ)
         val bottomRight = BlockPos(centerBlock.x + radiusX, centerBlock.y + radiusY, centerBlock.z + radiusZ)
