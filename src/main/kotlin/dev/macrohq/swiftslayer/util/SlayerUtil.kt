@@ -2,10 +2,7 @@ package dev.macrohq.swiftslayer.util
 
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.item.EntityArmorStand
-import net.minecraft.entity.monster.EntityBlaze
-import net.minecraft.entity.monster.EntityEnderman
-import net.minecraft.entity.monster.EntitySpider
-import net.minecraft.entity.monster.EntityZombie
+import net.minecraft.entity.monster.*
 import net.minecraft.entity.passive.EntityWolf
 import net.minecraft.util.StringUtils
 
@@ -14,6 +11,7 @@ object SlayerUtil {
   private val bosses = listOf("Revenant Horror", "Atoned Horror", "Tarantula Broodfather", "Sven Packmaster", "Voidgloom Seraph", "Inferno Demonlord")
   private val miniBosses = listOf("Revenant Sycophant", "Revenant Champion", "Deformed Revenant", "Atoned Champion", "Atoned Revenant", "Tarantula Vermin", "Tarantula Beast", "Mutant Tarantula", "Pack Enforcer", "Sven Follower", "Sven Alpha", "Voidling Devotee", "Voidling Radical", "Voidcrazed Maniac", "Flare Demon", "Kindleheart Demon", "Burningsoul Demon")
   private val bossTypes = listOf(EntityZombie::class, EntitySpider::class, EntityWolf::class, EntityEnderman::class, EntityBlaze::class)
+  private val fakeBossTypes = listOf(EntitySkeleton::class)
 
   fun getActive(): Pair<Slayer, SlayerTier>? {
     for (boss in bosses) {
@@ -49,6 +47,18 @@ object SlayerUtil {
       if (bossArmorStand != null && boss != null) return Pair(boss as EntityLiving, bossArmorStand)
     }
     return null
+  }
+
+  fun getFakeBoss(): EntityLiving? {
+    if(player.worldObj.loadedEntityList.filter { it::class in fakeBossTypes }.isNotEmpty()) {
+      val boss = player.worldObj.loadedEntityList.filter { it::class in fakeBossTypes }[0]
+      return boss as EntityLiving
+    } else {
+      return null
+    }
+
+
+
   }
 
   fun isBoss(entity: EntityArmorStand) = bosses.any { StringUtils.stripControlCodes(entity.name).contains(it) }

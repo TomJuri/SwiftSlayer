@@ -22,6 +22,7 @@ object PathingUtil {
         pathExecutor.enable(path)
         RenderUtil.lines.addAll(path.map { it.toVec3() })
       }
+
     }
   }
 

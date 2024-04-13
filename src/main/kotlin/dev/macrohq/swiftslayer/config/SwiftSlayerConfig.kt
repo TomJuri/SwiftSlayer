@@ -184,6 +184,16 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     return (macroRotationTime + Math.random().toFloat() * macroRotationTimeRandomness).toLong()
   }
 
+  @Slider(
+    name = "Lock rotation smoothness",
+    category = "General",
+    subcategory = "Rotation delays",
+    description = "Lock rotation smoothness",
+    min = 2f,
+    max = 10f
+  )
+  var macroLockSmoothness: Float = 4f
+  
   init {
     initialize()
     registerKeyBind(toggleMacro) { macroManager.toggle() }

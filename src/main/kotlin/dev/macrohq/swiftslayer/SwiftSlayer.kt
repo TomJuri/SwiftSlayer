@@ -1,9 +1,7 @@
 package dev.macrohq.swiftslayer
 
 import cc.polyfrost.oneconfig.utils.commands.CommandManager
-import dev.macrohq.swiftslayer.command.PathfindTest
-import dev.macrohq.swiftslayer.command.SwiftSlayerCommand
-import dev.macrohq.swiftslayer.command.TestCommand
+import dev.macrohq.swiftslayer.command.*
 import dev.macrohq.swiftslayer.config.SwiftSlayerConfig
 import dev.macrohq.swiftslayer.feature.*
 import dev.macrohq.swiftslayer.macro.EndermanBossKiller
@@ -13,6 +11,7 @@ import dev.macrohq.swiftslayer.macro.MobKiller
 import dev.macrohq.swiftslayer.macro.Revenant
 import dev.macrohq.swiftslayer.pathfinding.PathExecutor
 import dev.macrohq.swiftslayer.util.KeyBindUtil
+import dev.macrohq.swiftslayer.util.LockRotationUtil
 import dev.macrohq.swiftslayer.util.RenderUtil
 import dev.macrohq.swiftslayer.util.RotationUtil
 import net.minecraft.util.BlockPos
@@ -21,6 +20,7 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import java.util.concurrent.locks.Lock
 
 /* fun main() {
     val keyPairGenerator = KeyPairGenerator.getInstance("RSA")
@@ -52,6 +52,8 @@ class SwiftSlayer {
     lateinit var genericBossKiller: GenericBossKiller private set
     lateinit var revenant: Revenant private set
     lateinit var tracker: Tracker private set
+    lateinit var rotation: LockRotationUtil private set
+    lateinit var lockTest: LockTest private set
     var removeLater: BlockPos? = null
 
     @Mod.EventHandler
@@ -65,6 +67,9 @@ class SwiftSlayer {
         genericBossKiller = GenericBossKiller()
         revenant = Revenant()
         tracker = Tracker()
+        rotation = LockRotationUtil()
+        lockTest = LockTest()
+
         MinecraftForge.EVENT_BUS.register(this)
         MinecraftForge.EVENT_BUS.register(pathExecutor)
         MinecraftForge.EVENT_BUS.register(mobKiller)
@@ -75,8 +80,13 @@ class SwiftSlayer {
         MinecraftForge.EVENT_BUS.register(revenant)
         MinecraftForge.EVENT_BUS.register(tracker)
         MinecraftForge.EVENT_BUS.register(SupportItem())
+        MinecraftForge.EVENT_BUS.register(lockTest)
+        MinecraftForge.EVENT_BUS.register(rotation)
+        MinecraftForge.EVENT_BUS.register(DirectionTest())
         CommandManager.register(PathfindTest())
         CommandManager.register(SwiftSlayerCommand())
+        CommandManager.register(LockTest())
+        CommandManager.register(DirectionTest())
 
         val cmd = TestCommand()
         CommandManager.register(cmd)

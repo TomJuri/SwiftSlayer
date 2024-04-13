@@ -87,6 +87,7 @@ class PathExecutor {
     gameSettings.keyBindSprint.setPressed(AngleUtil.yawTo360(player.rotationYaw) in AngleUtil.yawTo360(player.rotationYaw) - 45..AngleUtil.yawTo360(player.rotationYaw) + 45)
     gameSettings.keyBindForward.setPressed(true)
     gameSettings.keyBindJump.setPressed(shouldJump())
+
   }
 
   fun enable(pathIn: List<BlockPos>) {

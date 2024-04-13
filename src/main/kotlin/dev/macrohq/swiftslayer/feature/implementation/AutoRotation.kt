@@ -8,6 +8,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import dev.macrohq.swiftslayer.feature.helper.Target
 import dev.macrohq.swiftslayer.util.EaseUtil
+import dev.macrohq.swiftslayer.util.LockRotationUtil
 
 class AutoRotation: AbstractFeature() {
   override val featureName: String = "AutoRotation"
@@ -36,7 +37,7 @@ class AutoRotation: AbstractFeature() {
   }
 
   fun easeTo(target: Target, time: Int, lockType: LockType = LockType.NONE, override: Boolean, smoothLockTime: Int = 200, easeFunction: (Float) -> Float = EaseUtil.easingFunctions.random()){
-    if(AutoRotation.getInstance().isOverriden) return;
+    if(AutoRotation.getInstance().isOverriden || LockRotationUtil.getInstance().isOverriden) return;
     AutoRotation.getInstance().isOverriden = override;
     this.enabled = true
     this.forceEnable = true

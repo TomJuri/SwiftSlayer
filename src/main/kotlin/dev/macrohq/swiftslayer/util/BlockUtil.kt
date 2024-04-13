@@ -1,13 +1,72 @@
 package dev.macrohq.swiftslayer.util
 
+import dev.macrohq.swiftslayer.feature.implementation.BossKillerMovement
 import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder
+import net.minecraft.block.Block
 import net.minecraft.block.BlockStairs
+import net.minecraft.block.material.Material
+import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
 
+
 object BlockUtil {
+
+
+    fun canWalkOnBlock(pos: BlockPos): Boolean {
+        val block = world.getBlockState(pos.add(0, 0, 0)).block
+        val blockAbove = world.getBlockState(pos.up()).block // Get the block above
+
+        val material: Material = block.material
+        val materialAbove: Material = blockAbove.material
+
+        // Check if both the block and the space above it are walkable
+        return material.isSolid && !material.isLiquid && materialAbove == Material.air
+    }
+
+
+    fun getBlocksBetweenCorners(topLeft: BlockPos, bottomRight: BlockPos): List<BlockPos> {
+        val blocksBetween = mutableListOf<BlockPos>()
+
+        for (x in topLeft.x..bottomRight.x) {
+            for (y in topLeft.y..bottomRight.y) {
+                for (z in topLeft.z..bottomRight.z) {
+                    val blockPos = BlockPos(x, y, z)
+                    blocksBetween.add(blockPos)
+                }
+            }
+        }
+
+        return blocksBetween
+    }
+
+    fun getBlocks(centerPos: BlockPos, width: Int, height: Int, depth: Int, entity: EntityLiving? = null): MutableList<BlockPos> {
+        var pos2: BlockPos
+
+            val blocks = getBlocksBetweenCorners(getCornerBlocks(centerPos,width, height, depth).first,getCornerBlocks(centerPos,width, height, depth).second).asSequence()
+                .filter { canWalkOnBlock(it.add(0, -1, 0)) }
+                .filter { blocksBetweenValid(mc.thePlayer.position, it) }
+                .filter { BossKillerMovement.getInstance().getDistanceBetweenBlocks(it, mc.thePlayer.position) > 1}
+                .toMutableList()
+        if(entity != null) {
+            blocks.filter { BossKillerMovement.getInstance().getDistanceBetweenBlocks(it, mc.thePlayer.position) >  BossKillerMovement.getInstance().getDistanceBetweenBlocks(it, entity.position)}
+        } else {
+            blocks.filter { BossKillerMovement.getInstance().getDistanceBetweenBlocks(it, mc.thePlayer.position) > 1}
+        }
+        return blocks
+    }
+
+    fun getColumns(centerPos: BlockPos, width: Int, height: Int, depth: Int): MutableList<BlockPos> {
+         
+    }
+    fun getCornerBlocks(centerBlock: BlockPos, radiusX: Int, radiusY: Int, radiusZ: Int): Pair<BlockPos, BlockPos> {
+        val topLeft = BlockPos(centerBlock.x - radiusX, centerBlock.y - radiusY, centerBlock.z - radiusZ)
+        val bottomRight = BlockPos(centerBlock.x + radiusX, centerBlock.y + radiusY, centerBlock.z + radiusZ)
+        return topLeft to bottomRight
+    }
+
     fun neighbourGenerator(mainBlock: BlockPos, size: Int): List<BlockPos> {
         return neighbourGenerator(mainBlock, size, size, size)
     }

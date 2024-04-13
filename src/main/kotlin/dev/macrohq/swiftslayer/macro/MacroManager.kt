@@ -1,16 +1,7 @@
 package dev.macrohq.swiftslayer.macro
 
-import dev.macrohq.swiftslayer.util.KeyBindUtil
-import dev.macrohq.swiftslayer.util.Logger
-import dev.macrohq.swiftslayer.util.PathingUtil
-import dev.macrohq.swiftslayer.util.SlayerUtil
-import dev.macrohq.swiftslayer.util.UnGrabUtil
-import dev.macrohq.swiftslayer.util.autoBatphone
-import dev.macrohq.swiftslayer.util.config
-import dev.macrohq.swiftslayer.util.endermanBossKiller
-import dev.macrohq.swiftslayer.util.genericBossKiller
-import dev.macrohq.swiftslayer.util.mobKiller
-import dev.macrohq.swiftslayer.util.tracker
+import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
+import dev.macrohq.swiftslayer.util.*
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
@@ -67,6 +58,8 @@ class MacroManager {
     mobKiller.disable()
     genericBossKiller.disable()
     endermanBossKiller.disable()
+    LockRotationUtil.getInstance().disable()
+    AutoRotation.getInstance().disable()
     KeyBindUtil.stopClicking()
     PathingUtil.stop()
     UnGrabUtil.grabMouse()
