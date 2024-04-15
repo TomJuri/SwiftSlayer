@@ -4,11 +4,7 @@ import cc.polyfrost.oneconfig.utils.commands.CommandManager
 import dev.macrohq.swiftslayer.command.*
 import dev.macrohq.swiftslayer.config.SwiftSlayerConfig
 import dev.macrohq.swiftslayer.feature.*
-import dev.macrohq.swiftslayer.macro.EndermanBossKiller
-import dev.macrohq.swiftslayer.macro.GenericBossKiller
-import dev.macrohq.swiftslayer.macro.MacroManager
-import dev.macrohq.swiftslayer.macro.MobKiller
-import dev.macrohq.swiftslayer.macro.Revenant
+import dev.macrohq.swiftslayer.macro.*
 import dev.macrohq.swiftslayer.pathfinding.PathExecutor
 import dev.macrohq.swiftslayer.util.KeyBindUtil
 import dev.macrohq.swiftslayer.util.LockRotationUtil
@@ -20,7 +16,6 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import java.util.concurrent.locks.Lock
 
 /* fun main() {
     val keyPairGenerator = KeyPairGenerator.getInstance("RSA")
@@ -87,6 +82,8 @@ class SwiftSlayer {
         CommandManager.register(SwiftSlayerCommand())
         CommandManager.register(LockTest())
         CommandManager.register(DirectionTest())
+        CommandManager.register(DequeCommand())
+
 
         val cmd = TestCommand()
         CommandManager.register(cmd)
