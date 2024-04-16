@@ -60,9 +60,12 @@ class GenericBossKiller {
       y--
     }
 
+    if(SwiftSlayer.instance.config.moveementType == 0 && inCorner && BossKillerMovement.getInstance().getDistanceBetweenBlocks(player.position, chosenCorner) > 1) {
+      inCorner = false
+    }
 
-    if( SwiftSlayer.instance.config.moveementType == 0 && blockPoss.isNotEmpty() && !inCorner) {
-      PathingUtil.goto(blockPoss[0])
+    if( SwiftSlayer.instance.config.moveementType == 0 && blockPoss.isNotEmpty() && !inCorner && PathingUtil.isDone) {
+      PathingUtil.goto(blockPoss[0].add(0, -1, 0))
       gameSettings.keyBindSneak.setPressed(true)
       chosenCorner = blockPoss[0]
       inCorner = true
@@ -151,18 +154,16 @@ class GenericBossKiller {
     if(!enabled) return
 
     blockPoss.clear()
-    if(BlockUtil.getBlocks(mc.thePlayer.position, 15, 4, 15).isEmpty()) return
+    if(BlockUtil.getBlocks(mc.thePlayer.position, 15, 5, 15).isEmpty()) return
 
-    if(SwiftSlayer.instance.config.moveementType == 0) {
-      for(block: BlockPos in BlockUtil.getBlocks(mc.thePlayer.position, 15, 5, 15)) {
-        if(BlockUtil.isSingleCorner(block)) {
-          if(BlockUtil.blocksBetweenValid(block,mc.thePlayer.position.add(0, 0, 0))) {
-            blockPoss.add(block)
-          }
-
+    for(block: BlockPos in BlockUtil.getBlocks(mc.thePlayer.position, 15, 5, 15)) {
+      if(BlockUtil.isSingleCorner(block)) {
+        if(BlockUtil.blocksBetweenValid(block,mc.thePlayer.position.add(0, -1, 0))) {
+          blockPoss.add(block)
         }
 
       }
+
     }
 
 

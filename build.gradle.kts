@@ -28,6 +28,7 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
     modRuntimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.1.2")
     embed("com.squareup.okhttp3:okhttp:3.14.9")
+    implementation("it.unimi.dsi:fastutil:8.2.1")
 }
 
 blossom {
@@ -57,13 +58,13 @@ loom {
 tasks {
     jar {
         manifest.attributes(
-                mapOf(
-                        "ModSide" to "CLIENT",
-                        "TweakOrder" to "0",
-                        "ForceLoadAsMod" to true,
-                        "TweakClass" to "cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker",
-                        "MixinConfigs" to "mixins.swiftslayer.json"
-                )
+            mapOf(
+                "ModSide" to "CLIENT",
+                "TweakOrder" to "0",
+                "ForceLoadAsMod" to true,
+                "TweakClass" to "cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker",
+                "MixinConfigs" to "mixins.swiftslayer.json"
+            )
         )
         dependsOn(shadowJar)
     }
@@ -76,7 +77,10 @@ tasks {
     shadowJar {
         isEnableRelocation = true
         relocationPrefix = "dev.macrohq.swiftslayer.relocate"
-        relocate("cc.polyfrost", "cc.polyfrost") // this is so oneconfig doesn't get relocated, causing the tweaker to not be found
+        relocate(
+            "cc.polyfrost",
+            "cc.polyfrost"
+        ) // this is so oneconfig doesn't get relocated, causing the tweaker to not be found
         configurations = listOf(embed)
     }
 

@@ -13,6 +13,8 @@
     "entity.MixinEntity",
     "entity.MixinEntityLivingBase",
     "entity.MixinEntityPlayer",
-    "entity.MixinEntityPlayerSP"
+    "entity.MixinEntityPlayerSP",
+    "MinecraftInvoker",
+    "world.MixinChunkProviderClient"
   ]
 }

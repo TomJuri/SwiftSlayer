@@ -66,13 +66,12 @@ class DirectionTest {
 
                for(block: BlockPos in BlockUtil.getBlocks(mc.thePlayer.position, 15, 5, 15)) {
                 if(BlockUtil.isSingleCorner(block)) {
-                    if(BlockUtil.blocksBetweenValid(block,mc.thePlayer.position.add(0, 0, 0))) {
+                    if(BlockUtil.blocksBetweenValid(block,mc.thePlayer.position.add(0, -1, 0))) {
                         RenderUtil.drawBox(event, block, Color.BLUE, true)
                         blockPoss.add(block)
                     }
 
                 }
-
 
             }
       /*  GenericBossKiller.blockPoss = BlockUtil.getBlocks(dev.macrohq.swiftslayer.util.mc.thePlayer.position, 5, 5, 5) as ArrayList<BlockPos>

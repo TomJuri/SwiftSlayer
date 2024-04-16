@@ -202,6 +202,43 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
   )
   var moveementType = 0
 
+  // ==============================
+  //    Pathfinder Debug Config
+  // ==============================
+  @Switch(
+    name = "allowJump",
+    category = "PF"
+  )
+  var allowJump = true
+
+
+  @Switch(
+    name = "holdSneak",
+    category = "PF"
+  )
+  var holdSneak = true
+
+  @Switch(
+    name = "allowDiagonalAscend",
+    category = "PF"
+  )
+  var allowDiagonalAscend = true
+
+
+  @Switch(
+    name = "allowDiagonalDescend",
+    category = "PF"
+  )
+  var allowDiagonalDescend = true
+
+  @Slider(
+    name = "maxFallHeight",
+    category = "PF",
+    min = 1f,
+    max = 256f
+  )
+  var maxFallHeight = 20
+
   init {
     initialize()
     registerKeyBind(toggleMacro) { macroManager.toggle() }
