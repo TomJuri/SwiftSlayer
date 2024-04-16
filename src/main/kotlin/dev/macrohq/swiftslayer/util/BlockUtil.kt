@@ -1,8 +1,6 @@
 package dev.macrohq.swiftslayer.util
 
-import dev.macrohq.swiftslayer.feature.implementation.BossKillerMovement
 import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder
-import net.minecraft.block.Block
 import net.minecraft.block.BlockStairs
 import net.minecraft.block.material.Material
 import net.minecraft.entity.EntityLiving
@@ -17,12 +15,11 @@ object BlockUtil {
 
     fun canWalkOnBlock(pos: BlockPos): Boolean {
         val block = world.getBlockState(pos.add(0, 0, 0)).block
-        val blockAbove = world.getBlockState(pos.up()).block // Get the block above
+        val blockAbove = world.getBlockState(pos.up()).block
 
         val material: Material = block.material
         val materialAbove: Material = blockAbove.material
 
-        // Check if both the block and the space above it are walkable
         return material.isSolid && !material.isLiquid && materialAbove == Material.air
     }
 
@@ -45,24 +42,52 @@ object BlockUtil {
     fun getBlocks(centerPos: BlockPos, width: Int, height: Int, depth: Int, entity: EntityLiving? = null): MutableList<BlockPos> {
         var pos2: BlockPos
 
-            val blocks = getBlocksBetweenCorners(getCornerBlocks(centerPos,width, height, depth).first,getCornerBlocks(centerPos,width, height, depth).second).asSequence()
-                .filter { canWalkOnBlock(it.add(0, -1, 0)) }
-                .filter { blocksBetweenValid(mc.thePlayer.position, it) }
-                .filter { BossKillerMovement.getInstance().getDistanceBetweenBlocks(it, mc.thePlayer.position) > 1}
+            val blocks = getBlocksBetweenCorners(getCornerBlocks(centerPos, width, height, depth).first,getCornerBlocks(centerPos, width, height, depth).second).asSequence()
+                .filter { canWalkOnBlock(it.add(0, 0, 0)) }
+                .filter { world.isBlockFullCube(it) }
                 .toMutableList()
-        if(entity != null) {
-            blocks.filter { BossKillerMovement.getInstance().getDistanceBetweenBlocks(it, mc.thePlayer.position) >  BossKillerMovement.getInstance().getDistanceBetweenBlocks(it, entity.position)}
-        } else {
-            blocks.filter { BossKillerMovement.getInstance().getDistanceBetweenBlocks(it, mc.thePlayer.position) > 1}
-        }
+
         return blocks
     }
 
-    
+
+
     fun getCornerBlocks(centerBlock: BlockPos, radiusX: Int, radiusY: Int, radiusZ: Int): Pair<BlockPos, BlockPos> {
         val topLeft = BlockPos(centerBlock.x - radiusX, centerBlock.y - radiusY, centerBlock.z - radiusZ)
         val bottomRight = BlockPos(centerBlock.x + radiusX, centerBlock.y + radiusY, centerBlock.z + radiusZ)
         return topLeft to bottomRight
+    }
+
+    fun isSingleCorner(pos: BlockPos): Boolean {
+        val top = pos.add(1, 0, 0)
+        val right = pos.add(0, 0, 1)
+        val bottom = pos.add(-1, 0, 0)
+        val left = pos.add(0, 0, -1)
+        val topAbove = pos.add(1, 1, 0)
+        val rightAbove = pos.add(0, 1, 1)
+        val bottomAbove = pos.add(-1, 1, 0)
+        val leftAbove = pos.add(0, 1, -1)
+
+        if(!isValidBlock(topAbove)) return false
+        if(!isValidBlock(bottomAbove)) return false
+        if(!isValidBlock(leftAbove)) return false
+        if(!isValidBlock(rightAbove)) return false
+
+
+        val r1 = !canWalkOnBlock(top) && !canWalkOnBlock(right);
+        val r2 = !canWalkOnBlock(bottom) && !canWalkOnBlock(right);
+        val r3 = !canWalkOnBlock(top) && !canWalkOnBlock(left);
+        val r4 = !canWalkOnBlock(bottom) && !canWalkOnBlock(left);
+
+        return (r1.and(r2.not()) .and(r3.not()) .and(r4.not())
+            .or(r2.and(r1.not()) .and(r3.not()) .and(r4.not()))
+            .or(r3.and(r1.not()) .and(r2.not()) .and(r4.not()))
+            .or(r4.and(r1.not()) .and(r2.not()) .and(r3.not())));
+    }
+
+
+    fun isValidBlock(block: BlockPos):Boolean {
+        return !(!world.isAirBlock(block) && !world.getBlockState(block).block.isBlockNormalCube)
     }
 
     fun neighbourGenerator(mainBlock: BlockPos, size: Int): List<BlockPos> {
@@ -109,7 +134,6 @@ object BlockUtil {
             if(world.isAirBlock(it)) blockFail++
             else blockFail=0
             if(blockFail>3) return false
-
             lastBlockY = it.y
             lastFullBlock = world.isBlockFullCube(it)
             isLastBlockSlab = isStairSlab(it)
@@ -133,7 +157,6 @@ object BlockUtil {
 //        }
 //        return true
     }
-
     fun bresenham(start: Vec3, end: Vec3): List<BlockPos> {
         var start0 = start
         val blocks = mutableListOf(start0.toBlockPos())
@@ -143,7 +166,6 @@ object BlockUtil {
         var x0 = MathHelper.floor_double(start0.xCoord)
         var y0 = MathHelper.floor_double(start0.yCoord)
         var z0 = MathHelper.floor_double(start0.zCoord)
-
         var iterations = 200
         while (iterations-- >= 0) {
             if (x0 == x1 && y0 == y1 && z0 == z1) {
@@ -207,5 +229,6 @@ object BlockUtil {
         }
         return blocks
     }
-
 }
+
+

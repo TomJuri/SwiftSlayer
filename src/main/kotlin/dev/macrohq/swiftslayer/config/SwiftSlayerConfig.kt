@@ -156,44 +156,6 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
   )
   var macroGuiDelayRandomness: Float = 350f
 
-
-  // ==============================
-  //    Pathfinder Debug Config
-  // ==============================
-  @Switch(
-    name = "allowJump",
-    category = "PF"
-  )
-  var allowJump = true
-
-
-  @Switch(
-    name = "holdSneak",
-    category = "PF"
-  )
-  var holdSneak = true
-
-  @Switch(
-    name = "allowDiagonalAscend",
-    category = "PF"
-  )
-  var allowDiagonalAscend = true
-
-
-  @Switch(
-    name = "allowDiagonalDescend",
-    category = "PF"
-  )
-  var allowDiagonalDescend = true
-
-  @Slider(
-    name = "maxFallHeight",
-    category = "PF",
-    min = 1f,
-    max = 256f
-  )
-  var maxFallHeight = 20
-
   fun getRandomGUIMacroDelay(): Long {
     return (macroGuiDelay + Math.random().toFloat() * macroGuiDelayRandomness).toLong()
   }
@@ -231,7 +193,15 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     max = 10f
   )
   var macroLockSmoothness: Float = 4f
-  
+
+  @Dropdown(
+    name = "BossKiller Movement",
+    category = "General",
+    subcategory = "Slayer",
+    options = ["Find corner", "Walk back"]
+  )
+  var moveementType = 0
+
   init {
     initialize()
     registerKeyBind(toggleMacro) { macroManager.toggle() }

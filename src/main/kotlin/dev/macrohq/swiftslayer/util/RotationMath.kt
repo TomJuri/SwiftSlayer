@@ -4,8 +4,6 @@ import net.minecraft.client.Minecraft
 import net.minecraft.util.BlockPos
 import net.minecraft.util.Vec3
 import kotlin.math.atan2
-import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.sqrt
 
 public class RotationMath {
@@ -20,18 +18,12 @@ public class RotationMath {
         }
 
         fun interpolate(goal: Float, current: Float, time: Float): Float {
-            var current = current
-            while (goal - current > 180) {
-                current += 360f
-            }
-            while (goal - current < -180) {
-                current -= 360f
-            }
-
             val t = easeInOut(time)
-            return current + (goal - current) * t
+            val difference = goal - current
+            val shortestPathDifference = (difference + 180) % 360 - 180
+            val target = current + shortestPathDifference * t
+            return target
         }
-
         fun toClock(seconds: Int): String {
             val hours = seconds / 3600
             val minutes = (seconds % 3600) / 60
@@ -58,18 +50,9 @@ public class RotationMath {
             val deltaX: Double = blockPos.x + 0.5 - mc.thePlayer.posX
             val deltaZ: Double = blockPos.z + 0.5 - mc.thePlayer.posZ
             val yawToBlock = atan2(-deltaX, deltaZ)
-            var yaw = Math.toDegrees(yawToBlock)
-
-            yaw = (yaw + 360) % 360
-            if (yaw > 180) {
-                yaw -= 360.0
-            }
+            val yaw = Math.toDegrees(yawToBlock)
 
             return yaw.toFloat()
-        }
-
-        fun fromBlockPos(pos: BlockPos): Vec3 {
-            return Vec3(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble())
         }
 
         fun getPitch(blockPos: BlockPos): Float {
@@ -79,9 +62,15 @@ public class RotationMath {
             val distanceXZ = sqrt(deltaX * deltaX + deltaZ * deltaZ)
             val pitchToBlock = -atan2(deltaY, distanceXZ)
             var pitch = Math.toDegrees(pitchToBlock)
-            pitch = max(-90.0, min(90.0, pitch))
+
             return pitch.toFloat()
         }
+
+        fun fromBlockPos(pos: BlockPos): Vec3 {
+            return Vec3(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble())
+        }
+
+
 
         fun getXZDistance(pos1: BlockPos, pos2: BlockPos): Double {
             val xDiff = (pos1.x - pos2.x).toDouble()

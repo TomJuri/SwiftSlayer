@@ -1,12 +1,12 @@
 package dev.macrohq.swiftslayer.util;
 
 import dev.macrohq.swiftslayer.feature.AbstractFeature
-import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
-import dev.macrohq.swiftslayer.feature.implementation.LockType
 import net.minecraft.client.Minecraft
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 public class LockRotationUtil: AbstractFeature() {
     override val featureName: String = "LockRotation"
@@ -18,7 +18,8 @@ public class LockRotationUtil: AbstractFeature() {
     private var pitchGoal = 0f
     private var yawSmooth = 0
     private var pitchSmooth = 0
-    public var isOverriden = false
+    var isOverriden = false
+    var lastYaws: ArrayDeque<Float> = ArrayDeque<Float>(80)
 
     companion object{
         private var instance: LockRotationUtil? = null
@@ -30,19 +31,29 @@ public class LockRotationUtil: AbstractFeature() {
         }
     }
     fun setYaw(yaw: Float, smoothing: Int, override: Boolean = false) {
+        var mutYaw = yaw
+        while (mutYaw >= 180) {
+            mutYaw-=360
+        }
+
+        while (mutYaw < -180) {
+            mutYaw+=360
+        }
 
         LockRotationUtil.getInstance().isOverriden = override;
-        yawGoal = yaw
+        yawGoal = mutYaw
         yawSmooth = smoothing
         updateYaw = true
     }
 
     fun setPitch(pitch: Float, smoothing: Int, override: Boolean = false) {
-        LockRotationUtil.getInstance().isOverriden = override;
-        pitchGoal = pitch
+
+        val mutPitch = max(-90.0f, min(90.0f, pitch))
+
+        LockRotationUtil.getInstance().isOverriden = override
+        pitchGoal = mutPitch
         pitchSmooth = smoothing
         updatePitch = true
-
     }
 
     fun reset() {
@@ -68,8 +79,9 @@ public class LockRotationUtil: AbstractFeature() {
     fun clientTick(event: ClientTickEvent?) {
 
         if (updateYaw) {
+
             mc.thePlayer.rotationYaw = RotationMath.interpolate(yawGoal, mc.thePlayer.rotationYaw, 1f / yawSmooth)
-            if (abs(mc.thePlayer.rotationYaw - yawGoal) < Math.random() / 2) {
+            if (abs(mc.thePlayer.rotationYaw - yawGoal) < Math.random() * 2) {
                 updateYaw = false
             }
         }
@@ -77,11 +89,13 @@ public class LockRotationUtil: AbstractFeature() {
         if (updatePitch) {
             mc.thePlayer.rotationPitch =
                 RotationMath.interpolate(pitchGoal, mc.thePlayer.rotationPitch, 1f / pitchSmooth)
-            if (abs(mc.thePlayer.rotationPitch - pitchGoal) < Math.random() / 2) {
+            if (abs(mc.thePlayer.rotationPitch - pitchGoal) < Math.random() * 2) {
                 updatePitch = false
             }
         }
 
 
     }
+
+
 }

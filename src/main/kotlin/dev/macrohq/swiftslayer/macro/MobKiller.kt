@@ -5,20 +5,7 @@ import dev.macrohq.swiftslayer.feature.helper.Angle
 import dev.macrohq.swiftslayer.feature.helper.Target
 import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
 import dev.macrohq.swiftslayer.feature.implementation.LockType
-import dev.macrohq.swiftslayer.util.AngleUtil
-import dev.macrohq.swiftslayer.util.EntityUtil
-import dev.macrohq.swiftslayer.util.InventoryUtil
-import dev.macrohq.swiftslayer.util.KeyBindUtil
-import dev.macrohq.swiftslayer.util.Logger
-import dev.macrohq.swiftslayer.util.PathingUtil
-import dev.macrohq.swiftslayer.util.RenderUtil
-import dev.macrohq.swiftslayer.util.SlayerUtil
-import dev.macrohq.swiftslayer.util.Timer
-import dev.macrohq.swiftslayer.util.config
-import dev.macrohq.swiftslayer.util.getStandingOnCeil
-import dev.macrohq.swiftslayer.util.lastTickPositionCeil
-import dev.macrohq.swiftslayer.util.mc
-import dev.macrohq.swiftslayer.util.player
+import dev.macrohq.swiftslayer.util.*
 import net.minecraft.entity.EntityLiving
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
@@ -143,9 +130,9 @@ class MobKiller {
 
   private fun angleForWeapon(entity: EntityLiving): Angle {
     return when (config.mobKillerWeapon) {
-      0 -> AngleUtil.getAngle(entity.positionVector.addVector(0.0, 0.8, 0.0));
-      1 -> AngleUtil.getAngle(entity.positionVector.addVector(0.0, 0.8, 0.0))
-      3 -> AngleUtil.getAngle(entity.positionVector.addVector(0.0, 0.8, 0.0));
+      0 -> AngleUtil.getAngle(entity.position.add(0, (entity.height*0.75).toInt(), 0));
+      1 -> AngleUtil.getAngle(entity.position.add(0, (entity.height*0.75).toInt(), 0))
+      3 -> AngleUtil.getAngle(entity.position.add(0, (entity.height*0.75).toInt(), 0));
       else -> Angle(0f,0f)
     }
   }

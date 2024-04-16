@@ -24,7 +24,7 @@ class Failsafe {
         macroManager.disable()
     }
 
-//    @SubscribeEvent
+    @SubscribeEvent
     fun onItemChange(event: ReceivePacketEvent) {
         if (!macroManager.enabled) return
         if (event.packet !is S09PacketHeldItemChange) return
