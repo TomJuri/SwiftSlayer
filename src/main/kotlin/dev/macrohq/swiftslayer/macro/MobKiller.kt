@@ -10,7 +10,6 @@ import net.minecraft.entity.EntityLiving
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import kotlin.math.abs
-import kotlin.math.sqrt
 
 class MobKiller {
   private var blacklist = mutableListOf<EntityLiving>()
@@ -32,36 +31,34 @@ class MobKiller {
       disable()
       return
     }
-
-    if (sqrt(player.lastTickPositionCeil().distanceSq(player.getStandingOnCeil())) > 1)
-      stuckTimer = Timer(1500)
-
-    if (blacklistResetTimer.isDone) {
-      blacklist.clear()
-      blacklistResetTimer = Timer(1000)
-    }
-
     when (state) {
       State.CHOOSE_TARGET -> {
+
         RenderUtil.entites.clear()
         val targetEntityList = EntityUtil.getMobs(SlayerUtil.getMobClass()).toMutableList()
+        if(targetEntityList.isEmpty()) return
         targetEntityList.removeAll(blacklist)
-        if (targetEntityList.isEmpty()) return
-        targetEntity = targetEntityList[0]
-        RenderUtil.entites.add(targetEntity!!)
+        currentTarget = targetEntityList.first()
+        RenderUtil.entites.add(currentTarget)
+        state = State.GOTO_TARGET
+        return
       }
 
-      State.GOTO_TARGET -> PathingUtil.goto(targetEntity!!.getStandingOnCeil())
+      State.GOTO_TARGET -> {
+        PathingUtil.goto(currentTarget.getStandingOnCeil())
+        state = State.VERIFY_PATHFINDING
+        return
+      }
 
       State.VERIFY_PATHFINDING -> {
-        if (PathingUtil.hasFailed || targetEntity!!.isDead || stuckTimer.isDone) {
+        if (PathingUtil.hasFailed || currentTarget.isDead) {
           PathingUtil.stop()
-          stuckTimer = Timer(1500)
-          blacklist.add(targetEntity!!)
+          blacklist.add(currentTarget)
           state = State.CHOOSE_TARGET
           return
+
         }
-        if ((PathingUtil.isDone || player.getDistanceToEntity(targetEntity) < attackDistance()) && player.canEntityBeSeen(targetEntity)) {
+        if (PathingUtil.isDone || player.getDistanceToEntity(currentTarget) < attackDistance()) {
           stopWalking()
           state = State.LOOK_AT_TARGET
         }
@@ -70,34 +67,38 @@ class MobKiller {
 
       State.LOOK_AT_TARGET -> {
         AutoRotation.getInstance().disable()
-        lookAtEntity(targetEntity!!)
-        lookTimer = Timer(1500)
+        lookAtEntity(currentTarget)
+        state = State.VERIFY_LOOKING
+        return
       }
 
       State.VERIFY_LOOKING -> {
-        if (lookTimer.isDone) {
-          state = State.LOOK_AT_TARGET
-          lookTimer = Timer(Long.MAX_VALUE)
-          state = State.CHOOSE_TARGET
-          blacklist.add(targetEntity!!)
-          AutoRotation.getInstance().disable()
-          return
-        }
-        if (lookDone()) {
-          lookTimer = Timer(Long.MAX_VALUE)
-          AutoRotation.getInstance().disable()
-          holdWeapon()
-        } else {
-          return
+        if(!AutoRotation.getInstance().enabled) {
+          if(mc.objectMouseOver.entityHit != null && player.getDistanceToEntity(currentTarget) <= attackDistance() && player.canEntityBeSeen(currentTarget)) {
+            Logger.info("hee i am")
+            holdWeapon()
+            state = State.KILL_TARGET
+            return
+          } else if(mc.objectMouseOver.entityHit == null && player.getDistanceToEntity(currentTarget) > attackDistance()) {
+            Logger.info("hee i am NOT")
+            state = State.CHOOSE_TARGET
+            return
+          } else if (mc.objectMouseOver.entityHit == null && player.getDistanceToEntity(currentTarget) <= attackDistance()) {
+            state = State.LOOK_AT_TARGET
+            return
+          }
         }
       }
 
       State.KILL_TARGET -> {
         useWeapon()
-        blacklist.add(targetEntity as EntityLiving)
+        blacklist.add(currentTarget)
+        state = State.CHOOSE_TARGET
+        return
       }
+
     }
-    state = State.entries[(state.ordinal + 1) % State.entries.size]
+
   }
 
   fun enable() {
@@ -115,6 +116,7 @@ class MobKiller {
     enabled = false
     PathingUtil.stop()
     AutoRotation.getInstance().disable()
+    state = State.CHOOSE_TARGET
   }
 
   private fun lookAtEntity(entity: EntityLiving) {
@@ -130,9 +132,9 @@ class MobKiller {
 
   private fun angleForWeapon(entity: EntityLiving): Angle {
     return when (config.mobKillerWeapon) {
-      0 -> AngleUtil.getAngle(entity.position.add(0, (entity.height*0.75).toInt(), 0));
-      1 -> AngleUtil.getAngle(entity.position.add(0, (entity.height*0.75).toInt(), 0))
-      3 -> AngleUtil.getAngle(entity.position.add(0, (entity.height*0.75).toInt(), 0));
+      0 -> AngleUtil.getAngle(entity.position.add(0, (entity.height*0.6).toInt(), 0));
+      1 -> AngleUtil.getAngle(entity.position.add(0, (entity.height*0.6).toInt(), 0))
+      3 -> AngleUtil.getAngle(entity.position.add(0, (entity.height*0.6).toInt(), 0));
       else -> Angle(0f,0f)
     }
   }
@@ -182,8 +184,8 @@ class MobKiller {
   }
 
   private fun lookDone(): Boolean {
-    val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw) - AngleUtil.yawTo360(angle.getAngle().yaw))
-    val pitchDiff = abs(mc.thePlayer.rotationPitch - angle.getAngle().pitch)
+    val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw) - AngleUtil.yawTo360(Target(currentTarget).getAngle().yaw))
+    val pitchDiff = abs(mc.thePlayer.rotationPitch - Target(currentTarget).getAngle().pitch)
     return when (config.mobKillerWeapon) {
       0 -> pitchDiff < 2
       1 -> yawDiff < 10 && pitchDiff < 5
@@ -196,4 +198,9 @@ class MobKiller {
   private enum class State {
     CHOOSE_TARGET, GOTO_TARGET, VERIFY_PATHFINDING, LOOK_AT_TARGET, VERIFY_LOOKING, KILL_TARGET,
   }
+
+  companion object {
+    lateinit var currentTarget: EntityLiving
+  }
 }
+

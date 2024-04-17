@@ -3,11 +3,13 @@ package dev.macrohq.swiftslayer.util
 import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder
 import net.minecraft.block.BlockStairs
 import net.minecraft.block.material.Material
+import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
+import kotlin.math.abs
 
 
 object BlockUtil {
@@ -21,6 +23,57 @@ object BlockUtil {
         val materialAbove: Material = blockAbove.material
 
         return material.isSolid && !material.isLiquid && materialAbove == Material.air
+    }
+
+    fun canWalkOn(startPos: BlockPos, endPos: BlockPos): Boolean {
+        val startState = world.getBlockState(startPos)
+        val endState = world.getBlockState(endPos)
+        if (!endState.block.material.isSolid) {
+            return endPos.y - startPos.y <= 1
+        }
+        if (endState.block is BlockStairs &&
+            getPlayerDirectionToBeAbleToWalkOnBlock(startPos, endPos) == getDirectionToWalkOnStairs(endState)
+        ) {
+            return true
+        }
+        val startHeight = startState.block.getCollisionBoundingBox(world, startPos, startState).maxY
+        val endHeight = endState.block.getCollisionBoundingBox(world, endPos, endState).maxY
+        if (endHeight - startHeight <= .5) {
+            return true
+        }
+        return false
+    }
+
+    fun getDirectionToWalkOnStairs(state: IBlockState): EnumFacing {
+        return when (state.block.getMetaFromState(state)) {
+            0 -> {
+                EnumFacing.EAST
+            }
+            1 -> {
+                EnumFacing.WEST
+            }
+            2 -> {
+                EnumFacing.SOUTH
+            }
+            3 -> {
+                EnumFacing.NORTH
+            }
+            4 -> {
+                EnumFacing.DOWN
+            }
+            else -> EnumFacing.UP
+        }
+    }
+
+    fun getPlayerDirectionToBeAbleToWalkOnBlock(startPos: BlockPos, endPoss: BlockPos): EnumFacing {
+        val deltaX: Int = endPoss.x - startPos.x
+        val deltaZ: Int = endPoss.z - startPos.z
+
+        return if (abs(deltaX) > abs(deltaZ)) {
+            if (deltaX > 0) EnumFacing.EAST else EnumFacing.WEST
+        } else {
+            if (deltaZ > 0) EnumFacing.SOUTH else EnumFacing.NORTH
+        }
     }
 
 

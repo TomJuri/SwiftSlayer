@@ -165,7 +165,7 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     category = "General",
     subcategory = "Rotation delays",
     description = "The time for rotations",
-    min = 200f,
+    min = 100f,
     max = 500f
   )
   var macroRotationTime: Float = 250f
@@ -175,7 +175,7 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     category = "General",
     subcategory = "Rotation delays",
     description = "Additional randomness ADDED to the rotation time",
-    min = 300f,
+    min = 100f,
     max = 700f
   )
   var macroRotationTimeRandomness: Float = 350f

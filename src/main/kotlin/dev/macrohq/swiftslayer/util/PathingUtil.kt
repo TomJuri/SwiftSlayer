@@ -38,6 +38,7 @@ object PathingUtil {
     runAsync {
       RenderUtil.lines.clear()
       path = pathfinder.calculatePath()
+
       if (path == null) {
         hasFailed = true
         Logger.log("Could not find path!!")

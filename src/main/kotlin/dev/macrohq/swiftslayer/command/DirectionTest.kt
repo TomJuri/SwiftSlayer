@@ -2,10 +2,9 @@ package dev.macrohq.swiftslayer.command
 
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
-import dev.macrohq.swiftslayer.util.BlockUtil
-import dev.macrohq.swiftslayer.util.PathingUtil
-import dev.macrohq.swiftslayer.util.RenderUtil
+import dev.macrohq.swiftslayer.util.*
 import net.minecraft.client.Minecraft
+import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -81,7 +80,14 @@ class DirectionTest {
                     RenderUtil.drawBox(event, blockk, Color.WHITE, true)
                 } */
            // }
+
+            val targetEntityList = EntityUtil.getMobs(SlayerUtil.getMobClass()).toMutableList()
+            for(entity: EntityLiving in targetEntityList) {
+                RenderUtil.renderText(entity.position.toVec3(), EntityUtil.getMobCost(entity).toInt().toString())
+            }
         }
+
+
     }
 
     companion object {
