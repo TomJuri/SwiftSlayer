@@ -13,19 +13,23 @@ object EntityUtil {
         var distanceCost: Double = 0.0
         var yChangeCost: Double = 0.0
         var healthCost: Double = 0.0
+        var returnedCost: Double = 0.0
 
-            distanceCost += entity.getDistanceToEntity(player)
+        distanceCost += entity.getDistanceToEntity(player)
 
-            if(abs(entity.position.y - player.position.y) > 7) {
-                yChangeCost += (abs(entity.position.y - player.position.y) - 7) * 10
+            if(abs(entity.position.y - player.position.y) > 5) {
+                yChangeCost += (abs(entity.position.y - player.position.y) - 5) * 10
             }
 
             yawCost = abs(AngleUtil.yawTo360(mc.thePlayer.rotationYaw) - AngleUtil.yawTo360(Target(entity).getAngle().yaw)).toDouble()
             yawCost /= 10
 
             healthCost += entity.health.toDouble() / 100
-
-        return yawCost + distanceCost + yChangeCost + healthCost
+        returnedCost = yawCost + distanceCost + yChangeCost + healthCost
+        if(player.canEntityBeSeen(entity)) {
+            returnedCost -= returnedCost * 0.35
+        }
+        return returnedCost
     }
 
 

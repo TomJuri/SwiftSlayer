@@ -31,6 +31,8 @@ class MobKiller {
       disable()
       return
     }
+
+    Logger.info(state.name)
     when (state) {
       State.CHOOSE_TARGET -> {
 
@@ -45,7 +47,7 @@ class MobKiller {
       }
 
       State.GOTO_TARGET -> {
-        PathingUtil.goto(currentTarget.getStandingOnCeil())
+        PathingUtil.goto(currentTarget.getStandingOnCeil(), currentTarget)
         state = State.VERIFY_PATHFINDING
         return
       }
@@ -58,9 +60,14 @@ class MobKiller {
           return
 
         }
-        if (PathingUtil.isDone || player.getDistanceToEntity(currentTarget) < attackDistance()) {
+        if (player.getDistanceToEntity(currentTarget) < attackDistance()) {
           stopWalking()
           state = State.LOOK_AT_TARGET
+        }
+
+        if(PathingUtil.isDone && player.getDistanceToEntity(currentTarget) > attackDistance()) {
+          Logger.info("Failed pathfinding :(")
+          state = State.GOTO_TARGET
         }
         return
       }
@@ -73,7 +80,6 @@ class MobKiller {
       }
 
       State.VERIFY_LOOKING -> {
-        if(!AutoRotation.getInstance().enabled) {
           if(mc.objectMouseOver.entityHit != null && player.getDistanceToEntity(currentTarget) <= attackDistance() && player.canEntityBeSeen(currentTarget)) {
             holdWeapon()
             state = State.KILL_TARGET
@@ -86,16 +92,15 @@ class MobKiller {
             return
           }
         }
-      }
+
 
       State.KILL_TARGET -> {
         useWeapon()
-        if (currentTarget.isDead) {
+        if (currentTarget.isDead || currentTarget.health < 1) {
           blacklist.add(currentTarget)
           state = State.CHOOSE_TARGET
           return
         }
-
         state = State.VERIFY_LOOKING
         return
       }

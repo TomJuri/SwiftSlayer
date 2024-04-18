@@ -1,24 +1,11 @@
 package dev.macrohq.swiftslayer.pathfinding
 
 import dev.macrohq.swiftslayer.feature.helper.Angle
+import dev.macrohq.swiftslayer.feature.helper.Target
 import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
 import dev.macrohq.swiftslayer.feature.implementation.LockType
-import dev.macrohq.swiftslayer.util.AngleUtil
-import dev.macrohq.swiftslayer.feature.helper.Target
-import dev.macrohq.swiftslayer.util.InventoryUtil
-import dev.macrohq.swiftslayer.util.KeyBindUtil
-import dev.macrohq.swiftslayer.util.Logger
-import dev.macrohq.swiftslayer.util.PathingUtil
-import dev.macrohq.swiftslayer.util.RenderUtil
-import dev.macrohq.swiftslayer.util.RotationUtil
-import dev.macrohq.swiftslayer.util.config
-import dev.macrohq.swiftslayer.util.gameSettings
-import dev.macrohq.swiftslayer.util.getStandingOnCeil
-import dev.macrohq.swiftslayer.util.lastTickPositionCeil
-import dev.macrohq.swiftslayer.util.mc
-import dev.macrohq.swiftslayer.util.player
-import dev.macrohq.swiftslayer.util.setPressed
-import dev.macrohq.swiftslayer.util.toVec3Top
+import dev.macrohq.swiftslayer.util.*
+import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
@@ -35,6 +22,7 @@ class PathExecutor {
   private var next: BlockPos? = null
   private var pathFailCounter = 0
   private var aotving = false
+  private var goal: BlockPos? = null
 
   @SubscribeEvent
   fun onTick(event: ClientTickEvent) {
@@ -59,7 +47,11 @@ class PathExecutor {
     if (isOnPath()) {
       next = path[path.indexOf(getStandingOn()!!) + 1]
       // RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f), 500)
-      AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(next!!.toVec3Top()).yaw, 20f)), 300, LockType.NONE, false)
+      if(goal != null ) {
+        AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(goal!!.toVec3Top()).yaw, AngleUtil.getAngle(goal!!.toVec3Top()).pitch)), 300, LockType.NONE, false)
+      } else {
+        AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(next!!.toVec3Top()).yaw, 20f)), 300, LockType.NONE, false)
+      }
       RenderUtil.markers.clear()
       RenderUtil.markers.add(next!!)
     }
@@ -90,7 +82,7 @@ class PathExecutor {
 
   }
 
-  fun enable(pathIn: List<BlockPos>) {
+  fun enable(pathIn: List<BlockPos>, target: EntityLiving? = null) {
     if (pathIn.isEmpty()) return
     disable()
     path = pathIn
@@ -99,6 +91,9 @@ class PathExecutor {
     pathFailCounter = 0
     aotving = false
     enabled = true
+    if(target != null) {
+      goal = target.position
+    }
   }
 
   fun disable() {
