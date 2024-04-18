@@ -75,13 +75,11 @@ class MobKiller {
       State.VERIFY_LOOKING -> {
         if(!AutoRotation.getInstance().enabled) {
           if(mc.objectMouseOver.entityHit != null && player.getDistanceToEntity(currentTarget) <= attackDistance() && player.canEntityBeSeen(currentTarget)) {
-            Logger.info("hee i am")
             holdWeapon()
             state = State.KILL_TARGET
             return
           } else if(mc.objectMouseOver.entityHit == null && player.getDistanceToEntity(currentTarget) > attackDistance()) {
-            Logger.info("hee i am NOT")
-            state = State.CHOOSE_TARGET
+            state = State.GOTO_TARGET
             return
           } else if (mc.objectMouseOver.entityHit == null && player.getDistanceToEntity(currentTarget) <= attackDistance()) {
             state = State.LOOK_AT_TARGET
@@ -92,8 +90,13 @@ class MobKiller {
 
       State.KILL_TARGET -> {
         useWeapon()
-        blacklist.add(currentTarget)
-        state = State.CHOOSE_TARGET
+        if (currentTarget.isDead) {
+          blacklist.add(currentTarget)
+          state = State.CHOOSE_TARGET
+          return
+        }
+
+        state = State.VERIFY_LOOKING
         return
       }
 
