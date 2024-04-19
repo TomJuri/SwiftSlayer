@@ -57,6 +57,5 @@ class Path(start: PathNode, end: PathNode, val goal: Goal, val ctx: CalculationC
         smooth.removeIf { world.getBlockState(it).block == Blocks.air }
         return smooth
     }
-//    }
 
 }
