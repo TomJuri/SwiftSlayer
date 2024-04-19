@@ -38,8 +38,8 @@ class MobKiller {
 
         RenderUtil.entites.clear()
         val targetEntityList = EntityUtil.getMobs(SlayerUtil.getMobClass()).toMutableList()
-        if(targetEntityList.isEmpty()) return
         targetEntityList.removeAll(blacklist)
+        if(targetEntityList.isEmpty()) return
         currentTarget = targetEntityList.first()
         RenderUtil.entites.add(currentTarget)
         state = State.GOTO_TARGET
@@ -47,7 +47,13 @@ class MobKiller {
       }
 
       State.GOTO_TARGET -> {
+        if(player.canEntityBeSeen(currentTarget)) {
         PathingUtil.goto(currentTarget.getStandingOnCeil(), currentTarget)
+        }
+        else {
+          PathingUtil.goto(currentTarget.getStandingOnCeil())
+        }
+
         state = State.VERIFY_PATHFINDING
         return
       }
@@ -66,8 +72,9 @@ class MobKiller {
         }
 
         if(PathingUtil.isDone && player.getDistanceToEntity(currentTarget) > attackDistance()) {
-          Logger.info("Failed pathfinding :(")
-          state = State.GOTO_TARGET
+          Logger.info("Failed pathfinding :( Ignoring this entity")
+          blacklist.add(currentTarget)
+          state = State.CHOOSE_TARGET
         }
         return
       }

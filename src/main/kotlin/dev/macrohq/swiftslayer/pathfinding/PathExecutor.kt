@@ -101,6 +101,7 @@ class PathExecutor {
     gameSettings.keyBindSprint.setPressed(false)
     gameSettings.keyBindForward.setPressed(false)
     gameSettings.keyBindJump.setPressed(false)
+    goal = null
   }
 
   private fun canAOTV(): Boolean {

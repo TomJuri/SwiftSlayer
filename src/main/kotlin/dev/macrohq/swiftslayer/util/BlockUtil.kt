@@ -25,56 +25,6 @@ object BlockUtil {
         return material.isSolid && !material.isLiquid && materialAbove == Material.air
     }
 
-    fun canWalkOn(startPos: BlockPos, endPos: BlockPos): Boolean {
-        val startState = world.getBlockState(startPos)
-        val endState = world.getBlockState(endPos)
-        if (!endState.block.material.isSolid) {
-            return endPos.y - startPos.y <= 1
-        }
-        if (endState.block is BlockStairs &&
-            getPlayerDirectionToBeAbleToWalkOnBlock(startPos, endPos) == getDirectionToWalkOnStairs(endState)
-        ) {
-            return true
-        }
-        val startHeight = startState.block.getCollisionBoundingBox(world, startPos, startState).maxY
-        val endHeight = endState.block.getCollisionBoundingBox(world, endPos, endState).maxY
-        if (endHeight - startHeight <= .5) {
-            return true
-        }
-        return false
-    }
-
-    fun getDirectionToWalkOnStairs(state: IBlockState): EnumFacing {
-        return when (state.block.getMetaFromState(state)) {
-            0 -> {
-                EnumFacing.EAST
-            }
-            1 -> {
-                EnumFacing.WEST
-            }
-            2 -> {
-                EnumFacing.SOUTH
-            }
-            3 -> {
-                EnumFacing.NORTH
-            }
-            4 -> {
-                EnumFacing.DOWN
-            }
-            else -> EnumFacing.UP
-        }
-    }
-
-    fun getPlayerDirectionToBeAbleToWalkOnBlock(startPos: BlockPos, endPoss: BlockPos): EnumFacing {
-        val deltaX: Int = endPoss.x - startPos.x
-        val deltaZ: Int = endPoss.z - startPos.z
-
-        return if (abs(deltaX) > abs(deltaZ)) {
-            if (deltaX > 0) EnumFacing.EAST else EnumFacing.WEST
-        } else {
-            if (deltaZ > 0) EnumFacing.SOUTH else EnumFacing.NORTH
-        }
-    }
 
 
     fun getBlocksBetweenCorners(topLeft: BlockPos, bottomRight: BlockPos): List<BlockPos> {
@@ -163,53 +113,76 @@ object BlockUtil {
         return neighbours
     }
 
-    fun isStairSlab(block: BlockPos): Boolean{
+    fun isStairSlab(block: BlockPos): Boolean {
         return world.getBlockState(block).block is BlockStairs ||
                 world.getBlockState(block).block is BlockStairs
     }
 
-    fun blocksBetweenValid(startPos: BlockPos, endPos: BlockPos): Boolean{
-        val blocks = bresenham(startPos.toVec3().addVector(0.0,0.4,0.0), endPos.toVec3().addVector(0.0,0.4,0.0)).toMutableList()
-        var blockFail = 0
-        var lastBlockY = blocks[0].y
-        var lastFullBlock = world.isBlockFullCube(blocks[0])
-        var isLastBlockSlab = isStairSlab(blocks[0])
-        var isLastBlockAir = world.isAirBlock(blocks[0])
-        blocks.remove(blocks[0])
-        blocks.forEach{
-            if(!AStarPathfinder.Node(it, null).isWalkable() && !world.isAirBlock(it)){
+    fun blocksBetweenValid(startPoss: BlockPos, endPoss: BlockPos): Boolean {
+        val blocksBetween = bresenham(startPoss.toVec3(), endPoss.toVec3())
+        for (i in blocksBetween.indices) {
+            val it = blocksBetween[i]
+            if (!AStarPathfinder.Node(it, null).isWalkable() && !world.isAirBlock(it)) {
                 return false
             }
-//            if(!(isLastBlockSlab && world.isBlockFullCube(it))) return false
-            if(isLastBlockAir && world.isBlockFullCube(it) && !isStairSlab(it)) return false
-//            if(!(isLastBlockAir && isStairSlab(it))) return false
-            if(lastFullBlock && world.isBlockFullCube(it) &&  it.y > lastBlockY) return false
-            if(world.isAirBlock(it)) blockFail++
-            else blockFail=0
-            if(blockFail>3) return false
-            lastBlockY = it.y
-            lastFullBlock = world.isBlockFullCube(it)
-            isLastBlockSlab = isStairSlab(it)
-            isLastBlockAir = world.isAirBlock(it)
+            if (i == 0) continue
+            val prev = blocksBetween[i - 1]
+            if (!canWalkOn(prev, it)) return false
         }
         return true
-//        blocks.forEach{
-//            if(!AStarPathfinder.Node(it, null).isWalkable() && !world.isAirBlock(it)){
-//                return false
-//            }
-//            if(world.isAirBlock(it)){
-//                blockFail++
-//            }
-//            if(world.isBlockFullCube(it) && blockFail>0) return false
-//            if(AStarPathfinder.Node(it, null).isWalkable()){
-//                blockFail = 0
-//            }
-//            if(blockFail>5){
-//                return false
-//            }
-//        }
-//        return true
     }
+
+    fun getDirectionToWalkOnStairs(state: IBlockState): EnumFacing {
+        return when (state.block.getMetaFromState(state)) {
+            0 -> {
+                EnumFacing.EAST
+            }
+            1 -> {
+                EnumFacing.WEST
+            }
+            2 -> {
+                EnumFacing.SOUTH
+            }
+            3 -> {
+                EnumFacing.NORTH
+            }
+            4 -> {
+                EnumFacing.DOWN
+            }
+            else -> EnumFacing.UP
+        }
+    }
+
+    fun getPlayerDirectionToBeAbleToWalkOnBlock(startPos: BlockPos, endPoss: BlockPos): EnumFacing {
+        val deltaX: Int = endPoss.x - startPos.x
+        val deltaZ: Int = endPoss.z - startPos.z
+
+        return if (abs(deltaX) > abs(deltaZ)) {
+            if (deltaX > 0) EnumFacing.EAST else EnumFacing.WEST
+        } else {
+            if (deltaZ > 0) EnumFacing.SOUTH else EnumFacing.NORTH
+        }
+    }
+
+    fun canWalkOn(startPos: BlockPos, endPos: BlockPos): Boolean {
+        val startState = world.getBlockState(startPos)
+        val endState = world.getBlockState(endPos)
+        if (!endState.block.material.isSolid) {
+            return endPos.y - startPos.y <= 1
+        }
+        if (endState.block is BlockStairs &&
+            getPlayerDirectionToBeAbleToWalkOnBlock(startPos, endPos) == getDirectionToWalkOnStairs(endState)
+        ) {
+            return true
+        }
+        val startHeight = startState.block.getCollisionBoundingBox(world, startPos, startState).maxY
+        val endHeight = endState.block.getCollisionBoundingBox(world, endPos, endState).maxY
+        if (endHeight - startHeight <= .5) {
+            return true
+        }
+        return false
+    }
+
     fun bresenham(start: Vec3, end: Vec3): List<BlockPos> {
         var start0 = start
         val blocks = mutableListOf(start0.toBlockPos())
@@ -219,6 +192,7 @@ object BlockUtil {
         var x0 = MathHelper.floor_double(start0.xCoord)
         var y0 = MathHelper.floor_double(start0.yCoord)
         var z0 = MathHelper.floor_double(start0.zCoord)
+
         var iterations = 200
         while (iterations-- >= 0) {
             if (x0 == x1 && y0 == y1 && z0 == z1) {
@@ -278,10 +252,35 @@ object BlockUtil {
             x0 = MathHelper.floor_double(start0.xCoord) - if (enumfacing == EnumFacing.EAST) 1 else 0
             y0 = MathHelper.floor_double(start0.yCoord) - if (enumfacing == EnumFacing.UP) 1 else 0
             z0 = MathHelper.floor_double(start0.zCoord) - if (enumfacing == EnumFacing.SOUTH) 1 else 0
-            blocks.add(BlockPos(x0, y0, z0))
+            val pos = BlockPos(x0, y0, z0)
+//      blocks.add(pos)
+            if (world.isAirBlock(pos)) {
+                val down = pos.down()
+                val down2 = pos.add(0, -2, 0)
+                if (!world.isAirBlock(down)) {
+                    blocks.add(down)
+                } else if (!world.isAirBlock(down2)) {
+                    blocks.add(down2)
+                } else return emptyList()
+            }
+            if (!world.isAirBlock(pos)) {
+                val airUp = world.isAirBlock(pos.up())
+                val airUp2 = world.isAirBlock(pos.add(0, 2, 0))
+                val airUp3 = world.isAirBlock(pos.add(0, 3, 0))
+                if (airUp) {
+                    blocks.add(pos)
+                } else if (airUp2) {
+                    blocks.add(pos.up())
+                } else if (airUp3) {
+                    blocks.add(pos.add(0, 2, 0))
+                } else {
+                    return emptyList()
+                }
+            }
         }
         return blocks
     }
+
 }
 
 

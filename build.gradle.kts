@@ -30,7 +30,7 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
     modRuntimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.1.2")
     embed("com.squareup.okhttp3:okhttp:3.14.9")
-    implementation("it.unimi.dsi:fastutil:8.2.1")
+    embed("it.unimi.dsi:fastutil:8.2.1")
 }
 
 blossom {

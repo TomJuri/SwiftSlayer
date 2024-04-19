@@ -3,7 +3,8 @@ package dev.macrohq.swiftslayer.pathfinder.calculate
 import dev.macrohq.swiftslayer.pathfinder.goal.Goal
 import dev.macrohq.swiftslayer.pathfinder.movement.CalculationContext
 import dev.macrohq.swiftslayer.util.BlockUtil
-import dev.macrohq.swiftslayer.util.RenderUtil
+import dev.macrohq.swiftslayer.util.world
+import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
 import java.util.*
 
@@ -26,35 +27,36 @@ class Path(start: PathNode, end: PathNode, val goal: Goal, val ctx: CalculationC
     node = listOfNodes.toList()
   }
 
-   fun reconstructPath(end: PathNode): List<BlockPos> {
-    val path = mutableListOf<BlockPos>()
-    var currentNode: PathNode? = end
-    while (currentNode != null) {
-      path.add(0, currentNode.getBlock())
-      currentNode = currentNode.parentNode
-    }
-    println("Rec: size${path.size}")
-    println(path)
-    RenderUtil.markers.clear()
-    RenderUtil.markers.addAll(path)
-    val smooth = mutableListOf<BlockPos>()
-    if (path.isNotEmpty()) {
-      smooth.add(path[0])
-      var currPoint = 0
-      while (currPoint + 1 < path.size) {
-        var nextPos = currPoint + 1
-        for (i in path.size - 1 downTo currPoint + 1) {
-          if (BlockUtil.canWalkOn(path[currPoint], path[i])) {
-            nextPos = i
-            break
-          }
+     fun reconstructPath(end: PathNode): List<BlockPos> {
+        val path = mutableListOf<BlockPos>()
+        var currentNode: PathNode? = end
+        while (currentNode != null) {
+            path.add(0, currentNode.getBlock())
+            currentNode = currentNode.parentNode
         }
-        smooth.add(path[nextPos])
-        currPoint = nextPos
-      }
+
+        val smooth = mutableListOf<BlockPos>()
+        if (path.isNotEmpty()) {
+            smooth.add(path[0])
+            var currPoint = 0
+            var maxiters = 2000
+
+            while (currPoint + 1 < path.size && maxiters-- > 0) {
+                var nextPos = currPoint + 1
+
+                for (i in (path.size - 1) downTo nextPos) {
+                    if (BlockUtil.blocksBetweenValid(path[currPoint], path[i])) {
+                        nextPos = i
+                        break
+                    }
+                }
+                smooth.add(path[nextPos])
+                currPoint = nextPos
+            }
+        }
+        smooth.removeIf { world.getBlockState(it).block == Blocks.air }
+        return smooth
     }
 //    }
-    return smooth
-  }
 
 }
