@@ -1,6 +1,8 @@
 package dev.macrohq.swiftslayer.feature.implementation
 
+import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.feature.AbstractFeature
+import dev.macrohq.swiftslayer.pathfinder.movement.CalculationContext
 import dev.macrohq.swiftslayer.util.BlockUtil
 import dev.macrohq.swiftslayer.util.Logger
 import net.minecraft.block.Block
@@ -99,7 +101,7 @@ class BossKillerMovement: AbstractFeature() {
 
                 continue
             } else {
-                if(BlockUtil.blocksBetweenValid(block, mc.thePlayer.position)) {
+                if(BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer.instance), block, mc.thePlayer.position)) {
                     return block
 
                 } else {

@@ -14,11 +14,13 @@ class Path(start: PathNode, end: PathNode, val goal: Goal, val ctx: CalculationC
   var end: BlockPos = BlockPos(end.x, end.y, end.z)
   var path: List<BlockPos>
   var node: List<PathNode>
-  init{
+  var smoothPath: MutableList<BlockPos> = mutableListOf()
+
+  init {
     var temp: PathNode? = end;
     val listOfBlocks = LinkedList<BlockPos>()
     val listOfNodes = LinkedList<PathNode>()
-    while (temp != null){
+    while (temp != null) {
       listOfNodes.addFirst(temp)
       listOfBlocks.addFirst(BlockPos(temp.x, temp.y, temp.z))
       temp = temp.parentNode
@@ -27,35 +29,61 @@ class Path(start: PathNode, end: PathNode, val goal: Goal, val ctx: CalculationC
     node = listOfNodes.toList()
   }
 
-     fun reconstructPath(end: PathNode): List<BlockPos> {
-        val path = mutableListOf<BlockPos>()
-        var currentNode: PathNode? = end
-        while (currentNode != null) {
-            path.add(0, currentNode.getBlock())
-            currentNode = currentNode.parentNode
+  fun getSmoothPath(): List<BlockPos> {
+    if (smoothPath.isNotEmpty()) return smoothPath
+
+    val smooth = mutableListOf<BlockPos>()
+    if (path.isNotEmpty()) {
+      smooth.add(path[0])
+      var currPoint = 0
+      var maxiters = 2000
+
+      while (currPoint + 1 < path.size && maxiters-- > 0) {
+        var nextPos = currPoint + 1
+
+        for (i in (path.size - 1) downTo nextPos) {
+          if (BlockUtil.blocksBetweenValid(ctx, path[currPoint], path[i])) {
+            nextPos = i
+            break
+          }
         }
-
-        val smooth = mutableListOf<BlockPos>()
-        if (path.isNotEmpty()) {
-            smooth.add(path[0])
-            var currPoint = 0
-            var maxiters = 2000
-
-            while (currPoint + 1 < path.size && maxiters-- > 0) {
-                var nextPos = currPoint + 1
-
-                for (i in (path.size - 1) downTo nextPos) {
-                    if (BlockUtil.blocksBetweenValid(path[currPoint], path[i])) {
-                        nextPos = i
-                        break
-                    }
-                }
-                smooth.add(path[nextPos])
-                currPoint = nextPos
-            }
-        }
-        smooth.removeIf { world.getBlockState(it).block == Blocks.air }
-        return smooth
+        smooth.add(path[nextPos])
+        currPoint = nextPos
+      }
     }
+    smoothPath = smooth
+    return smoothPath
+  }
+
+  fun reconstructPath(end: PathNode): List<BlockPos> {
+    val path = mutableListOf<BlockPos>()
+    var currentNode: PathNode? = end
+    while (currentNode != null) {
+      path.add(0, currentNode.getBlock())
+      currentNode = currentNode.parentNode
+    }
+
+    val smooth = mutableListOf<BlockPos>()
+    if (path.isNotEmpty()) {
+      smooth.add(path[0])
+      var currPoint = 0
+      var maxiters = 2000
+
+      while (currPoint + 1 < path.size && maxiters-- > 0) {
+        var nextPos = currPoint + 1
+
+        for (i in (path.size - 1) downTo nextPos) {
+          if (BlockUtil.blocksBetweenValid(ctx, path[currPoint], path[i])) {
+            nextPos = i
+            break
+          }
+        }
+        smooth.add(path[nextPos])
+        currPoint = nextPos
+      }
+    }
+    smooth.removeIf { world.getBlockState(it).block == Blocks.air }
+    return smooth
+  }
 
 }

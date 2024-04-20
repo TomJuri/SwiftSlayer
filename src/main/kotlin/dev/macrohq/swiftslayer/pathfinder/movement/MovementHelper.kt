@@ -5,6 +5,7 @@ import net.minecraft.block.*
 import net.minecraft.block.state.IBlockState
 import net.minecraft.init.Blocks
 import net.minecraft.util.EnumFacing
+import kotlin.math.abs
 
 object MovementHelper {
 
@@ -89,7 +90,7 @@ object MovementHelper {
   }
 
   fun getFacing(dx: Int, dz: Int): EnumFacing {
-    return if (dx == 0 && dz == 0) EnumFacing.UP else EnumFacing.HORIZONTALS[Math.abs(dx) * (2 + dx) + Math.abs(dz) * (1 - dz)]
+    return if (dx == 0 && dz == 0) EnumFacing.UP else EnumFacing.HORIZONTALS[abs(dx) * (2 + dx) + abs(dz) * (1 - dz)]
   }
 
   fun isLadder(state: IBlockState): Boolean {
