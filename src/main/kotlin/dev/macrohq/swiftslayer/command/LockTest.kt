@@ -31,7 +31,7 @@ if (enabled) {
 
     rotationTargetEntity = SlayerUtil.getFakeBoss()!!
 
-    if(rotationTargetEntity.isDead) enabled = false;
+    if(rotationTargetEntity.isDead) enabled = false
 
     val randomPositionOnBoundingBox =
         rotationTargetEntity.position.add(0, (rotationTargetEntity.height*0.75).toInt(), 0)

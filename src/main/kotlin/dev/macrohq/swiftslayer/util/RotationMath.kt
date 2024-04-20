@@ -1,4 +1,4 @@
-package dev.macrohq.swiftslayer.util;
+package dev.macrohq.swiftslayer.util
 
 import net.minecraft.client.Minecraft
 import net.minecraft.util.BlockPos
@@ -6,7 +6,7 @@ import net.minecraft.util.Vec3
 import kotlin.math.atan2
 import kotlin.math.sqrt
 
-public class RotationMath {
+class RotationMath {
 
     var mc: Minecraft = Minecraft.getMinecraft()
 

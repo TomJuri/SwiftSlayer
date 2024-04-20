@@ -33,7 +33,7 @@ class AutoBatphone {
         if (!enabled) return
 
        if(!timeout.isDone) {
-           return;
+           return
        }
 
         when (state) {

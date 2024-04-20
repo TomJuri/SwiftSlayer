@@ -147,9 +147,9 @@ class MobKiller {
 
   private fun angleForWeapon(entity: EntityLiving): Angle {
     return when (config.mobKillerWeapon) {
-      0 -> AngleUtil.getAngle(entity.position.add(0, (entity.height*0.6).toInt(), 0));
+      0 -> AngleUtil.getAngle(entity.position.add(0, (entity.height*0.6).toInt(), 0))
       1 -> AngleUtil.getAngle(entity.position.add(0, (entity.height*0.6).toInt(), 0))
-      3 -> AngleUtil.getAngle(entity.position.add(0, (entity.height*0.6).toInt(), 0));
+      3 -> AngleUtil.getAngle(entity.position.add(0, (entity.height*0.6).toInt(), 0))
       else -> Angle(0f,0f)
     }
   }
@@ -164,7 +164,7 @@ class MobKiller {
           KeyBindUtil.rightClick()
         }
       }
-      3 -> KeyBindUtil.rightClick();
+      3 -> KeyBindUtil.rightClick()
 
       else -> {}
     }
@@ -175,7 +175,7 @@ class MobKiller {
       0 -> 6
       1 -> 3
       2 -> 4
-      3 -> 3;
+      3 -> 3
       else -> 6
     }
   }
@@ -185,7 +185,7 @@ class MobKiller {
       0 -> InventoryUtil.holdItem("Spirit Sceptre")
       1 -> player.inventory.currentItem = config.meleeWeaponSlot - 1
       2 -> InventoryUtil.holdItem("Fire Veil Wand")
-      3 -> player.inventory.currentItem = config.meleeWeaponSlot - 1;
+      3 -> player.inventory.currentItem = config.meleeWeaponSlot - 1
     }
   }
 
@@ -194,7 +194,7 @@ class MobKiller {
       0 -> {}
       1 -> PathingUtil.stop()
       2 -> {}
-      3 -> PathingUtil.stop();
+      3 -> PathingUtil.stop()
     }
   }
 
@@ -205,7 +205,7 @@ class MobKiller {
       0 -> pitchDiff < 2
       1 -> yawDiff < 10 && pitchDiff < 5
       2 -> true
-      3 -> yawDiff < 10 && pitchDiff < 5;
+      3 -> yawDiff < 10 && pitchDiff < 5
       else -> true
     }
   }

@@ -53,7 +53,7 @@ class SwiftSlayer {
   lateinit var revenant: Revenant private set
   lateinit var tracker: Tracker private set
   lateinit var rotation: LockRotationUtil private set
-  lateinit var lockTest: LockTest private set
+  private lateinit var lockTest: LockTest
   var removeLater: BlockPos? = null
 
   @Mod.EventHandler

@@ -6,8 +6,8 @@ import net.minecraft.util.BlockPos
 class PathNode(var x: Int, var y: Int, var z: Int, val goal: Goal) {
   var costSoFar: Double = 1e6                             // gCost - INF_COST
   var costToEnd: Double = goal.heuristic(x, y, z)         // hCost / Heuristic
-  var totalCost: Double = 1.0;                            // INF_COST
-  var heapPosition = -1;                                  // Smart
+  var totalCost: Double = 1.0                            // INF_COST
+  var heapPosition = -1                                  // Smart
   var parentNode: PathNode? = null
 
   override fun equals(other: Any?): Boolean {
@@ -29,11 +29,11 @@ class PathNode(var x: Int, var y: Int, var z: Int, val goal: Goal) {
 
   companion object {
     fun longHash(x: Int, y: Int, z: Int): Long {
-      var hash = 3241L;
-      hash = 3457689L * hash + x;
-      hash = 8734625L * hash + y;
-      hash = 2873465L * hash + z;
-      return hash;
+      var hash = 3241L
+        hash = 3457689L * hash + x
+        hash = 8734625L * hash + y
+        hash = 2873465L * hash + z
+        return hash
     }
   }
 }

@@ -11,236 +11,191 @@ import dev.macrohq.swiftslayer.util.macroManager
 
 class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftslayer.json") {
 
-  @Dropdown(
-    name = "Slayer",
-    category = "General",
-    subcategory = "Slayers",
-    options = ["Revenant Horror", "Tarantula Broodfather", "Sven Packmaster"/*, "Voidgloom Seraph"*/]
-  )
-  var slayer = 0
+    @Dropdown(
+        name = "Slayer type",
+        category = "General",
+        subcategory = "Slayer",
+        options = ["Revenant Horror", "Tarantula Broodfather", "Sven Packmaster"/*, "Voidgloom Seraph"*/]
+    )
+    var slayer = 0
 
-  @Dropdown(
-    name = "Tier",
-    category = "General",
-    subcategory = "Slayers",
-    options = ["1", "2", "3", "4", "5"]
-  )
-  var slayerTier = 4
+    @Dropdown(
+        name = "Slayer tier",
+        category = "General",
+        subcategory = "Slayer",
+        options = ["1", "2", "3", "4", "5"]
+    )
+    var slayerTier = 4
 
-  @Dropdown(
-    name = "MobKiller Weapon",
-    category = "General",
-    subcategory = "Slayer",
-    options = ["Spirit Sceptre", "Melee", "Fire Veil Wand", "Right click Meele"]
-  )
-  var mobKillerWeapon = 0
+    @Dropdown(
+        name = "Weapon type for mobs",
+        category = "General",
+        subcategory = "Slayer",
+        options = ["Spirit Sceptre", "Melee", "Fire Veil Wand", "Right click Melee"]
+    )
+    var mobKillerWeapon = 0
 
-  @Switch(
-    name = "Ignore Mini bosses",
-    category = "General",
-    subcategory = "Slayer",
-  )
-  var ignoreMiniBosses = false
+    @Dropdown(
+        name = "Weapon type for boss",
+        category = "General",
+        subcategory = "Slayer",
+        options = ["Melee", "Hyperion"]
+    )
+    var bossKillerWeapon = 0
 
-  @Dropdown(
-    name = "BossKiller Weapon",
-    category = "General",
-    subcategory = "Slayer",
-    options = ["Melee", "Hyperion"]
-  )
-  var bossKillerWeapon = 0
+    @Switch(
+        name = "Ignore mini bosses",
+        category = "General",
+        subcategory = "Slayer",
+    )
+    var ignoreMiniBosses = false
 
-  @Slider(
-    name = "Melee Weapon Slot",
-    category = "General",
-    subcategory = "Slayer",
-    min = 1f,
-    max = 9f
-  )
-  var meleeWeaponSlot = 1
+    @Switch(
+        name = "Keep killing",
+        category = "General",
+        subcategory = "Slayer"
+    )
+    var autoSlayer = false
 
-  @Switch(
-    name = "Use healing wand",
-    category = "General",
-    subcategory = "Support Items"
-  )
-  var useHealing = false
+    @Slider(
+        name = "Melee weapon slot",
+        category = "General",
+        subcategory = "Slayer",
+        min = 1f,
+        max = 9f,
+        step = 1
+    )
+    var meleeWeaponSlot = 1
 
-  @Slider(
-    name = "Use healing at % health",
-    category = "General",
-    subcategory = "Support Items",
-    min = 10f,
-    max = 90f,
-  )
-  var useHealingAt = 25
+    @Switch(
+        name = "Ungrab mouse",
+        category = "General",
+        subcategory = "Miscellaneous"
+    )
+    var ungrabMouse = true
 
-  @Switch(
-    name = "Use weird tuba",
-    category = "General",
-    subcategory = "Support Items"
-  )
-  var useTuba = false
+    @Switch(
+        name = "Enable advanced settings",
+        category = "General",
+        subcategory = "Miscellaneous",
+        description = "All settings are configured optimally by default. Only adjust advanced settings if you have a clear understanding of their impact."
+    )
+    var showAdvanced = false
 
-  @Switch(
-    name = "Deploy Power Orb",
-    category = "General",
-    subcategory = "Support Items"
-  )
-  var deployOrb = false
+    @KeyBind(
+        name = "Toggle macro",
+        category = "General",
+        subcategory = "Miscellaneous",
+    )
+    var toggleMacro = OneKeyBind(UKeyboard.KEY_X)
 
-  @Slider(
-    name = "Failsafe volume",
-    category = "General",
-    subcategory = "Failsafe",
-    min = 0f,
-    max = 100f,
-    step = 5
-  )
-  val failsafeVolume = 100
+    @KeyBind(
+        name = "Open config",
+        category = "General",
+        subcategory = "Miscellaneous",
+    )
+    var openConfig = OneKeyBind(UKeyboard.KEY_SEMICOLON)
 
-  @KeyBind(
-    name = "Toggle Macro",
-    category = "General",
-    subcategory = "Macro"
-  )
-  var toggleMacro = OneKeyBind(UKeyboard.KEY_X)
+    @Slider(
+        name = "Failsafe volume",
+        category = "General",
+        subcategory = "Miscellaneous",
+        min = 0f,
+        max = 100f,
+    )
+    var failsafeVolume = 100
 
-  @Switch(
-    name = "Debug Mode",
-    category = "General",
-    subcategory = "Debug"
-  )
-  var debugMode = false
+    @Slider(
+        name = "Use healing at % health",
+        category = "General",
+        subcategory = "Advanced",
+        min = 10f,
+        max = 80f,
+    )
+    var useHealingAt = 70
 
-  @Switch(
-    name = "Autoslayer",
-    category = "General",
-    subcategory = "Slayer"
-  )
-  var autoSlayer = false
+    @Slider(
+        name = "Gui delay",
+        category = "General",
+        subcategory = "Advanced",
+        min = 250f,
+        max = 2500f,
+    )
+    var macroGuiDelay: Float = 250f
 
-  @Switch(
-    name = "Ungrab Mouse",
-    category = "General",
-    subcategory = "QOL"
-  )
-  var ungrabMouse = true
+    @Slider(
+        name = "Additional random gui delay",
+        category = "General",
+        subcategory = "Advanced",
+        min = 0f,
+        max = 2500f,
+    )
+    var macroGuiDelayRandomness: Float = 250f
+    fun getRandomGUIMacroDelay(): Long {
+        return (macroGuiDelay + Math.random().toFloat() * macroGuiDelayRandomness).toLong()
+    }
 
-  @Switch(
-    name = "Aotv",
-    category = "General",
-    subcategory = "QOL"
-  )
-  var useAOTV = false
+    @Slider(
+        name = "Rotation time",
+        category = "General",
+        subcategory = "Advanced",
+        min = 100f,
+        max = 500f,
+    )
+    var macroRotationTime: Float = 250f
 
-  @HUD(name = "HUD", category = "HUD")
-  var hud = SwiftSlayerHud()
+    @Slider(
+        name = "Rotation time randomness",
+        category = "General",
+        subcategory = "Advanced",
+        min = 100f,
+        max = 1000f,
+    )
+    var macroRotationTimeRandomness: Float = 300f
+    fun getRandomRotationTime(): Long {
+        return (macroRotationTime + Math.random().toFloat() * macroRotationTimeRandomness).toLong()
+    }
 
-  @Slider(
-    name = "GUI Delay",
-    category = "General",
-    subcategory = "GUI Delays",
-    description = "The delay between clicking during GUI macros (in milliseconds)",
-    min = 250f,
-    max = 2000f
-  )
-  var macroGuiDelay: Float = 400f
-  @Slider(
-    name = "Additional random GUI Delay",
-    category = "General",
-    subcategory = "GUI Delays",
-    description = "The maximum random time added to the delay time between clicking during GUI macros (in milliseconds)",
-    min = 0f,
-    max = 2000f
-  )
-  var macroGuiDelayRandomness: Float = 350f
+    @Slider(
+        name = "Lock rotation smoothness",
+        category = "General",
+        subcategory = "Advanced",
+        min = 2f,
+        max = 10f,
+    )
+    var macroLockSmoothness: Float = 4f
 
-  fun getRandomGUIMacroDelay(): Long {
-    return (macroGuiDelay + Math.random().toFloat() * macroGuiDelayRandomness).toLong()
-  }
+    @Dropdown(
+        name = "Boss killer movement",
+        category = "General",
+        subcategory = "Advanced",
+        options = ["Find corner", "Walk back"]
+    )
+    var movementType = 0
 
-  @Slider(
-    name = "Rotation time",
-    category = "General",
-    subcategory = "Rotation delays",
-    description = "The time for rotations",
-    min = 100f,
-    max = 500f
-  )
-  var macroRotationTime: Float = 250f
+    @Switch(
+        name = "Debug Mode",
+        category = "General",
+        subcategory = "Advanced",
+    )
+    var debugMode = false
 
-  @Slider(
-    name = "Rotation time randomness",
-    category = "General",
-    subcategory = "Rotation delays",
-    description = "Additional randomness ADDED to the rotation time",
-    min = 100f,
-    max = 700f
-  )
-  var macroRotationTimeRandomness: Float = 350f
+    @HUD(name = "HUD", category = "HUD")
+    var hud = SwiftSlayerHud()
 
-  fun getRandomRotationTime(): Long {
-    return (macroRotationTime + Math.random().toFloat() * macroRotationTimeRandomness).toLong()
-  }
+    init {
+        initialize()
+        registerKeyBind(toggleMacro) { macroManager.toggle() }
+        registerKeyBind(openConfig) { openGui() }
 
-  @Slider(
-    name = "Lock rotation smoothness",
-    category = "General",
-    subcategory = "Rotation delays",
-    description = "Lock rotation smoothness",
-    min = 2f,
-    max = 10f
-  )
-  var macroLockSmoothness: Float = 4f
-
-  @Dropdown(
-    name = "BossKiller Movement",
-    category = "General",
-    subcategory = "Slayer",
-    options = ["Find corner", "Walk back"]
-  )
-  var moveementType = 0
-
-  // ==============================
-  //    Pathfinder Debug Config
-  // ==============================
-  @Switch(
-    name = "allowJump",
-    category = "PF"
-  )
-  var allowJump = true
-
-
-  @Switch(
-    name = "holdSneak",
-    category = "PF"
-  )
-  var holdSneak = true
-
-  @Switch(
-    name = "allowDiagonalAscend",
-    category = "PF"
-  )
-  var allowDiagonalAscend = true
-
-
-  @Switch(
-    name = "allowDiagonalDescend",
-    category = "PF"
-  )
-  var allowDiagonalDescend = true
-
-  @Slider(
-    name = "maxFallHeight",
-    category = "PF",
-    min = 1f,
-    max = 256f
-  )
-  var maxFallHeight = 20
-
-  init {
-    initialize()
-    registerKeyBind(toggleMacro) { macroManager.toggle() }
-  }
+        hideIf("ignored") { !showAdvanced }
+        hideIf("useHealingAt") { !showAdvanced }
+        hideIf("macroGuiDelay") { !showAdvanced }
+        hideIf("macroGuiDelayRandomness") { !showAdvanced }
+        hideIf("macroRotationTime") { !showAdvanced }
+        hideIf("macroRotationTimeRandomness") { !showAdvanced }
+        hideIf("macroLockSmoothness") { !showAdvanced }
+        hideIf("movementType") { !showAdvanced }
+        hideIf("debugMode") { !showAdvanced }
+    }
 }

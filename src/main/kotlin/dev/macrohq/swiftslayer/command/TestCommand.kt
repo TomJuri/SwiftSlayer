@@ -30,7 +30,7 @@ class TestCommand {
     if(!AutoRotation.getInstance().enabled) {
       AutoRotation.getInstance().easeTo(Target(rotationTargetBlock!!), 500, if (lock) LockType.SMOOTH else LockType.NONE, false, 400)
     }else{
-      AutoRotation.getInstance().disable();
+      AutoRotation.getInstance().disable()
     }
   }
 

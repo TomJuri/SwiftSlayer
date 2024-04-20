@@ -1,4 +1,4 @@
-package dev.macrohq.swiftslayer.feature;
+package dev.macrohq.swiftslayer.feature
 
 interface IFeature {
   var enabled: Boolean

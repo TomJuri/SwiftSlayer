@@ -1,4 +1,4 @@
-package dev.macrohq.swiftslayer.util;
+package dev.macrohq.swiftslayer.util
 
 import dev.macrohq.swiftslayer.feature.AbstractFeature
 import net.minecraft.client.Minecraft
@@ -8,7 +8,7 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-public class LockRotationUtil: AbstractFeature() {
+class LockRotationUtil: AbstractFeature() {
     override val featureName: String = "LockRotation"
     override val isPassiveFeature: Boolean = false
     var mc: Minecraft = Minecraft.getMinecraft()
@@ -40,7 +40,7 @@ public class LockRotationUtil: AbstractFeature() {
             mutYaw+=360
         }
 
-        LockRotationUtil.getInstance().isOverriden = override;
+        getInstance().isOverriden = override
         yawGoal = mutYaw
         yawSmooth = smoothing
         updateYaw = true
@@ -50,7 +50,7 @@ public class LockRotationUtil: AbstractFeature() {
 
         val mutPitch = max(-90.0f, min(90.0f, pitch))
 
-        LockRotationUtil.getInstance().isOverriden = override
+        getInstance().isOverriden = override
         pitchGoal = mutPitch
         pitchSmooth = smoothing
         updatePitch = true

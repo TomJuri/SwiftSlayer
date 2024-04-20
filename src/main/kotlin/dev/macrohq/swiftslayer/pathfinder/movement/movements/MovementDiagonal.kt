@@ -34,7 +34,7 @@ class MovementDiagonal(ss: SwiftSlayer, from: BlockPos, to: BlockPos) : Movement
       if (!MovementHelper.canWalkThroughBlockState(ctx.bsa, destX, y + 1, destZ, destUpState)) {
         canAscend = true
         isDestBottomSlab = MovementHelper.isBottomSlab(destUpState)
-        if (!ctx.pathConfig.allowDiagonalAscend || (isSourceBottomSlab && !isDestBottomSlab) || MovementHelper.isLadder(
+        if ((isSourceBottomSlab && !isDestBottomSlab) || MovementHelper.isLadder(
             destUpState
           ) || !MovementHelper.canWalkThrough(ctx.bsa, x, y + 3, z) || !MovementHelper.canStandOnBlockState(
             ctx.bsa,
@@ -50,7 +50,7 @@ class MovementDiagonal(ss: SwiftSlayer, from: BlockPos, to: BlockPos) : Movement
         if (!MovementHelper.canStandOnBlock(ctx.bsa, destX, y, destZ)) {
           canDescend = true
           val newDestState = ctx.get(destX, y - 1, destZ)
-          if (!ctx.pathConfig.allowDiagonalDescend || !MovementHelper.canStandOnBlockState(
+          if (!MovementHelper.canStandOnBlockState(
               ctx.bsa,
               destX,
               y - 1,

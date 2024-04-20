@@ -17,9 +17,9 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class RenderGuardianMixin {
     @Shadow protected abstract Vec3 func_177110_a(EntityLivingBase entityLivingBaseIn, double d, float f);
     @Inject(method = "doRender(Lnet/minecraft/entity/monster/EntityGuardian;DDDFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Vec3;subtract(Lnet/minecraft/util/Vec3;)Lnet/minecraft/util/Vec3;"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void renderGuardianBeamMixin(EntityGuardian entity, double x, double y, double z, float entityYaw, float partialTicks, CallbackInfo ci) {
-        Vec3 start = func_177110_a(entity.getTargetedEntity(), (double) entity.getTargetedEntity().height * 0.5D, partialTicks);
-        Vec3 end = func_177110_a(entity, entity.getEyeHeight(), partialTicks);
+    private void renderGuardianBeamMixin(final EntityGuardian entity, final double x, final double y, final double z, final float entityYaw, final float partialTicks, final CallbackInfo ci) {
+        final Vec3 start = this.func_177110_a(entity.getTargetedEntity(), entity.getTargetedEntity().height * 0.5D, partialTicks);
+        final Vec3 end = this.func_177110_a(entity, entity.getEyeHeight(), partialTicks);
         SwiftSlayer.Companion.getInstance().getEndermanBossKiller().lasers = new Pair<>(start, end);
         SwiftSlayer.Companion.getInstance().getEndermanBossKiller().setLastLaser(System.currentTimeMillis());
     }
