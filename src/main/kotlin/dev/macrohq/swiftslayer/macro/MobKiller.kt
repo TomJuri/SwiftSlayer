@@ -22,6 +22,9 @@ class MobKiller {
   private var lookTimer = Timer(Long.MAX_VALUE)
   private var fireVeilTimer = Timer(Long.MAX_VALUE)
   private lateinit var angle: Target
+  private var tickCounter: Int = 0
+  private var ticksSinceLastClick: Int = 0
+  private var ticksSinceLastMovement: Int = 0
 
   @SubscribeEvent
   fun onTick(event: TickEvent.ClientTickEvent) {
@@ -32,10 +35,35 @@ class MobKiller {
       return
     }
 
+      if(tickCounter == 20) {
+        tickCounter = 1
+      } else {
+        tickCounter++
+    }
+
+      ticksSinceLastClick++
+
+    if(RotationMath.getXZDistance(player.lastTickPositionCeil(), player.getStandingOnCeil()) < 0.25) {
+      ticksSinceLastMovement++
+    } else {
+      ticksSinceLastMovement = 0
+    }
+
+    if(ticksSinceLastMovement > 60) {
+      ticksSinceLastMovement = 0
+      blacklist.add(currentTarget)
+      state = State.CHOOSE_TARGET
+      Logger.info("stuck for 3 seconds!")
+      return
+    }
+
     Logger.info(state.name)
+    if(blacklistResetTimer.isDone) {
+      blacklist.clear()
+      blacklistResetTimer = Timer(1000)
+    }
     when (state) {
       State.CHOOSE_TARGET -> {
-
         RenderUtil.entites.clear()
         val targetEntityList = EntityUtil.getMobs(SlayerUtil.getMobClass()).toMutableList()
         targetEntityList.removeAll(blacklist)
@@ -47,6 +75,7 @@ class MobKiller {
       }
 
       State.GOTO_TARGET -> {
+        AutoRotation.getInstance().disable()
         if(player.canEntityBeSeen(currentTarget)) {
         PathingUtil.goto(currentTarget.getStandingOnCeil(), currentTarget)
         }
@@ -81,12 +110,18 @@ class MobKiller {
 
       State.LOOK_AT_TARGET -> {
         AutoRotation.getInstance().disable()
-        lookAtEntity(currentTarget)
+        if(currentTarget != null) {
+          lookAtEntity(currentTarget)
+        } else {
+          Logger.info("failed to look at target!")
+          state = State.CHOOSE_TARGET
+        }
         state = State.VERIFY_LOOKING
         return
       }
 
       State.VERIFY_LOOKING -> {
+
           if(mc.objectMouseOver.entityHit != null && player.getDistanceToEntity(currentTarget) <= attackDistance() && player.canEntityBeSeen(currentTarget)) {
             holdWeapon()
             state = State.KILL_TARGET
@@ -95,14 +130,18 @@ class MobKiller {
             state = State.GOTO_TARGET
             return
           } else if (mc.objectMouseOver.entityHit == null && player.getDistanceToEntity(currentTarget) <= attackDistance()) {
-            state = State.LOOK_AT_TARGET
+            state = State.GOTO_TARGET
             return
           }
         }
 
 
       State.KILL_TARGET -> {
-        useWeapon()
+        if(ticksSinceLastClick > 3) {
+          useWeapon()
+          ticksSinceLastClick = 0
+        }
+
         if (currentTarget.isDead || currentTarget.health < 1) {
           blacklist.add(currentTarget)
           state = State.CHOOSE_TARGET
@@ -170,7 +209,7 @@ class MobKiller {
     }
   }
 
-  private fun attackDistance(): Int {
+   fun attackDistance(): Int {
     return when (config.mobKillerWeapon) {
       0 -> 6
       1 -> 3

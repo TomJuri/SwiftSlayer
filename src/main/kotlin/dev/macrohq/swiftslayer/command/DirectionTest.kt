@@ -2,15 +2,11 @@ package dev.macrohq.swiftslayer.command
 
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
-import dev.macrohq.swiftslayer.SwiftSlayer
-import dev.macrohq.swiftslayer.pathfinder.movement.CalculationContext
-import dev.macrohq.swiftslayer.util.*
+import dev.macrohq.swiftslayer.feature.SupportItem
 import net.minecraft.client.Minecraft
-import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import java.awt.Color
 
 @Command("directionTest")
 class DirectionTest {
@@ -23,9 +19,7 @@ class DirectionTest {
 
 
         enabled = lock
-        if(blockPoss.isNotEmpty()) {
-            PathingUtil.goto(blockPoss[0])
-        }
+
 
     }
 
@@ -62,19 +56,7 @@ class DirectionTest {
             }
 
                */
-            blockPoss.clear()
-            if (BlockUtil.getBlocks(mc.thePlayer.position, 15, 4, 15).isEmpty()) return
 
-               for(block: BlockPos in BlockUtil.getBlocks(mc.thePlayer.position, 15, 5, 15)) {
-                if(BlockUtil.isSingleCorner(block)) {
-                    if(BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer.instance), block,mc.thePlayer.position.add(0, -1, 0))) {
-                        RenderUtil.drawBox(event, block, Color.BLUE, true)
-                        blockPoss.add(block)
-                    }
-
-                }
-
-            }
       /*  GenericBossKiller.blockPoss = BlockUtil.getBlocks(dev.macrohq.swiftslayer.util.mc.thePlayer.position, 5, 5, 5) as ArrayList<BlockPos>
 
             for (blockk: BlockPos in GenericBossKiller.blockPoss) {
@@ -83,10 +65,9 @@ class DirectionTest {
                 } */
            // }
 
-            val targetEntityList = EntityUtil.getMobs(SlayerUtil.getMobClass()).toMutableList()
-            for(entity: EntityLiving in targetEntityList) {
-                RenderUtil.renderText(entity.position.toVec3(), EntityUtil.getMobCost(entity).toInt().toString())
-            }
+            val supportItem: SupportItem = SupportItem()
+            supportItem.healing()
+
         }
 
 

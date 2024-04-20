@@ -54,7 +54,8 @@ class GenericBossKiller {
 
     val randomPositionOnBoundingBox = target!!.position.add(0, (target!!.height*0.75).toInt(), 0)
     SwiftSlayer.instance.rotation.setYaw(RotationMath.getYaw(randomPositionOnBoundingBox), SwiftSlayer.instance.config.macroLockSmoothness.toInt(), true)
-    SwiftSlayer.instance.rotation.setPitch(RotationMath.getPitch(randomPositionOnBoundingBox), SwiftSlayer.instance.config.macroLockSmoothness.toInt(), true)
+    if(!player.isAirBorne && !target!!.isAirBorne) {
+    SwiftSlayer.instance.rotation.setPitch(RotationMath.getPitch(randomPositionOnBoundingBox), SwiftSlayer.instance.config.macroLockSmoothness.toInt(), true) }
 
     var y = target!!.getStandingOnCeil().y
     while (world.getBlockState(BlockPos(target!!.posX, y.toDouble(), target!!.posZ)).block == Blocks.air) {

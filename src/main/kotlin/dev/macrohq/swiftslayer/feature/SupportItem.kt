@@ -1,14 +1,8 @@
 package dev.macrohq.swiftslayer.feature
 
+import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.macro.MacroManager
-import dev.macrohq.swiftslayer.util.InventoryUtil
-import dev.macrohq.swiftslayer.util.KeyBindUtil
-import dev.macrohq.swiftslayer.util.Logger
-import dev.macrohq.swiftslayer.util.SlayerUtil
-import dev.macrohq.swiftslayer.util.Timer
-import dev.macrohq.swiftslayer.util.config
-import dev.macrohq.swiftslayer.util.macroManager
-import dev.macrohq.swiftslayer.util.player
+import dev.macrohq.swiftslayer.util.*
 import net.minecraft.util.StringUtils
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -18,35 +12,51 @@ import java.util.regex.Pattern
 class SupportItem {
   private var maxHealth = -1
   private var health = -1
-  private var healingTimer = Timer(0)
-  private var tubaTimer = Timer(0)
-  private var orbTimer = Timer(0)
+  private var  state: State = State.SHOULD_ENABLE
+
 
   @SubscribeEvent
   fun onTick(event: ClientTickEvent) {
-    if (!macroManager.enabled) return
-    healing()
-    tuba()
-    orb()
+    if(!SwiftSlayer.instance.config.useHeal) return
+
+    when(state) {
+      State.SHOULD_ENABLE -> {
+        if(1 < config.useHealingAt / 100f) {
+          state = State.SWITCH_ITEM
+        }
+      }
+
+      State.SWITCH_ITEM -> {
+
+      }
+      State.CLICK_ITEM -> {
+
+      }
+    }
+
   }
 
-  private fun healing() {
-    if (health == -1 || maxHealth == -1) return
-    val healthPercent = health.toFloat() / maxHealth.toFloat()
-    if (healthPercent > config.useHealingAt / 100f || !healingTimer.isDone) return
-    val previousItem = player.inventory.currentItem
-    if (InventoryUtil.holdItem("Wand of ")) {
-      Logger.info("Using healing wand.")
-      KeyBindUtil.rightClick()
-      player.inventory.currentItem = previousItem
-    } else {
-      healingTimer = Timer(8000)
-      Logger.error("No Wand of Healing found in hotbar!")
+   fun healing() {
+    if (true) {
+      // if (health == -1 || maxHealth == -1) return
+      // val healthPercent = health.toFloat() / maxHealth.toFloat()
+      //  if (healthPercent > config.useHealingAt / 100f || !healingTimer.isDone) return
+      if (healingTimer.isDone) {
+        val previousItem = player.inventory.currentItem
+        if (InventoryUtil.holdItem("Wand of ")) {
+          Logger.info("Using healing wand.")
+          KeyBindUtil.rightClick()
+          healingTimer = Timer(8000)
+          player.inventory.currentItem = previousItem
+        } else {
+          Logger.error("No Wand of Healing found in hotbar!")
+        }
+      }
     }
   }
 
   private fun tuba() {
-    if (tubaTimer.isDone && macroManager.state == MacroManager.State.KILL_BOSS) {
+    if ( tubaTimer.isDone && macroManager.state == MacroManager.State.KILL_BOSS) {
       val previousItem = player.inventory.currentItem
       if (InventoryUtil.holdItem("Tuba")) {
         Logger.info("Using Weird Tuba.")
@@ -54,14 +64,13 @@ class SupportItem {
         tubaTimer = Timer(21000)
         player.inventory.currentItem = previousItem
       } else {
-        tubaTimer = Timer(21000)
         Logger.error("No Weird Tuba found in hotbar!")
       }
     }
   }
 
   private fun orb() {
-    if (SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_ALIVE && orbTimer.isDone) {
+    if ( SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_ALIVE && orbTimer.isDone) {
       val previousItem = player.inventory.currentItem
       if (InventoryUtil.holdItem("Flux")) {
         Logger.info("Using Power Orb.")
@@ -69,7 +78,6 @@ class SupportItem {
         orbTimer = Timer(30_000)
         player.inventory.currentItem = previousItem
       } else {
-        orbTimer = Timer(30_000)
         Logger.error("No Power Orb found in hotbar!")
       }
     }
@@ -91,4 +99,15 @@ class SupportItem {
       }
     }
   }
+
+  private enum class State {
+    SHOULD_ENABLE, SWITCH_ITEM, CLICK_ITEM
+  }
+  companion object {
+    private var healingTimer = Timer(0)
+    private var tubaTimer = Timer(0)
+    private var orbTimer = Timer(0)
+
+  }
+
 }

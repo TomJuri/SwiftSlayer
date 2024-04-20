@@ -15,7 +15,7 @@ object EntityUtil {
         var healthCost: Double = 0.0
         var returnedCost: Double = 0.0
 
-        distanceCost += entity.getDistanceToEntity(player)
+        distanceCost += RotationMath.getXZDistance(player.position, entity.position)
 
             if(abs(entity.position.y - player.position.y) > 5) {
                 yChangeCost += (abs(entity.position.y - player.position.y) - 5) * 10
@@ -27,7 +27,7 @@ object EntityUtil {
             healthCost += entity.health.toDouble() / 100
         returnedCost = yawCost + distanceCost + yChangeCost + healthCost
         if(player.canEntityBeSeen(entity)) {
-            returnedCost -= returnedCost * 0.35
+            returnedCost /= 2
         }
         return returnedCost
     }

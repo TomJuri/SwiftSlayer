@@ -46,6 +46,7 @@ class PathExecutor {
 
     if (isOnPath()) {
       next = path[path.indexOf(getStandingOn()!!) + 1]
+
       // RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f), 500)
       if(goal != null ) {
         AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(goal!!.toVec3Top()).yaw, AngleUtil.getAngle(goal!!.toVec3Top()).pitch)), 300, LockType.NONE, false)
@@ -109,7 +110,7 @@ class PathExecutor {
     val yp = AngleUtil.getAngles(next!!.up().up())
     val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw) - AngleUtil.yawTo360(yp.yaw))
     val pitchDiff = abs(mc.thePlayer.rotationPitch - yp.pitch)
-    return d && yawDiff < 5 && pitchDiff < 2
+    return d && yawDiff < 5 && pitchDiff < 2 && false
   }
 
   private fun shouldJump() = player.onGround && (next!!.y + 0.5 - player.posY) >= 0.5 && (sqrt(

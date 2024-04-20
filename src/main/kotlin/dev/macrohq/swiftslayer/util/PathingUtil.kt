@@ -30,9 +30,9 @@ object PathingUtil {
         Logger.log("Could not find path!!")
       } else {
         if(target != null) {
-          pathExecutor.enable(path!!.path, target)
+          pathExecutor.enable(path!!.getSmoothedPath(), target)
         } else {
-          pathExecutor.enable(path!!.path)
+          pathExecutor.enable(path!!.getSmoothedPath())
         }
       }
 
