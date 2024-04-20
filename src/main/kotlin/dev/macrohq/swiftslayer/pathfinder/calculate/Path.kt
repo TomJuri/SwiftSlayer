@@ -29,7 +29,7 @@ class Path(start: PathNode, end: PathNode, val goal: Goal, val ctx: CalculationC
     node = listOfNodes.toList()
   }
 
-  fun getSmoothPath(): List<BlockPos> {
+  fun getSmoothPathArr(): List<BlockPos> {
     if (smoothPath.isNotEmpty()) return smoothPath
 
     val smooth = mutableListOf<BlockPos>()
