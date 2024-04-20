@@ -37,9 +37,9 @@ class AutoRotation: AbstractFeature() {
   }
 
   fun easeTo(target: Target, time: Int, lockType: LockType = LockType.NONE, override: Boolean, smoothLockTime: Int = 200, easeFunction: (Float) -> Float = EaseUtil.easingFunctions.random()){
-    if(AutoRotation.getInstance().isOverriden || LockRotationUtil.getInstance().isOverriden) return;
-    AutoRotation.getInstance().isOverriden = override;
-    this.enabled = true
+    if(getInstance().isOverriden || LockRotationUtil.getInstance().isOverriden) return
+      getInstance().isOverriden = override
+      this.enabled = true
     this.forceEnable = true
     this.lockType = lockType
     this.smoothLockTime = smoothLockTime

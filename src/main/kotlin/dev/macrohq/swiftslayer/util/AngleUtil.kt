@@ -41,7 +41,7 @@ object AngleUtil {
 
   fun getAngle(blockPos: BlockPos): Angle {
 //    return getAngle(BlockUtil.getClosestSidePos(blockPos))
-    return getAngle(blockPos.toVec3());
+    return getAngle(blockPos.toVec3())
   }
 
   fun getAngle(entity: Entity, height: Float = 1.5f): Angle {

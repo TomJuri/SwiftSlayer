@@ -21,11 +21,11 @@ public class MixinChunkProviderClient implements IChunkProviderClient {
 
     @Override
     public LongHashMap<Chunk> chunkMapping() {
-        return this.chunkMapping;
+        return chunkMapping;
     }
 
     @Override
     public List<Chunk> chunkListing() {
-        return this.chunkListing;
+        return chunkListing;
     }
 }

@@ -15,10 +15,10 @@ class Path(start: PathNode, end: PathNode, val goal: Goal, val ctx: CalculationC
   var path: List<BlockPos>
   var node: List<PathNode>
   var smoothPath: MutableList<BlockPos> = mutableListOf()
-
-  init {
-    var temp: PathNode? = end;
-    val listOfBlocks = LinkedList<BlockPos>()
+  
+  init{
+    var temp: PathNode? = end
+      val listOfBlocks = LinkedList<BlockPos>()
     val listOfNodes = LinkedList<PathNode>()
     while (temp != null) {
       listOfNodes.addFirst(temp)

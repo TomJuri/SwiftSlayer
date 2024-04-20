@@ -20,7 +20,7 @@ object Logger {
   fun log(message: Any) {
     if (!config.debugMode || message == this.lastDebugMessage) return
     this.lastDebugMessage = message.toString()
-    this.send("7$message");
+    this.send("7$message")
   }
   private fun send(message: String) {
     player.addChatMessage(ChatComponentText("§aSwift§bSlayer §8» §$message"))

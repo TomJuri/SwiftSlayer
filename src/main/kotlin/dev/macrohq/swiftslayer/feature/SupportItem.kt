@@ -31,24 +31,22 @@ class SupportItem {
   }
 
   private fun healing() {
-    if (config.useHealing) {
-      if (health == -1 || maxHealth == -1) return
-      val healthPercent = health.toFloat() / maxHealth.toFloat()
-      if (healthPercent > config.useHealingAt / 100f || !healingTimer.isDone) return
-      val previousItem = player.inventory.currentItem
-      if (InventoryUtil.holdItem("Wand of ")) {
-        Logger.info("Using healing wand.")
-        KeyBindUtil.rightClick()
-        healingTimer = Timer(8000)
-        player.inventory.currentItem = previousItem
-      } else {
-        Logger.error("No Wand of Healing found in hotbar!")
-      }
+    if (health == -1 || maxHealth == -1) return
+    val healthPercent = health.toFloat() / maxHealth.toFloat()
+    if (healthPercent > config.useHealingAt / 100f || !healingTimer.isDone) return
+    val previousItem = player.inventory.currentItem
+    if (InventoryUtil.holdItem("Wand of ")) {
+      Logger.info("Using healing wand.")
+      KeyBindUtil.rightClick()
+      player.inventory.currentItem = previousItem
+    } else {
+      healingTimer = Timer(8000)
+      Logger.error("No Wand of Healing found in hotbar!")
     }
   }
 
   private fun tuba() {
-    if (config.useTuba && tubaTimer.isDone && macroManager.state == MacroManager.State.KILL_BOSS) {
+    if (tubaTimer.isDone && macroManager.state == MacroManager.State.KILL_BOSS) {
       val previousItem = player.inventory.currentItem
       if (InventoryUtil.holdItem("Tuba")) {
         Logger.info("Using Weird Tuba.")
@@ -56,13 +54,14 @@ class SupportItem {
         tubaTimer = Timer(21000)
         player.inventory.currentItem = previousItem
       } else {
+        tubaTimer = Timer(21000)
         Logger.error("No Weird Tuba found in hotbar!")
       }
     }
   }
 
   private fun orb() {
-    if (config.deployOrb && SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_ALIVE && orbTimer.isDone) {
+    if (SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_ALIVE && orbTimer.isDone) {
       val previousItem = player.inventory.currentItem
       if (InventoryUtil.holdItem("Flux")) {
         Logger.info("Using Power Orb.")
@@ -70,6 +69,7 @@ class SupportItem {
         orbTimer = Timer(30_000)
         player.inventory.currentItem = previousItem
       } else {
+        orbTimer = Timer(30_000)
         Logger.error("No Power Orb found in hotbar!")
       }
     }

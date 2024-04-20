@@ -61,25 +61,25 @@ class GenericBossKiller {
       y--
     }
 
-    if(SwiftSlayer.instance.config.moveementType == 0 && inCorner && BossKillerMovement.getInstance().getDistanceBetweenBlocks(player.position, chosenCorner) > 1) {
+    if(SwiftSlayer.instance.config.movementType == 0 && inCorner && BossKillerMovement.getInstance().getDistanceBetweenBlocks(player.position, chosenCorner) > 1) {
       inCorner = false
     }
 
-    if( SwiftSlayer.instance.config.moveementType == 0 && blockPoss.isNotEmpty() && !inCorner && PathingUtil.isDone) {
+    if( SwiftSlayer.instance.config.movementType == 0 && blockPoss.isNotEmpty() && !inCorner && PathingUtil.isDone) {
       PathingUtil.goto(blockPoss[0].add(0, -1, 0))
       gameSettings.keyBindSneak.setPressed(true)
       chosenCorner = blockPoss[0]
       inCorner = true
     }
 
-    if( SwiftSlayer.instance.config.moveementType == 0 && inCorner) {
+    if( SwiftSlayer.instance.config.movementType == 0 && inCorner) {
       if(BossKillerMovement.getInstance().getDistanceBetweenBlocks(player.position, chosenCorner) > 2) {
         PathingUtil.goto(chosenCorner)
       }
     }
 
 
-    if(SwiftSlayer.instance.config.moveementType == 1 && timeout.isDone) {
+    if(SwiftSlayer.instance.config.movementType == 1 && timeout.isDone) {
       gameSettings.keyBindForward.setPressed(false)
 
       if(ticksSinceLastMovement > 100) {
@@ -99,7 +99,7 @@ class GenericBossKiller {
       }
 
 
-    } else if(SwiftSlayer.instance.config.moveementType == 1 && !timeout.isDone){
+    } else if(SwiftSlayer.instance.config.movementType == 1 && !timeout.isDone){
       gameSettings.keyBindForward.setPressed(true)
       if(SwiftSlayer.instance.rotation.canEnable()) SwiftSlayer.instance.rotation.disable()
 

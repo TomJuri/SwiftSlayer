@@ -267,7 +267,7 @@ object RenderUtil {
         GlStateManager.disableBlend()
         GlStateManager.enableAlpha()
         GlStateManager.enableTexture2D()
-        GlStateManager.enableDepth();
+        GlStateManager.enableDepth()
         GlStateManager.depthMask(true)
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f)
         GlStateManager.popMatrix()

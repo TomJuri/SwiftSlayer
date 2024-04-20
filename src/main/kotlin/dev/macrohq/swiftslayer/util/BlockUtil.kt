@@ -78,15 +78,15 @@ object BlockUtil {
         if(!isValidBlock(rightAbove)) return false
 
 
-        val r1 = !canWalkOnBlock(top) && !canWalkOnBlock(right);
-        val r2 = !canWalkOnBlock(bottom) && !canWalkOnBlock(right);
-        val r3 = !canWalkOnBlock(top) && !canWalkOnBlock(left);
-        val r4 = !canWalkOnBlock(bottom) && !canWalkOnBlock(left);
+        val r1 = !canWalkOnBlock(top) && !canWalkOnBlock(right)
+        val r2 = !canWalkOnBlock(bottom) && !canWalkOnBlock(right)
+        val r3 = !canWalkOnBlock(top) && !canWalkOnBlock(left)
+        val r4 = !canWalkOnBlock(bottom) && !canWalkOnBlock(left)
 
         return (r1.and(r2.not()) .and(r3.not()) .and(r4.not())
             .or(r2.and(r1.not()) .and(r3.not()) .and(r4.not()))
             .or(r3.and(r1.not()) .and(r2.not()) .and(r4.not()))
-            .or(r4.and(r1.not()) .and(r2.not()) .and(r3.not())));
+            .or(r4.and(r1.not()) .and(r2.not()) .and(r3.not())))
     }
 
 

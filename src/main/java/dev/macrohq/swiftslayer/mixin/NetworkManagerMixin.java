@@ -13,9 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(NetworkManager.class)
 public class NetworkManagerMixin {
     @Inject(method = "channelRead0*", at = @At("HEAD"))
-    private void read(ChannelHandlerContext context, Packet<?> packet, CallbackInfo callback) {
-        if (packet.getClass().getSimpleName().startsWith("S")) {
+    private void read(final ChannelHandlerContext context, final Packet<?> packet, final CallbackInfo callback) {
+        if (packet.getClass().getSimpleName().startsWith("S"))
             MinecraftForge.EVENT_BUS.post(new ReceivePacketEvent(packet));
-        }
     }
 }

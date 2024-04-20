@@ -49,7 +49,7 @@ object RotationUtil {
         if (lock != null && !lock!!.first.isDead) {
             startRotation = Rotation(player.rotationYaw, player.rotationPitch)
             endRotation = AngleUtil.getAngles(lock!!.first.positionVector.addVector(0.0, lock!!.second, 0.0))
-            startTime = System.currentTimeMillis();
+            startTime = System.currentTimeMillis()
             endTime = startTime + 150
             return
         }

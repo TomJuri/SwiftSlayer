@@ -22,26 +22,26 @@ class MovementDescend(ss: SwiftSlayer, from: BlockPos, to: BlockPos) : Movement(
     }
 
     private fun cost(ctx: CalculationContext, x: Int, y: Int, z: Int, destX: Int, destZ: Int, res: MovementResult) {
-      val destUpState = ctx.get(destX, y, destZ);
-      if (!MovementHelper.canWalkThrough(ctx.bsa, destX, y + 2, destZ)
+      val destUpState = ctx.get(destX, y, destZ)
+        if (!MovementHelper.canWalkThrough(ctx.bsa, destX, y + 2, destZ)
         || !MovementHelper.canWalkThrough(ctx.bsa, destX, y + 1, destZ)
         || !MovementHelper.canWalkThroughBlockState(ctx.bsa, destX, y, destZ, destUpState)
       ) {
-        return;
+        return
       }
-      val sourceState = ctx.get(x, y, z);
-      if (MovementHelper.isLadder(sourceState) || MovementHelper.isLadder(destUpState)) { // Cannot descend from ladder it'll be MovementDownward
-        return;
+      val sourceState = ctx.get(x, y, z)
+        if (MovementHelper.isLadder(sourceState) || MovementHelper.isLadder(destUpState)) { // Cannot descend from ladder it'll be MovementDownward
+        return
       }
-      val destState = ctx.get(destX, y - 1, destZ);
-      if (!MovementHelper.canStandOnBlockState(ctx.bsa, destX, y - 1, destZ, destState) || MovementHelper.isLadder(
+      val destState = ctx.get(destX, y - 1, destZ)
+        if (!MovementHelper.canStandOnBlockState(ctx.bsa, destX, y - 1, destZ, destState) || MovementHelper.isLadder(
           destState
         )
       ) {
-        freeFallCost(ctx, x, y, z, destX, destZ, destState, res);
-        return;
+        freeFallCost(ctx, x, y, z, destX, destZ, destState, res)
+          return
       }
-      res.cost = ctx.cost.WALK_OFF_ONE_BLOCK_COST * ctx.cost.SPRINT_MULTIPLIER + ctx.cost.N_BLOCK_FALL_COST[1];
+      res.cost = ctx.cost.WALK_OFF_ONE_BLOCK_COST * ctx.cost.SPRINT_MULTIPLIER + ctx.cost.N_BLOCK_FALL_COST[1]
     }
 
     fun freeFallCost(
@@ -92,7 +92,7 @@ class MovementDescend(ss: SwiftSlayer, from: BlockPos, to: BlockPos) : Movement(
           effStartHeight = newY
           continue
         }
-        if (fellSoFar <= ctx.pathConfig.maxFallHeight) {
+        if (fellSoFar <= 20) {
           res.y = newY
           res.cost = costUpUntilThisBlock
           return

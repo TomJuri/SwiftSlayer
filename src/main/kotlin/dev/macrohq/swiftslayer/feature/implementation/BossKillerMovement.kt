@@ -67,15 +67,15 @@ class BossKillerMovement: AbstractFeature() {
     }
 
     private fun getRandomX(loc: BlockPos, size: Int): Int {
-        val minX = loc.x as Int - size
-        val maxX = loc.x as Int + size
+        val minX = loc.x - size
+        val maxX = loc.x + size
 
-        return random.nextInt( (maxX - minX)) + minX;
+        return random.nextInt( (maxX - minX)) + minX
     }
 
     private fun getRandomZ(loc: BlockPos, size: Int): Int {
-        val minZ = loc.z as Int - size
-        val maxZ = loc.z as Int + size
+        val minZ = loc.z - size
+        val maxZ = loc.z + size
 
         return random.nextInt((maxZ - minZ)) + minZ
     }

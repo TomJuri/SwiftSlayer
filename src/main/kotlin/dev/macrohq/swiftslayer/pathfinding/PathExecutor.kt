@@ -109,7 +109,7 @@ class PathExecutor {
     val yp = AngleUtil.getAngles(next!!.up().up())
     val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw) - AngleUtil.yawTo360(yp.yaw))
     val pitchDiff = abs(mc.thePlayer.rotationPitch - yp.pitch)
-    return d && yawDiff < 5 && pitchDiff < 2 && config.useAOTV
+    return d && yawDiff < 5 && pitchDiff < 2
   }
 
   private fun shouldJump() = player.onGround && (next!!.y + 0.5 - player.posY) >= 0.5 && (sqrt(
