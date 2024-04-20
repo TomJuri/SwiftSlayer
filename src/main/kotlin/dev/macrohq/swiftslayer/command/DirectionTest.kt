@@ -2,6 +2,8 @@ package dev.macrohq.swiftslayer.command
 
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
+import dev.macrohq.swiftslayer.SwiftSlayer
+import dev.macrohq.swiftslayer.pathfinder.movement.CalculationContext
 import dev.macrohq.swiftslayer.util.*
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.EntityLiving
@@ -65,7 +67,7 @@ class DirectionTest {
 
                for(block: BlockPos in BlockUtil.getBlocks(mc.thePlayer.position, 15, 5, 15)) {
                 if(BlockUtil.isSingleCorner(block)) {
-                    if(BlockUtil.blocksBetweenValid(block,mc.thePlayer.position.add(0, -1, 0))) {
+                    if(BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer.instance), block,mc.thePlayer.position.add(0, -1, 0))) {
                         RenderUtil.drawBox(event, block, Color.BLUE, true)
                         blockPoss.add(block)
                     }

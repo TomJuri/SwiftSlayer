@@ -44,7 +44,7 @@ class MovementDescend(ss: SwiftSlayer, from: BlockPos, to: BlockPos) : Movement(
       res.cost = ctx.cost.WALK_OFF_ONE_BLOCK_COST * ctx.cost.SPRINT_MULTIPLIER + ctx.cost.N_BLOCK_FALL_COST[1]
     }
 
-    private fun freeFallCost(
+    fun freeFallCost(
       ctx: CalculationContext,
       x: Int,
       y: Int,
@@ -62,7 +62,6 @@ class MovementDescend(ss: SwiftSlayer, from: BlockPos, to: BlockPos) : Movement(
       var effStartHeight = y // for ladder
       var cost = 0.0
       for (fellSoFar in 2..Int.MAX_VALUE) {
-        // cant visualize reachedMinimum - yet
         val newY = y - fellSoFar
         if (newY < 0) return
 

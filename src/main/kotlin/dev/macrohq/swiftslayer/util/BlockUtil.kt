@@ -1,5 +1,8 @@
 package dev.macrohq.swiftslayer.util
 
+import dev.macrohq.swiftslayer.SwiftSlayer
+import dev.macrohq.swiftslayer.pathfinder.movement.CalculationContext
+import dev.macrohq.swiftslayer.pathfinder.movement.MovementHelper
 import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder
 import net.minecraft.block.BlockStairs
 import net.minecraft.block.material.Material
@@ -52,8 +55,6 @@ object BlockUtil {
 
         return blocks
     }
-
-
 
     fun getCornerBlocks(centerBlock: BlockPos, radiusX: Int, radiusY: Int, radiusZ: Int): Pair<BlockPos, BlockPos> {
         val topLeft = BlockPos(centerBlock.x - radiusX, centerBlock.y - radiusY, centerBlock.z - radiusZ)
@@ -118,16 +119,21 @@ object BlockUtil {
                 world.getBlockState(block).block is BlockStairs
     }
 
-    fun blocksBetweenValid(startPoss: BlockPos, endPoss: BlockPos): Boolean {
-        val blocksBetween = bresenham(startPoss.toVec3(), endPoss.toVec3())
+    fun blocksBetweenValid(ctx: CalculationContext = CalculationContext(SwiftSlayer.instance), startPoss: BlockPos, endPoss: BlockPos): Boolean {
+        val blocksBetween = bresenham(ctx, startPoss.toVec3(), endPoss.toVec3())
+        if(blocksBetween.isEmpty()){
+            return false
+        }
         for (i in blocksBetween.indices) {
             val it = blocksBetween[i]
-            if (!AStarPathfinder.Node(it, null).isWalkable() && !world.isAirBlock(it)) {
+            if (!MovementHelper.canStandOnBlock(ctx.bsa, it.x, it.y, it.z)) {
                 return false
             }
             if (i == 0) continue
             val prev = blocksBetween[i - 1]
-            if (!canWalkOn(prev, it)) return false
+            if (!canWalkOn(ctx, prev, it)){
+                return false
+            }
         }
         return true
     }
@@ -164,26 +170,21 @@ object BlockUtil {
         }
     }
 
-    fun canWalkOn(startPos: BlockPos, endPos: BlockPos): Boolean {
+    fun canWalkOn(ctx: CalculationContext, startPos: BlockPos, endPos: BlockPos): Boolean {
         val startState = world.getBlockState(startPos)
         val endState = world.getBlockState(endPos)
         if (!endState.block.material.isSolid) {
             return endPos.y - startPos.y <= 1
         }
-        if (endState.block is BlockStairs &&
-            getPlayerDirectionToBeAbleToWalkOnBlock(startPos, endPos) == getDirectionToWalkOnStairs(endState)
-        ) {
+        if (endState.block is BlockStairs && MovementHelper.isValidStair(endState, endPos.x - startPos.x, endPos.z - startPos.z)) {
             return true
         }
-        val startHeight = startState.block.getCollisionBoundingBox(world, startPos, startState).maxY
-        val endHeight = endState.block.getCollisionBoundingBox(world, endPos, endState).maxY
-        if (endHeight - startHeight <= .5) {
-            return true
-        }
-        return false
+        val sourceMaxY = startState.block.getCollisionBoundingBox(ctx.world, startPos, startState)?.maxY ?: startPos.y.toDouble()
+        val destMaxY = endState.block.getCollisionBoundingBox(ctx.world, endPos, endState)?.maxY ?: (startPos.y + 1.0)
+        return destMaxY - sourceMaxY <= .5
     }
 
-    fun bresenham(start: Vec3, end: Vec3): List<BlockPos> {
+    fun bresenham(ctx: CalculationContext, start: Vec3, end: Vec3): List<BlockPos> {
         var start0 = start
         val blocks = mutableListOf(start0.toBlockPos())
         val x1 = MathHelper.floor_double(end.xCoord)
@@ -253,17 +254,15 @@ object BlockUtil {
             y0 = MathHelper.floor_double(start0.yCoord) - if (enumfacing == EnumFacing.UP) 1 else 0
             z0 = MathHelper.floor_double(start0.zCoord) - if (enumfacing == EnumFacing.SOUTH) 1 else 0
             val pos = BlockPos(x0, y0, z0)
-//      blocks.add(pos)
-            if (world.isAirBlock(pos)) {
+            if (ctx.world.isAirBlock(pos)) {
                 val down = pos.down()
                 val down2 = pos.add(0, -2, 0)
-                if (!world.isAirBlock(down)) {
+                if (MovementHelper.canStandOnBlock(ctx.bsa, down.x, down.y, down.z)) {
                     blocks.add(down)
-                } else if (!world.isAirBlock(down2)) {
+                } else if (MovementHelper.canStandOnBlock(ctx.bsa, down2.x, down2.y, down2.z)) {
                     blocks.add(down2)
                 } else return emptyList()
-            }
-            if (!world.isAirBlock(pos)) {
+            } else{
                 val airUp = world.isAirBlock(pos.up())
                 val airUp2 = world.isAirBlock(pos.add(0, 2, 0))
                 val airUp3 = world.isAirBlock(pos.add(0, 3, 0))
@@ -280,7 +279,6 @@ object BlockUtil {
         }
         return blocks
     }
-
 }
 
 
