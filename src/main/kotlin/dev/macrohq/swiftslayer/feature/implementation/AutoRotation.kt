@@ -5,7 +5,6 @@ import dev.macrohq.swiftslayer.feature.helper.Angle
 import dev.macrohq.swiftslayer.feature.helper.Target
 import dev.macrohq.swiftslayer.util.AngleUtil
 import dev.macrohq.swiftslayer.util.EaseUtil
-import dev.macrohq.swiftslayer.util.Logger
 import dev.macrohq.swiftslayer.util.player
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -50,8 +49,7 @@ class AutoRotation: AbstractFeature() {
 
     this.startTime = System.currentTimeMillis()
     this.endTime = this.startTime + time
-    val stack = Thread.currentThread().stackTrace[3]
-    Logger.info( stack.className + "." + stack.methodName)
+
   }
 
   private fun changeAngle(yawChange: Float, pitchChange: Float) {
@@ -117,11 +115,6 @@ class AutoRotation: AbstractFeature() {
     }
   }
 
-  private fun getCallingMethodName(): String {
-    val stack = Thread.currentThread().stackTrace[3]
-
-    return stack.className + "." + stack.methodName
-  }
 }
 
 enum class LockType { NONE, INSTANT, SMOOTH }

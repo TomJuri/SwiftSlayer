@@ -1,12 +1,11 @@
 package dev.macrohq.swiftslayer.macro
 
-import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
-import dev.macrohq.swiftslayer.util.Logger.info
 import dev.macrohq.swiftslayer.feature.helper.Angle
-import dev.macrohq.swiftslayer.feature.implementation.LockType
 import dev.macrohq.swiftslayer.feature.helper.Target
+import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
+import dev.macrohq.swiftslayer.feature.implementation.LockType
 import dev.macrohq.swiftslayer.util.*
-
+import dev.macrohq.swiftslayer.util.Logger.info
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.entity.monster.EntityZombie
@@ -43,14 +42,14 @@ class Revenant {
                 state = State.MOBKILLER
             }
             State.MOBKILLER -> {
-                mobKiller.enable()
+                mobKiller.getInstance().enable()
                 state = State.CHECKING
             }
             State.CHECKING -> {
 //                info("in checking. found: ${found}")
                 if(found){
                     info("mob found disabling")
-                    mobKiller.disable()
+                    mobKiller.getInstance().disable()
                     state = State.WALKING
                 }
             }

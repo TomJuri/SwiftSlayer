@@ -1,6 +1,7 @@
 package dev.macrohq.swiftslayer.util
 
 import dev.macrohq.swiftslayer.SwiftSlayer
+import dev.macrohq.swiftslayer.macro.mobKillers.RevMobKiller
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.Tessellator
 
@@ -21,7 +22,15 @@ val config
 val pathExecutor
     get() = swiftSlayer.pathExecutor
 val mobKiller
-    get() = swiftSlayer.mobKiller
+    get() = when(SwiftSlayer.instance.config.slayer) {
+            0 -> {
+                RevMobKiller
+            }
+
+        else -> {
+            RevMobKiller
+        }
+    }
 val autoBatphone
     get() = swiftSlayer.autoBatphone
 val macroManager

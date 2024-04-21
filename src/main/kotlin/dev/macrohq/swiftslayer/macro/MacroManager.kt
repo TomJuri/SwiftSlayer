@@ -14,7 +14,7 @@ class MacroManager {
 
   @SubscribeEvent
   fun onTick(event: ClientTickEvent) {
-    if (!enabled || autoBatphone.enabled || mobKiller.enabled || genericBossKiller.enabled || endermanBossKiller.enabled) return
+    if (!enabled || mobKiller.getInstance().enabled) return
     when (state) {
       State.ACTIVATE_QUEST -> {
         if (SlayerUtil.getActive() == null ||
@@ -26,13 +26,13 @@ class MacroManager {
             autoBatphone.enable()
         }
       }
-      State.KILL_MOBS -> mobKiller.enable()
+      State.KILL_MOBS -> mobKiller.getInstance().enable()
       State.KILL_BOSS -> {
         //if (config.slayer == 3) endermanBossKiller.enable()
         /* else*/ genericBossKiller.enable()
       }
     }
-    state = State.entries[(state.ordinal + 1) % State.entries.size]
+    state = State.entries[(state.ordinal + 1) % State.entries.size] // tf is this for?
   }
 
   fun toggle() = if (!enabled) enable() else disable()
@@ -55,7 +55,7 @@ class MacroManager {
     Logger.info("Disabling macro.")
     enabled = false
     autoBatphone.disable()
-    mobKiller.disable()
+    mobKiller.getInstance().disable()
     genericBossKiller.disable()
     endermanBossKiller.disable()
     AutoRotation.getInstance().disable()
