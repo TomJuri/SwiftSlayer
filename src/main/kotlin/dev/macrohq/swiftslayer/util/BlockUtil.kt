@@ -3,7 +3,6 @@ package dev.macrohq.swiftslayer.util
 import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.pathfinder.movement.CalculationContext
 import dev.macrohq.swiftslayer.pathfinder.movement.MovementHelper
-import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder
 import net.minecraft.block.BlockStairs
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.IBlockState
@@ -13,6 +12,7 @@ import net.minecraft.util.EnumFacing
 import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
 import kotlin.math.abs
+import kotlin.math.sqrt
 
 
 object BlockUtil {
@@ -93,6 +93,13 @@ object BlockUtil {
     fun isValidBlock(block: BlockPos):Boolean {
         return !(!world.isAirBlock(block) && !world.getBlockState(block).block.isBlockNormalCube)
     }
+
+    fun getXZDistance(pos1: BlockPos, pos2: BlockPos): Double {
+        val xDiff = (pos1.x - pos2.x).toDouble()
+        val zDiff = (pos1.z - pos2.z).toDouble()
+        return sqrt(xDiff * xDiff + zDiff * zDiff)
+    }
+
 
     fun neighbourGenerator(mainBlock: BlockPos, size: Int): List<BlockPos> {
         return neighbourGenerator(mainBlock, size, size, size)

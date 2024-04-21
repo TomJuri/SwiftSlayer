@@ -26,6 +26,7 @@ class GenericBossKiller {
   var enabled = false
     private set
   private var target: EntityLiving? = null
+  private var waitTimer = Timer(50)
 
   @SubscribeEvent
   fun onTick(event: ClientTickEvent) {
@@ -35,7 +36,6 @@ class GenericBossKiller {
     if (target == null) return
     if (SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_DEAD) {
       Logger.info("Boss killed.")
-      LockRotationUtil.getInstance().disable()
       disable()
       return
     }
@@ -53,9 +53,12 @@ class GenericBossKiller {
     val boundingBox: AxisAlignedBB = target!!.entityBoundingBox
 
     val randomPositionOnBoundingBox = target!!.position.add(0, (target!!.height*0.75).toInt(), 0)
-    if(mc.objectMouseOver.entityHit == null) {
-    SwiftSlayer.instance.rotation.setYaw(RotationMath.getYaw(randomPositionOnBoundingBox), SwiftSlayer.instance.config.macroLockSmoothness.toInt(), true)
-    SwiftSlayer.instance.rotation.setPitch(RotationMath.getPitch(randomPositionOnBoundingBox), SwiftSlayer.instance.config.macroLockSmoothness.toInt(), true)  }
+    if(mc.objectMouseOver.entityHit != target!! && waitTimer.isDone && !target!!.isAirBorne && timeout.isDone) {
+      AutoRotation.getInstance().disable()
+      AutoRotation.getInstance().easeTo(Target(randomPositionOnBoundingBox), SwiftSlayer.instance.config.getRandomRotationTime().toInt(), LockType.NONE, true)
+    } else if (mc.objectMouseOver.entityHit == target!!) {
+      waitTimer = Timer(90)
+    }
 
     var y = target!!.getStandingOnCeil().y
     while (world.getBlockState(BlockPos(target!!.posX, y.toDouble(), target!!.posZ)).block == Blocks.air) {
@@ -71,7 +74,7 @@ class GenericBossKiller {
 
     }
 
-    if(inCorner && RotationMath.getXZDistance(chosenCorner!!, player.getStandingOnCeil()) > 1 && PathingUtil.isDone) {
+    if(inCorner && BlockUtil.getXZDistance(chosenCorner!!, player.getStandingOnCeil()) > 1 && PathingUtil.isDone) {
       PathingUtil.stop()
       PathingUtil.goto(chosenCorner!!)
       gameSettings.keyBindSneak.setPressed(true)
@@ -100,8 +103,7 @@ class GenericBossKiller {
 
     } else if(SwiftSlayer.instance.config.movementType == 1 && !timeout.isDone){
       gameSettings.keyBindForward.setPressed(true)
-      if(SwiftSlayer.instance.rotation.canEnable()) SwiftSlayer.instance.rotation.disable()
-
+      if(AutoRotation.getInstance().enabled) AutoRotation.getInstance().disable()
     }
 
 
@@ -128,7 +130,7 @@ class GenericBossKiller {
     // Melee
     if (config.bossKillerWeapon == 0) {
       player.inventory.currentItem = config.meleeWeaponSlot - 1
-      if(mc.thePlayer.getDistanceToEntity(target!!) < 4 && player.canEntityBeSeen(target!!))  {
+      if(mc.thePlayer.getDistanceToEntity(target!!) < 4 && player.canEntityBeSeen(target!!) && mc.objectMouseOver.entityHit == target!!)  {
         KeyBindUtil.leftClick(8)
       } else {
         KeyBindUtil.stopClicking()
@@ -189,7 +191,6 @@ class GenericBossKiller {
     AutoRotation.getInstance().disable()
     PathingUtil.stop()
     KeyBindUtil.stopClicking()
-    SwiftSlayer.instance.rotation.disable()
     blockPoss.clear()
     inCorner = false
     tryUnstuck = false

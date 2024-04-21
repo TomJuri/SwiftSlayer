@@ -58,7 +58,6 @@ class MacroManager {
     mobKiller.disable()
     genericBossKiller.disable()
     endermanBossKiller.disable()
-    LockRotationUtil.getInstance().disable()
     AutoRotation.getInstance().disable()
     KeyBindUtil.stopClicking()
     PathingUtil.stop()

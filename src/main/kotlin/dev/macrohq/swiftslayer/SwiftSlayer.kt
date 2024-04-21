@@ -11,7 +11,6 @@ import dev.macrohq.swiftslayer.pathfinder.helper.player.IPlayerContext
 import dev.macrohq.swiftslayer.pathfinder.helper.player.PlayerContext
 import dev.macrohq.swiftslayer.pathfinding.PathExecutor
 import dev.macrohq.swiftslayer.util.KeyBindUtil
-import dev.macrohq.swiftslayer.util.LockRotationUtil
 import dev.macrohq.swiftslayer.util.RenderUtil
 import dev.macrohq.swiftslayer.util.RotationUtil
 import net.minecraft.client.Minecraft
@@ -52,7 +51,6 @@ class SwiftSlayer {
   lateinit var genericBossKiller: GenericBossKiller private set
   lateinit var revenant: Revenant private set
   lateinit var tracker: Tracker private set
-  lateinit var rotation: LockRotationUtil private set
   private lateinit var lockTest: LockTest
   var removeLater: BlockPos? = null
 
@@ -67,7 +65,6 @@ class SwiftSlayer {
     genericBossKiller = GenericBossKiller()
     revenant = Revenant()
     tracker = Tracker()
-    rotation = LockRotationUtil()
     lockTest = LockTest()
     MinecraftForge.EVENT_BUS.register(this)
     MinecraftForge.EVENT_BUS.register(pathExecutor)
@@ -79,7 +76,6 @@ class SwiftSlayer {
     MinecraftForge.EVENT_BUS.register(revenant)
     MinecraftForge.EVENT_BUS.register(tracker)
     MinecraftForge.EVENT_BUS.register(lockTest)
-    MinecraftForge.EVENT_BUS.register(rotation)
     MinecraftForge.EVENT_BUS.register(DirectionTest())
     MinecraftForge.EVENT_BUS.register(SupportItem())
     CommandManager.register(PathfindTest())

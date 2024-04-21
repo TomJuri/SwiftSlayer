@@ -2,13 +2,13 @@ package dev.macrohq.swiftslayer.feature.implementation
 
 import dev.macrohq.swiftslayer.feature.AbstractFeature
 import dev.macrohq.swiftslayer.feature.helper.Angle
+import dev.macrohq.swiftslayer.feature.helper.Target
 import dev.macrohq.swiftslayer.util.AngleUtil
+import dev.macrohq.swiftslayer.util.EaseUtil
+import dev.macrohq.swiftslayer.util.Logger
 import dev.macrohq.swiftslayer.util.player
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import dev.macrohq.swiftslayer.feature.helper.Target
-import dev.macrohq.swiftslayer.util.EaseUtil
-import dev.macrohq.swiftslayer.util.LockRotationUtil
 
 class AutoRotation: AbstractFeature() {
   override val featureName: String = "AutoRotation"
@@ -37,7 +37,7 @@ class AutoRotation: AbstractFeature() {
   }
 
   fun easeTo(target: Target, time: Int, lockType: LockType = LockType.NONE, override: Boolean, smoothLockTime: Int = 200, easeFunction: (Float) -> Float = EaseUtil.easingFunctions.random()){
-    if(getInstance().isOverriden || LockRotationUtil.getInstance().isOverriden) return
+    if(getInstance().isOverriden) return
       getInstance().isOverriden = override
       this.enabled = true
     this.forceEnable = true
@@ -50,6 +50,8 @@ class AutoRotation: AbstractFeature() {
 
     this.startTime = System.currentTimeMillis()
     this.endTime = this.startTime + time
+    val stack = Thread.currentThread().stackTrace[3]
+    Logger.info( stack.className + "." + stack.methodName)
   }
 
   private fun changeAngle(yawChange: Float, pitchChange: Float) {
@@ -113,6 +115,12 @@ class AutoRotation: AbstractFeature() {
     } else {
       this.easeTo(this.target!!, 200, LockType.SMOOTH, false, this.smoothLockTime)
     }
+  }
+
+  private fun getCallingMethodName(): String {
+    val stack = Thread.currentThread().stackTrace[3]
+
+    return stack.className + "." + stack.methodName
   }
 }
 

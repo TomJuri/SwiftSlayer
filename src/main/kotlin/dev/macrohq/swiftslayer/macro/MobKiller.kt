@@ -43,7 +43,7 @@ class MobKiller {
 
       ticksSinceLastClick++
 
-    if(RotationMath.getXZDistance(player.lastTickPositionCeil(), player.getStandingOnCeil()) < 0.25) {
+    if(BlockUtil.getXZDistance(player.lastTickPositionCeil(), player.getStandingOnCeil()) < 0.25) {
       ticksSinceLastMovement++
     } else {
       ticksSinceLastMovement = 0
@@ -110,6 +110,7 @@ class MobKiller {
 
       State.LOOK_AT_TARGET -> {
         AutoRotation.getInstance().disable()
+       AutoRotation.getInstance().disable()
         if(currentTarget != null) {
           lookAtEntity(currentTarget)
         } else {

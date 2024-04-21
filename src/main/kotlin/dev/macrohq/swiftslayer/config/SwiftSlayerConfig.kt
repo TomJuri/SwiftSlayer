@@ -155,7 +155,8 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     )
     var macroRotationTimeRandomness: Float = 300f
     fun getRandomRotationTime(): Long {
-        return (macroRotationTime + Math.random().toFloat() * macroRotationTimeRandomness).toLong()
+        val ran = (macroRotationTime + Math.random().toFloat() * macroRotationTimeRandomness).toLong()
+        return ran
     }
 
     @Slider(

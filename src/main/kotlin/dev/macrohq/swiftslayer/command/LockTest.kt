@@ -2,8 +2,6 @@ package dev.macrohq.swiftslayer.command
 
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
-import dev.macrohq.swiftslayer.SwiftSlayer
-import dev.macrohq.swiftslayer.util.RotationMath
 import dev.macrohq.swiftslayer.util.SlayerUtil
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.EntityLiving
@@ -38,8 +36,6 @@ if (enabled) {
 
     if (Minecraft.getMinecraft().objectMouseOver.entityHit == rotationTargetEntity) return
 
-    SwiftSlayer.instance.rotation.setYaw(RotationMath.getYaw(randomPositionOnBoundingBox), SwiftSlayer.instance.config.macroLockSmoothness.toInt(), true)
-    SwiftSlayer.instance.rotation.setPitch(RotationMath.getPitch(randomPositionOnBoundingBox), SwiftSlayer.instance.config.macroLockSmoothness.toInt(), true)
 
 }
 

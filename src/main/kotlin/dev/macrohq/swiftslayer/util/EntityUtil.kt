@@ -15,7 +15,7 @@ object EntityUtil {
         var healthCost: Double = 0.0
         var returnedCost: Double = 0.0
 
-        distanceCost += RotationMath.getXZDistance(player.position, entity.position)
+        distanceCost += BlockUtil.getXZDistance(player.position, entity.position)
 
             if(abs(entity.position.y - player.position.y) > 5) {
                 yChangeCost += (abs(entity.position.y - player.position.y) - 5) * 10
