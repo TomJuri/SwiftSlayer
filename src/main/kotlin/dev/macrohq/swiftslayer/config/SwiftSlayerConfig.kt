@@ -114,12 +114,6 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     )
     var useHealingAt = 70
 
-    @Switch(
-        name = "Use healing wand",
-        category = "General",
-        subcategory = "Advanced"
-    )
-    var useHeal: Boolean = false
 
 
     @Slider(

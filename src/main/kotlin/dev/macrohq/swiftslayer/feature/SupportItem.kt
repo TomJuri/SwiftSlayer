@@ -1,6 +1,5 @@
 package dev.macrohq.swiftslayer.feature
 
-import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.macro.MacroManager
 import dev.macrohq.swiftslayer.util.*
 import net.minecraft.util.StringUtils
@@ -17,7 +16,7 @@ class SupportItem {
 
   @SubscribeEvent
   fun onTick(event: ClientTickEvent) {
-    if(!SwiftSlayer.instance.config.useHeal) return
+    return
 
     when(state) {
       State.SHOULD_ENABLE -> {

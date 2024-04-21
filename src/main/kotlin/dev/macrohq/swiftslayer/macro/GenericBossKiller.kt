@@ -15,6 +15,7 @@ import net.minecraft.util.BlockPos
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
+import kotlin.math.abs
 
 private var timeout = Timer(0)
 
@@ -49,34 +50,31 @@ class GenericBossKiller {
     } else {
       ticksSinceLastMovement++
     }
-    //AutoRotation.getInstance().easeTo(Target(target!!), 700, LockType.INSTANT, true)
     val boundingBox: AxisAlignedBB = target!!.entityBoundingBox
 
     val randomPositionOnBoundingBox = target!!.position.add(0, (target!!.height*0.75).toInt(), 0)
+    if(mc.objectMouseOver.entityHit == null) {
     SwiftSlayer.instance.rotation.setYaw(RotationMath.getYaw(randomPositionOnBoundingBox), SwiftSlayer.instance.config.macroLockSmoothness.toInt(), true)
-    if(!player.isAirBorne && !target!!.isAirBorne) {
-    SwiftSlayer.instance.rotation.setPitch(RotationMath.getPitch(randomPositionOnBoundingBox), SwiftSlayer.instance.config.macroLockSmoothness.toInt(), true) }
+    SwiftSlayer.instance.rotation.setPitch(RotationMath.getPitch(randomPositionOnBoundingBox), SwiftSlayer.instance.config.macroLockSmoothness.toInt(), true)  }
 
     var y = target!!.getStandingOnCeil().y
     while (world.getBlockState(BlockPos(target!!.posX, y.toDouble(), target!!.posZ)).block == Blocks.air) {
       y--
     }
 
-    if(SwiftSlayer.instance.config.movementType == 0 && inCorner && BossKillerMovement.getInstance().getDistanceBetweenBlocks(player.position, chosenCorner) > 1) {
-      inCorner = false
-    }
-
-    if( SwiftSlayer.instance.config.movementType == 0 && blockPoss.isNotEmpty() && !inCorner && PathingUtil.isDone) {
-      PathingUtil.goto(blockPoss[0].add(0, -1, 0))
-      gameSettings.keyBindSneak.setPressed(true)
+    if(SwiftSlayer.instance.config.movementType == 0 && !inCorner && chosenCorner == null && PathingUtil.isDone) {
+     if(blockPoss.isEmpty()) return
       chosenCorner = blockPoss[0]
+      PathingUtil.goto(chosenCorner!!)
       inCorner = true
+      gameSettings.keyBindSneak.setPressed(true)
+
     }
 
-    if( SwiftSlayer.instance.config.movementType == 0 && inCorner) {
-      if(BossKillerMovement.getInstance().getDistanceBetweenBlocks(player.position, chosenCorner) > 2) {
-        PathingUtil.goto(chosenCorner)
-      }
+    if(inCorner && RotationMath.getXZDistance(chosenCorner!!, player.getStandingOnCeil()) > 1 && PathingUtil.isDone) {
+      PathingUtil.stop()
+      PathingUtil.goto(chosenCorner!!)
+      gameSettings.keyBindSneak.setPressed(true)
     }
 
 
@@ -130,8 +128,10 @@ class GenericBossKiller {
     // Melee
     if (config.bossKillerWeapon == 0) {
       player.inventory.currentItem = config.meleeWeaponSlot - 1
-      if(mc.thePlayer.getDistanceToEntity(target!!) < 4) {
+      if(mc.thePlayer.getDistanceToEntity(target!!) < 4 && player.canEntityBeSeen(target!!))  {
         KeyBindUtil.leftClick(8)
+      } else {
+        KeyBindUtil.stopClicking()
       }
 
 
@@ -161,7 +161,9 @@ class GenericBossKiller {
     for(block: BlockPos in BlockUtil.getBlocks(mc.thePlayer.position, 15, 5, 15)) {
       if(BlockUtil.isSingleCorner(block)) {
         if(BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer.instance), block, mc.thePlayer.position.add(0, -1, 0))) {
-          blockPoss.add(block)
+          if(abs(player.position.y - block.y) < 5) {
+            blockPoss.add(block)
+          }
         }
 
       }
@@ -194,12 +196,13 @@ class GenericBossKiller {
     gameSettings.keyBindSneak.setPressed(false)
     gameSettings.keyBindBack.setPressed(false)
     gameSettings.keyBindRight.setPressed(false)
+    chosenCorner = null
   }
 
   companion object {
     var blockPoss: ArrayList<BlockPos> = ArrayList<BlockPos>()
     var inCorner: Boolean = false
-    lateinit var chosenCorner: BlockPos
+     var chosenCorner: BlockPos? = null
     var ticksSinceLastMovement: Int = 0
     var tryUnstuck: Boolean = false
      lateinit var playerLastPos: BlockPos
