@@ -14,7 +14,6 @@ import dev.macrohq.swiftslayer.util.*
 import net.minecraft.util.BlockPos
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import org.lwjgl.opencl.APPLEContextLoggingUtil
 import java.awt.Color
 
 @Command("test", aliases = ["set"])
@@ -29,6 +28,7 @@ class TestCommand {
       Logger.note("Target Block is null.")
       return
     }
+
     val ss = SwiftSlayer.instance
     val currPos = ss.playerContext.playerPosition
     val ctx = CalculationContext(ss)

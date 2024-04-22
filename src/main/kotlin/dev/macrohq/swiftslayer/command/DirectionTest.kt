@@ -2,11 +2,19 @@ package dev.macrohq.swiftslayer.command
 
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
-import dev.macrohq.swiftslayer.feature.SupportItem
+import dev.macrohq.swiftslayer.util.EntityUtil
+import dev.macrohq.swiftslayer.util.RenderUtil
 import net.minecraft.client.Minecraft
+import net.minecraft.entity.EntityLiving
+import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.util.BlockPos
+import net.minecraft.util.Vec3
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import java.awt.Color
+import kotlin.math.abs
+import kotlin.math.atan2
+
 
 @Command("directionTest")
 class DirectionTest {
@@ -20,9 +28,25 @@ class DirectionTest {
 
         enabled = lock
 
-
     }
 
+    fun isInFOV(entity: EntityLiving): Boolean {
+        val playerLook: Vec3 = mc.thePlayer.lookVec
+        val relativePosition: Vec3 = entity.getPositionVector().subtract(mc.thePlayer.positionVector)
+
+        var angle = atan2(relativePosition.zCoord, relativePosition.xCoord) - atan2(playerLook.zCoord, playerLook.xCoord)
+
+        angle = abs(Math.toDegrees(angle))
+
+        // Adjust angle to be within 0-180 degrees
+        if (angle > 180) {
+            angle = 360 - angle
+        }
+
+
+        // Check if angle is within FOV
+        return (angle <= mc.gameSettings.fovSetting / 2 && mc.thePlayer.canEntityBeSeen(entity))
+    }
 
     @SubscribeEvent
     fun onWorldRender(event: RenderWorldLastEvent) {
@@ -65,9 +89,11 @@ class DirectionTest {
                 } */
            // }
 
-            val supportItem: SupportItem = SupportItem()
-            supportItem.healing()
-
+                for(entity: EntityLiving in EntityUtil.getMobs(EntityZombie::class.java)) {
+                    if(isInFOV(entity)) {
+                        RenderUtil.drawEntity(event, entity, Color.CYAN, true)
+                    }
+                }
         }
 
 

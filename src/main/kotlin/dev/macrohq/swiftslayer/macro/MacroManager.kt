@@ -14,7 +14,8 @@ class MacroManager {
 
   @SubscribeEvent
   fun onTick(event: ClientTickEvent) {
-    if (!enabled || mobKiller.getInstance().enabled) return
+    mc.gameSettings.fovSetting
+    if (!enabled || mobKiller.getInstance().enabled || genericBossKiller.enabled) return
     when (state) {
       State.ACTIVATE_QUEST -> {
         if (SlayerUtil.getActive() == null ||

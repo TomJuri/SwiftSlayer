@@ -17,7 +17,7 @@ class RevMobKiller: AbstractMobKiller() {
     override var currentTarget: EntityLiving? = null
     override val targetEntityClass: Class<out EntityLiving> = EntityZombie::class.java
     override var blacklist = mutableListOf<EntityLiving>()
-
+    var waitTimer: Timer = Timer(0)
     override var tickCounter: Int = 0
     override var ticksSinceLastClick: Int = 0
     override var ticksSinceLastMovement: Int = 0
@@ -73,10 +73,10 @@ class RevMobKiller: AbstractMobKiller() {
             State.GOTO_TARGET -> {
                 AutoRotation.getInstance().disable()
                 if(player.canEntityBeSeen(currentTarget!!)) {
-                    PathingUtil.goto(currentTarget!!.getStandingOnCeil(), currentTarget)
+                    PathingUtil.goto(if(currentTarget!!.onGround) currentTarget!!.getStandingOnCeil() else currentTarget!!.getStandingOnCeil().down(), currentTarget)
                 }
                 else {
-                    PathingUtil.goto(currentTarget!!.getStandingOnCeil())
+                    PathingUtil.goto(if(currentTarget!!.onGround) currentTarget!!.getStandingOnCeil() else currentTarget!!.getStandingOnCeil().down())
                 }
 
                 state = State.VERIFY_PATHFINDING
@@ -106,13 +106,13 @@ class RevMobKiller: AbstractMobKiller() {
 
              State.LOOK_AT_TARGET -> {
                 AutoRotation.getInstance().disable()
-                AutoRotation.getInstance().disable()
                 if(currentTarget != null) {
                     lookAtEntity(currentTarget!!)
                 } else {
                     Logger.info("failed to look at target!")
                     state = State.CHOOSE_TARGET
                 }
+                 waitTimer = Timer(150)
                 state = State.VERIFY_LOOKING
                 return
             }
@@ -127,6 +127,7 @@ class RevMobKiller: AbstractMobKiller() {
                     state = State.GOTO_TARGET
                     return
                 } else if (mc.objectMouseOver.entityHit == null && player.getDistanceToEntity(currentTarget) <= attackDistance()) {
+                    AutoRotation.getInstance().disable()
                     state = State.GOTO_TARGET
                     return
                 }

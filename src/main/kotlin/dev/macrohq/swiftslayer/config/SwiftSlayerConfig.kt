@@ -7,6 +7,7 @@ import cc.polyfrost.oneconfig.config.data.Mod
 import cc.polyfrost.oneconfig.config.data.ModType
 import cc.polyfrost.oneconfig.libs.universal.UKeyboard
 import dev.macrohq.swiftslayer.util.macroManager
+import kotlin.math.*
 
 
 class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftslayer.json") {
@@ -185,6 +186,40 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
 
     @HUD(name = "HUD", category = "HUD")
     var hud = SwiftSlayerHud()
+
+    fun calculateRotationTime(degrees: Double): Int {
+        val proportion = degrees / 180.0
+        return (getRandomRotationTime() * proportion).toInt()
+    }
+
+    fun calculateDegreeDistance(
+        initialYaw: Double,
+        initialPitch: Double,
+        targetYaw: Double,
+        targetPitch: Double
+    ): Double {
+        // Calculate angular difference in yaw
+        val deltaYaw = Math.toDegrees(
+            atan2(
+                sin(Math.toRadians(targetYaw - initialYaw)), cos(
+                    Math.toRadians(targetYaw - initialYaw)
+                )
+            )
+        )
+
+
+        val deltaPitch = Math.toDegrees(
+            atan2(
+                sin(Math.toRadians(targetPitch - initialPitch)), cos(
+                    Math.toRadians(targetPitch - initialPitch)
+                )
+            )
+        )
+
+        val degreeDistance = sqrt(deltaYaw.pow(2.0) + deltaPitch.pow(2.0))
+
+        return degreeDistance
+    }
 
     init {
         initialize()

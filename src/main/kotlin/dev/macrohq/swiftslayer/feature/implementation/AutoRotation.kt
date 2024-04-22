@@ -87,6 +87,7 @@ class AutoRotation: AbstractFeature() {
 
     lockType = LockType.NONE
     smoothLockTime = 0
+
   }
 
   override fun canEnable(): Boolean {
@@ -115,6 +116,11 @@ class AutoRotation: AbstractFeature() {
     }
   }
 
+  private fun getCallingMethodName(): String {
+    val stack = Thread.currentThread().stackTrace[3]
+
+    return stack.className + "." + stack.methodName
+  }
 }
 
 enum class LockType { NONE, INSTANT, SMOOTH }

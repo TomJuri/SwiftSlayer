@@ -51,15 +51,16 @@ class GenericBossKiller {
       ticksSinceLastMovement++
     }
     val boundingBox: AxisAlignedBB = target!!.entityBoundingBox
-
-    val randomPositionOnBoundingBox = target!!.position.add(0, (target!!.height*0.75).toInt(), 0)
-    if(mc.objectMouseOver.entityHit != target!! && waitTimer.isDone && !target!!.isAirBorne && timeout.isDone) {
-      AutoRotation.getInstance().disable()
-      AutoRotation.getInstance().easeTo(Target(randomPositionOnBoundingBox), SwiftSlayer.instance.config.getRandomRotationTime().toInt(), LockType.NONE, true)
+    var angle = Target(target!!)
+    var time = SwiftSlayer.instance.config.calculateRotationTime(SwiftSlayer.instance.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(angle.getAngle().yaw).toDouble(), angle.getAngle().pitch.toDouble()))
+    var randomPositionOnBoundingBox = target!!.position.add(0, (target!!.height*0.75).toInt(), 0)
+    if(mc.objectMouseOver.entityHit != target!! && waitTimer.isDone) {
+      AutoRotation.getInstance().easeTo(Target(randomPositionOnBoundingBox), time, LockType.NONE, true)
     } else if (mc.objectMouseOver.entityHit == target!!) {
-      waitTimer = Timer(90)
+      waitTimer = Timer(60)
     }
 
+    if(!player.onGround) AutoRotation.getInstance().disable()
     var y = target!!.getStandingOnCeil().y
     while (world.getBlockState(BlockPos(target!!.posX, y.toDouble(), target!!.posZ)).block == Blocks.air) {
       y--

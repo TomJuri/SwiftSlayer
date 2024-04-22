@@ -4,7 +4,9 @@ import dev.macrohq.swiftslayer.feature.helper.Target
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.monster.EntityCaveSpider
 import net.minecraft.init.Blocks
+import net.minecraft.util.Vec3
 import kotlin.math.abs
+import kotlin.math.atan2
 
 object EntityUtil {
 
@@ -26,12 +28,30 @@ object EntityUtil {
 
             healthCost += entity.health.toDouble() / 100
         returnedCost = yawCost + distanceCost + yChangeCost + healthCost
-        if(player.canEntityBeSeen(entity)) {
-            returnedCost /= 2
+
+        if(isInFOV(entity)) {
+            returnedCost /= 4
         }
         return returnedCost
     }
 
+    fun isInFOV(entity: EntityLiving): Boolean {
+        val playerLook: Vec3 = mc.thePlayer.lookVec
+        val relativePosition: Vec3 = entity.getPositionVector().subtract(mc.thePlayer.positionVector)
+
+        var angle = atan2(relativePosition.zCoord, relativePosition.xCoord) - atan2(playerLook.zCoord, playerLook.xCoord)
+
+        angle = abs(Math.toDegrees(angle))
+
+        // Adjust angle to be within 0-180 degrees
+        if (angle > 180) {
+            angle = 360 - angle
+        }
+
+
+        // Check if angle is within FOV
+        return (angle <= mc.gameSettings.fovSetting / 2 && mc.thePlayer.canEntityBeSeen(entity))
+    }
 
 
     fun getMobs(entityClass: Class<out EntityLiving>): List<EntityLiving> {
