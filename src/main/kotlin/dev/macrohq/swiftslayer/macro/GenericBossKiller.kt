@@ -57,7 +57,7 @@ class GenericBossKiller {
     if(mc.objectMouseOver.entityHit != target!! && waitTimer.isDone) {
       AutoRotation.getInstance().easeTo(Target(randomPositionOnBoundingBox), time, LockType.NONE, true)
     } else if (mc.objectMouseOver.entityHit == target!!) {
-      waitTimer = Timer(60)
+      waitTimer = Timer(40)
     }
 
     if(!player.onGround) AutoRotation.getInstance().disable()

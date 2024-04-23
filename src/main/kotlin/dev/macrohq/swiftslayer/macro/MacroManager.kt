@@ -1,6 +1,7 @@
 package dev.macrohq.swiftslayer.macro
 
 import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
+import dev.macrohq.swiftslayer.macro.bossKiller.RevBossKiller
 import dev.macrohq.swiftslayer.util.*
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
@@ -15,7 +16,7 @@ class MacroManager {
   @SubscribeEvent
   fun onTick(event: ClientTickEvent) {
     mc.gameSettings.fovSetting
-    if (!enabled || mobKiller.getInstance().enabled || genericBossKiller.enabled) return
+    if (!enabled || mobKiller.getInstance().enabled || RevBossKiller.getInstance().enabled) return
     when (state) {
       State.ACTIVATE_QUEST -> {
         if (SlayerUtil.getActive() == null ||
@@ -30,7 +31,7 @@ class MacroManager {
       State.KILL_MOBS -> mobKiller.getInstance().enable()
       State.KILL_BOSS -> {
         //if (config.slayer == 3) endermanBossKiller.enable()
-        /* else*/ genericBossKiller.enable()
+        /* else*/ RevBossKiller.getInstance().enable()
       }
     }
     state = State.entries[(state.ordinal + 1) % State.entries.size] // tf is this for?
@@ -57,7 +58,7 @@ class MacroManager {
     enabled = false
     autoBatphone.disable()
     mobKiller.getInstance().disable()
-    genericBossKiller.disable()
+    RevBossKiller.getInstance().disable()
     endermanBossKiller.disable()
     AutoRotation.getInstance().disable()
     KeyBindUtil.stopClicking()

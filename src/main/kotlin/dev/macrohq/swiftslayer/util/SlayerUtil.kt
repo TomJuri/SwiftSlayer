@@ -91,6 +91,7 @@ object SlayerUtil {
     }
   }
 
+
   fun getSlayerSlot(): Int {
     return InventoryUtil.getSlotInGUI(getSlayerName()!!)
   }

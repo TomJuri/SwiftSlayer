@@ -126,9 +126,8 @@ class RevMobKiller: AbstractMobKiller() {
                 } else if(mc.objectMouseOver.entityHit == null && player.getDistanceToEntity(currentTarget) > attackDistance()) {
                     state = State.GOTO_TARGET
                     return
-                } else if (mc.objectMouseOver.entityHit == null && player.getDistanceToEntity(currentTarget) <= attackDistance()) {
-                    AutoRotation.getInstance().disable()
-                    state = State.GOTO_TARGET
+                } else if (mc.objectMouseOver.entityHit == null && player.getDistanceToEntity(currentTarget) <= attackDistance() && !AutoRotation.getInstance().enabled) {
+                    lookAtEntity(currentTarget!!)
                     return
                 }
             }
