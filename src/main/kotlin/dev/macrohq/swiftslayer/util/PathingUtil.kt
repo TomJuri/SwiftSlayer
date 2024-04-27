@@ -14,7 +14,7 @@ object PathingUtil {
   var hasFailed = false
     private set
 
-  fun goto(pos: BlockPos, target: EntityLiving? = null) {
+  fun goto(pos: BlockPos, target: EntityLiving? = null, rotate: Boolean = true) {
     hasFailed = false
 
     val ctx = CalculationContext(instance)
@@ -30,9 +30,9 @@ object PathingUtil {
         Logger.log("Could not find path!!")
       } else {
         if(target != null) {
-          pathExecutor.enable(path!!.getSmoothedPath(), target)
+          pathExecutor.enable(path!!.getSmoothedPath(), target, rotate)
         } else {
-          pathExecutor.enable(path!!.getSmoothedPath())
+          pathExecutor.enable(path!!.getSmoothedPath(), null, rotate)
         }
       }
 

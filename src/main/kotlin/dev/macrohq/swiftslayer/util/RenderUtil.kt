@@ -23,6 +23,13 @@ object RenderUtil {
     var points = mutableListOf<Vec3>()
     var green = Color(0, 255, 0, 255)
 
+    fun clearAll() {
+        entites.clear()
+        lines.clear()
+        filledBox.clear()
+        points.clear()
+        markers.clear()
+    }
     fun onRenderWorldLast(event: RenderWorldLastEvent) {
         val chromaHSB = Color.getHSBColor((System.currentTimeMillis() / 10 % 2000).toFloat() / 2000, 1f, 1f)
         val chroma = Color(chromaHSB.red, chromaHSB.green, chromaHSB.blue, 120)

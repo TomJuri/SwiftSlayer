@@ -41,7 +41,7 @@ class MovementAscend(ss: SwiftSlayer, from: BlockPos, to: BlockPos) : Movement(s
 
       res.cost = when {
         destMaxY - sourceMaxY <= 0.5 -> ctx.cost.ONE_BLOCK_SPRINT_COST
-        destMaxY - sourceMaxY <= 1.125 -> ctx.cost.JUMP_ONE_BLOCK_COST
+        destMaxY - sourceMaxY <= 1.125 && ctx.pathConfig.allowJump -> ctx.cost.JUMP_ONE_BLOCK_COST
         else -> ctx.cost.INF_COST                                           // Should never trigger. Maybe throw exception in case it triggers?
       }
     }

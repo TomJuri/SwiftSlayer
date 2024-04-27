@@ -43,11 +43,10 @@ abstract class AbstractMobKiller:IMobKiller {
         when (config.mobKillerWeapon) {
 
             0 -> AutoRotation.getInstance().easeTo(angle, time, LockType.NONE, true)
-            1 -> AutoRotation.getInstance().easeTo(angle, time, LockType.NONE, true )
+            1 -> AutoRotation.getInstance().easeTo(angle, time, LockType.NONE, true, 200, easeFunction = EaseUtil::easeOutBack )
             2 -> {}
             3 -> AutoRotation.getInstance().easeTo(angle,time, LockType.NONE, true)
         }
-        Logger.info(time)
     }
 
     override fun angleForWeapon(entity: EntityLiving): Angle {

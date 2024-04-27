@@ -92,7 +92,7 @@ class MovementDescend(ss: SwiftSlayer, from: BlockPos, to: BlockPos) : Movement(
           effStartHeight = newY
           continue
         }
-        if (fellSoFar <= 20) {
+        if (fellSoFar <= ctx.pathConfig.maxFallHeight) {
           res.y = newY
           res.cost = costUpUntilThisBlock
           return

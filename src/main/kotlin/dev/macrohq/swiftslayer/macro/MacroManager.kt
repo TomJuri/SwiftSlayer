@@ -64,6 +64,7 @@ class MacroManager {
     KeyBindUtil.stopClicking()
     PathingUtil.stop()
     UnGrabUtil.grabMouse()
+    RenderUtil.clearAll()
   }
 
   enum class State {

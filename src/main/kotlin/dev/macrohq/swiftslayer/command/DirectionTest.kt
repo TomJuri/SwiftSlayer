@@ -2,16 +2,13 @@ package dev.macrohq.swiftslayer.command
 
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
-import dev.macrohq.swiftslayer.util.EntityUtil
-import dev.macrohq.swiftslayer.util.RenderUtil
+import dev.macrohq.swiftslayer.macro.bossKiller.RevBossKiller
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.EntityLiving
-import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.util.BlockPos
 import net.minecraft.util.Vec3
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import java.awt.Color
 import kotlin.math.abs
 import kotlin.math.atan2
 
@@ -24,7 +21,8 @@ class DirectionTest {
     @SubCommand
     private fun direction(lock: Boolean) {
         //gameSettings.keyBindSneak.setPressed(true)
-
+        if(lock) RevBossKiller.getInstance().enable()
+        if(!lock) RevBossKiller.getInstance().disable()
 
         enabled = lock
 
@@ -89,11 +87,7 @@ class DirectionTest {
                 } */
            // }
 
-                for(entity: EntityLiving in EntityUtil.getMobs(EntityZombie::class.java)) {
-                    if(isInFOV(entity)) {
-                        RenderUtil.drawEntity(event, entity, Color.CYAN, true)
-                    }
-                }
+
         }
 
 

@@ -1,6 +1,5 @@
 package dev.macrohq.swiftslayer.pathfinding
 
-import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.feature.helper.Angle
 import dev.macrohq.swiftslayer.feature.helper.Target
 import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
@@ -24,6 +23,7 @@ class PathExecutor {
   private var pathFailCounter = 0
   private var aotving = false
   private var goal: BlockPos? = null
+  private var rotate: Boolean = true
 
   @SubscribeEvent
   fun onTick(event: ClientTickEvent) {
@@ -49,13 +49,22 @@ class PathExecutor {
       next = path[path.indexOf(getStandingOn()!!) + 1]
 
       // RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f), 500)
-      if(goal != null ) {
-        var time = SwiftSlayer.instance.config.calculateRotationTime(SwiftSlayer.instance.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(Target(goal!!).getAngle().yaw).toDouble(), Target(goal!!).getAngle().pitch.toDouble()))
-        AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(goal!!.toVec3Top()).yaw, AngleUtil.getAngle(goal!!.toVec3Top()).pitch)), time, LockType.NONE, false)
-      } else {
-        var time = SwiftSlayer.instance.config.calculateRotationTime(SwiftSlayer.instance.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(Target(next!!).getAngle().yaw).toDouble(), Target(next!!).getAngle().pitch.toDouble()))
-        AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(next!!.toVec3Top()).yaw, 20f)), time, LockType.NONE, false)
+      if(rotate) {
+        if (goal != null) {
+          AutoRotation.getInstance().easeTo(
+            Target(
+              Angle(
+                AngleUtil.getAngle(goal!!.toVec3Top()).yaw,
+                AngleUtil.getAngle(goal!!.toVec3Top()).pitch
+              )
+            ), 400, LockType.NONE, false
+          )
+        } else {
+          
+          AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(next!!.toVec3Top()).yaw, 20f)), 400, LockType.NONE, false)
+        }
       }
+
       RenderUtil.markers.clear()
       RenderUtil.markers.add(next!!)
     }
@@ -86,7 +95,7 @@ class PathExecutor {
 
   }
 
-  fun enable(pathIn: List<BlockPos>, target: EntityLiving? = null) {
+  fun enable(pathIn: List<BlockPos>, target: EntityLiving? = null, rotate: Boolean = true) {
     if (pathIn.isEmpty()) return
     disable()
     path = pathIn
@@ -98,6 +107,8 @@ class PathExecutor {
     if(target != null) {
       goal = target.position
     }
+    this.rotate = rotate
+
   }
 
   fun disable() {
@@ -106,6 +117,7 @@ class PathExecutor {
     gameSettings.keyBindForward.setPressed(false)
     gameSettings.keyBindJump.setPressed(false)
     goal = null
+    rotate = true
   }
 
   private fun canAOTV(): Boolean {
