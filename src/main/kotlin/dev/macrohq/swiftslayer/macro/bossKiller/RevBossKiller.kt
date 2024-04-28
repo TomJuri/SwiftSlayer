@@ -4,7 +4,6 @@ import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.feature.helper.Angle
 import dev.macrohq.swiftslayer.feature.helper.Target
 import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
-import dev.macrohq.swiftslayer.pathfinder.movement.CalculationContext
 import dev.macrohq.swiftslayer.util.*
 import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
@@ -43,7 +42,7 @@ class RevBossKiller:AbstractBossKiller() {
                         if(chosenBlock == null || findNewBlock) {
                             findCorner@
                             for (block: BlockPos in BlockUtil.getBlocks(player.position, 15, 5, 15)) {
-                                if (BlockUtil.isSingleCorner(block) && BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer.instance), player.getStandingOnCeil(), block)) {
+                                if (BlockUtil.isSingleCorner(block) && BlockUtil.blocksBetweenValid(player.getStandingOnCeil(), block)) {
                                     chosenBlock = block
                                     break@findCorner
                                 }
@@ -58,7 +57,7 @@ class RevBossKiller:AbstractBossKiller() {
                             Logger.info("getting called")
                             findBlock@
                             for (block: BlockPos in BlockUtil.getBlocks(BlockPos(mc.thePlayer.posX + mc.thePlayer.getLookVec().xCoord * -25, mc.thePlayer.posY, mc.thePlayer.posZ + mc.thePlayer.getLookVec().zCoord * -25), 15, 5, 15)) {
-                                if (BlockUtil.getXZDistance(player.getStandingOnCeil(), block) > 6 && BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer.instance), player.getStandingOnCeil(), block) && !BlockUtil.isSingleCorner(block)) {
+                                if (BlockUtil.getXZDistance(player.getStandingOnCeil(), block) > 6 && BlockUtil.blocksBetweenValid( player.getStandingOnCeil(), block) && !BlockUtil.isSingleCorner(block)) {
                                     chosenBlock = block
                                     break@findBlock
                                 }
@@ -96,7 +95,7 @@ class RevBossKiller:AbstractBossKiller() {
 
                 //movement type = find corner
                 if(BlockUtil.getXZDistance(player.getStandingOnCeil(), chosenBlock!!) < 1 && SwiftSlayer.instance.config.movementType == 0) {
-                    if(BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer.instance), player.getStandingOnCeil(), chosenBlock!!)) {
+                    if(BlockUtil.blocksBetweenValid(player.getStandingOnCeil(), chosenBlock!!)) {
                         movState = MovementState.GOTO_BLOCK
                     } else {
                         findNewBlock = true

@@ -26,15 +26,16 @@ class Pathfinder {
     }
 
     fun calculatePath(start: BlockPos, goal: BlockPos): List<BlockPos>?  {
-        if(calculatePath(BlockNode(start), BlockNode(goal)) != null) {
-            return calculatePath(BlockNode(start), BlockNode(goal))!!
+        return if(calculatePath(BlockNode(start), BlockNode(goal)) != null) {
+            calculatePath(BlockNode(start), BlockNode(goal))!!
         } else {
-            return null
+            null
         }
     }
 
     fun calculatePath(start: BlockNode, goal: BlockNode): List<BlockPos>? {
-        if (BlockUtil.isNotWalkable(start.position) || BlockUtil.isNotWalkable(goal.position)) return null
+        //Logger.info(BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer.instance), start.position, goal.position)
+       // if(BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer.instance), start.position, goal.position)) return null
         openSet.clear()
         closedSet.clear()
 

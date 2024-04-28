@@ -3,17 +3,16 @@ package dev.macrohq.swiftslayer
 import cc.polyfrost.oneconfig.utils.commands.CommandManager
 import dev.macrohq.swiftslayer.codecPathfinder.Pathfinder.Pathfinder
 import dev.macrohq.swiftslayer.codecPathfinder.Pathfinder.dependencies.CodecPathexecutor
-import dev.macrohq.swiftslayer.command.*
+import dev.macrohq.swiftslayer.command.DirectionTest
+import dev.macrohq.swiftslayer.command.LockTest
+import dev.macrohq.swiftslayer.command.PathfindTest
+import dev.macrohq.swiftslayer.command.SwiftSlayerCommand
 import dev.macrohq.swiftslayer.config.SwiftSlayerConfig
-import dev.macrohq.swiftslayer.event.GameEventHandler
 import dev.macrohq.swiftslayer.feature.*
 import dev.macrohq.swiftslayer.macro.EndermanBossKiller
 import dev.macrohq.swiftslayer.macro.GenericBossKiller
 import dev.macrohq.swiftslayer.macro.MacroManager
 import dev.macrohq.swiftslayer.macro.Revenant
-import dev.macrohq.swiftslayer.pathfinder.helper.BlockStateAccessor
-import dev.macrohq.swiftslayer.pathfinder.helper.player.IPlayerContext
-import dev.macrohq.swiftslayer.pathfinder.helper.player.PlayerContext
 import dev.macrohq.swiftslayer.pathfinding.PathExecutor
 import dev.macrohq.swiftslayer.util.KeyBindUtil
 import dev.macrohq.swiftslayer.util.RenderUtil
@@ -90,13 +89,9 @@ class SwiftSlayer {
     CommandManager.register(DirectionTest())
 
 
-    val cmd = TestCommand()
-    CommandManager.register(cmd)
-    MinecraftForge.EVENT_BUS.register(cmd)
 
     // New Structure
     FeatureManager.getInstance().loadFeatures().forEach(MinecraftForge.EVENT_BUS::register)
-    MinecraftForge.EVENT_BUS.register(GameEventHandler(this))
 
   }
 
@@ -112,6 +107,5 @@ class SwiftSlayer {
 
   // Hellow
   val mc: Minecraft = Minecraft.getMinecraft()
-  val playerContext: IPlayerContext = PlayerContext(this, mc)
-  var bsa: BlockStateAccessor? = null
+
 }

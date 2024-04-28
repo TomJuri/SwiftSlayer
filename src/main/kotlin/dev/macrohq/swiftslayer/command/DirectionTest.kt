@@ -7,6 +7,9 @@ import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.codecPathfinder.Pathfinder.Pathfinder
 import dev.macrohq.swiftslayer.codecPathfinder.Pathfinder.dependencies.BlockNode
 import dev.macrohq.swiftslayer.feature.SupportItem
+import dev.macrohq.swiftslayer.util.BlockUtil
+import dev.macrohq.swiftslayer.util.Logger
+import dev.macrohq.swiftslayer.util.player
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
@@ -49,9 +52,10 @@ class DirectionTest {
 
     @Main
     private fun path(x: Int, y: Int, z: Int) {
+        Logger.info(BlockUtil.isNotWalkable(player.position))
         Thread {
             var pathFinder: Pathfinder = SwiftSlayer.instance.pathFinder
-            var path = pathFinder.calculatePath(BlockNode((Minecraft.getMinecraft().thePlayer.position)), BlockNode(BlockPos(x, y, z)))
+            var path = pathFinder.calculatePath(BlockNode((Minecraft.getMinecraft().thePlayer.position.add(0.0, 0.5, 0.0))), BlockNode(BlockPos(x, y, z)))
 
             if (path != null && path.size > 1) {
                 SwiftSlayer.instance.pathExecutor.enable(path)

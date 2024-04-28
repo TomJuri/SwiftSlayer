@@ -17,7 +17,7 @@ class BlockNode(var position: BlockPos) {
     }
 
     fun updateValues(goal: BlockNode): BlockNode {
-        val parent = this.parent
+        var parent = this.parent
         this.gCost = if (parent != null) parent.gCost + 1 else 0.0
         this.hCost = BlockUtil.calculateDistance(position, goal.position)
 

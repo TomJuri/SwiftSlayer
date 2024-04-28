@@ -1,5 +1,6 @@
 package dev.macrohq.swiftslayer.pathfinding
 
+import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.feature.helper.Angle
 import dev.macrohq.swiftslayer.feature.helper.Target
 import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
@@ -51,16 +52,32 @@ class PathExecutor {
       // RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f), 500)
       if(rotate) {
         if (goal != null) {
+          var time = SwiftSlayer.instance.config.calculateRotationTime(
+            SwiftSlayer.instance.config.calculateDegreeDistance(
+              AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(),
+              mc.thePlayer.rotationPitch.toDouble(),
+              AngleUtil.yawTo360(Target(goal!!).getAngle().yaw).toDouble(),
+              Target(goal!!).getAngle().pitch.toDouble()
+            )
+          )
           AutoRotation.getInstance().easeTo(
             Target(
               Angle(
                 AngleUtil.getAngle(goal!!.toVec3Top()).yaw,
                 AngleUtil.getAngle(goal!!.toVec3Top()).pitch
               )
-            ), 400, LockType.NONE, false
+            ), time, LockType.NONE, false
           )
         } else {
-          AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(next!!.toVec3Top()).yaw, 20f)), 400, LockType.NONE, false)
+          var time = SwiftSlayer.instance.config.calculateRotationTime(
+            SwiftSlayer.instance.config.calculateDegreeDistance(
+              AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(),
+              mc.thePlayer.rotationPitch.toDouble(),
+              AngleUtil.yawTo360(Target(next!!).getAngle().yaw).toDouble(),
+              Target(next!!).getAngle().pitch.toDouble()
+            )
+          )
+          AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(next!!.toVec3Top()).yaw, 20f)), time, LockType.NONE, false)
         }
       }
 
