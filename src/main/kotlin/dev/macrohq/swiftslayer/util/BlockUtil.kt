@@ -1,16 +1,15 @@
 package dev.macrohq.swiftslayer.util
 
 import dev.macrohq.swiftslayer.SwiftSlayer
+import dev.macrohq.swiftslayer.codecPathfinder.Pathfinder.dependencies.BlockNode
 import dev.macrohq.swiftslayer.pathfinder.movement.CalculationContext
 import dev.macrohq.swiftslayer.pathfinder.movement.MovementHelper
 import net.minecraft.block.BlockStairs
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.IBlockState
+import net.minecraft.client.Minecraft
 import net.minecraft.entity.EntityLiving
-import net.minecraft.util.BlockPos
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.MathHelper
-import net.minecraft.util.Vec3
+import net.minecraft.util.*
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -28,6 +27,55 @@ object BlockUtil {
         return material.isSolid && !material.isLiquid && materialAbove == Material.air
     }
 
+    fun calculateDistance(one: BlockPos, two: BlockPos?): Double {
+        return sqrt(one.distanceSq(two))
+    }
+
+    fun toVec3(pos: BlockPos): Vec3 {
+        return Vec3(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble())
+    }
+
+    fun isNotWalkable(pos: BlockPos): Boolean {
+        val node1 = BlockNode(pos.add(0, -1, 0))
+        val node2 = BlockNode(pos)
+        val node3 = BlockNode(pos.add(0, 1, 0))
+
+        val node1BS = Minecraft.getMinecraft().theWorld.getBlockState(node1.position)
+        val node2BS = Minecraft.getMinecraft().theWorld.getBlockState(node2.position)
+        val node3BS = Minecraft.getMinecraft().theWorld.getBlockState(node3.position)
+
+        var node1BB: AxisAlignedBB? = null
+        var node2BB: AxisAlignedBB? = null
+        var node3BB: AxisAlignedBB? = null
+
+        try {
+            node1BB = node1BS.block.getCollisionBoundingBox(Minecraft.getMinecraft().theWorld, node1.position, node1BS)
+        } catch (ignored: Exception) {
+        }
+        try {
+            node2BB = node2BS.block.getCollisionBoundingBox(Minecraft.getMinecraft().theWorld, node1.position, node2BS)
+        } catch (ignored: Exception) {
+        }
+        try {
+            node3BB = node3BS.block.getCollisionBoundingBox(Minecraft.getMinecraft().theWorld, node1.position, node3BS)
+        } catch (ignored: Exception) {
+        }
+
+        var allBB = 0.0
+        if (node1BB != null) {
+            allBB += (node1BB.maxY - node1BB.minY)
+        }
+
+        if (node2BB != null) {
+            allBB += (node2BB.maxY - node2BB.minY)
+        }
+
+        if (node3BB != null) {
+            allBB += (node3BB.maxY - node3BB.minY)
+        }
+
+        return allBB < 0.2 || allBB > 1
+    }
 
 
     fun getBlocksBetweenCorners(topLeft: BlockPos, bottomRight: BlockPos): List<BlockPos> {

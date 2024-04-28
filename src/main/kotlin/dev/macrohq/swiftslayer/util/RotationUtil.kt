@@ -1,7 +1,12 @@
 package dev.macrohq.swiftslayer.util
 
+import net.minecraft.client.Minecraft
 import net.minecraft.entity.Entity
+import net.minecraft.util.BlockPos
+import kotlin.math.atan2
 import kotlin.math.pow
+import kotlin.math.sqrt
+
 
 object RotationUtil {
     private var startRotation = Rotation(0f, 0f)
@@ -71,6 +76,36 @@ object RotationUtil {
         done = true
         lock = null
     }
+    fun normalize(value: Float): Float {
+        var value = value
+        while (180 <= value) {
+            value -= 360f
+        }
 
+        while (-180 > value) {
+            value += 360f
+        }
+
+        return value
+    }
+
+    fun getYaw(blockPos: BlockPos): Float {
+        val deltaX = blockPos.x + 0.5 - Minecraft.getMinecraft().thePlayer.posX
+        val deltaZ = blockPos.z + 0.5 - Minecraft.getMinecraft().thePlayer.posZ
+        val yawToBlock = atan2(-deltaX, deltaZ)
+        val yaw = Math.toDegrees(yawToBlock)
+        return yaw.toFloat()
+    }
+
+    fun getPitch(blockPos: BlockPos): Float {
+        val deltaX = blockPos.x + 0.5 - Minecraft.getMinecraft().thePlayer.posX
+        val deltaY =
+            blockPos.y + 0.5 - Minecraft.getMinecraft().thePlayer.posY - Minecraft.getMinecraft().thePlayer.getEyeHeight()
+        val deltaZ = blockPos.z + 0.5 - Minecraft.getMinecraft().thePlayer.posZ
+        val distanceXZ = sqrt(deltaX * deltaX + deltaZ * deltaZ)
+        val pitchToBlock = -atan2(deltaY, distanceXZ)
+        val pitch = Math.toDegrees(pitchToBlock)
+        return pitch.toFloat()
+    }
     data class Rotation(var yaw: Float, var pitch: Float)
 }

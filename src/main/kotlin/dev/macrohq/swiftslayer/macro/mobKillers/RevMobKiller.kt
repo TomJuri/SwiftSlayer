@@ -127,9 +127,8 @@ class RevMobKiller: AbstractMobKiller() {
                 }
 
                 if(PathingUtil.isDone && player.getDistanceToEntity(currentTarget) > attackDistance()) {
-                    Logger.info("Failed pathfinding :( Ignoring this entity")
-                    blacklist.add(currentTarget!!)
-                    state = State.CHOOSE_TARGET
+                    Logger.info("Failed pathfinding :( trying again")
+                    state = State.GOTO_TARGET
                 }
                 return
             }

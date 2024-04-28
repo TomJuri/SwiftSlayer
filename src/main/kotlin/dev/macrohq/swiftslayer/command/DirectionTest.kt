@@ -1,7 +1,11 @@
 package dev.macrohq.swiftslayer.command
 
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command
+import cc.polyfrost.oneconfig.utils.commands.annotations.Main
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
+import dev.macrohq.swiftslayer.SwiftSlayer
+import dev.macrohq.swiftslayer.codecPathfinder.Pathfinder.Pathfinder
+import dev.macrohq.swiftslayer.codecPathfinder.Pathfinder.dependencies.BlockNode
 import dev.macrohq.swiftslayer.feature.SupportItem
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.EntityLiving
@@ -43,10 +47,21 @@ class DirectionTest {
         return (angle <= mc.gameSettings.fovSetting / 2 && mc.thePlayer.canEntityBeSeen(entity))
     }
 
+    @Main
+    private fun path(x: Int, y: Int, z: Int) {
+        Thread {
+            var pathFinder: Pathfinder = SwiftSlayer.instance.pathFinder
+            var path = pathFinder.calculatePath(BlockNode((Minecraft.getMinecraft().thePlayer.position)), BlockNode(BlockPos(x, y, z)))
+
+            if (path != null && path.size > 1) {
+                SwiftSlayer.instance.pathExecutor.enable(path)
+            }
+        }.start()
+    }
+
     @SubscribeEvent
     fun onWorldRender(event: RenderWorldLastEvent) {
         if(enabled) {
-
             // RenderUtil.drawBox(event, BlockUtil.getCornerBlocks(SlayerUtil.getFakeBoss()!!.position, 2, 1, 2).first, Color.GREEN, true)
             //    RenderUtil.drawBox(event, BlockUtil.getCornerBlocks(SlayerUtil.getFakeBoss()!!.position, 2, 1, 2).second, Color.GREEN, true)
 

@@ -1,6 +1,8 @@
 package dev.macrohq.swiftslayer
 
 import cc.polyfrost.oneconfig.utils.commands.CommandManager
+import dev.macrohq.swiftslayer.codecPathfinder.Pathfinder.Pathfinder
+import dev.macrohq.swiftslayer.codecPathfinder.Pathfinder.dependencies.CodecPathexecutor
 import dev.macrohq.swiftslayer.command.*
 import dev.macrohq.swiftslayer.config.SwiftSlayerConfig
 import dev.macrohq.swiftslayer.event.GameEventHandler
@@ -23,6 +25,7 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+
 
 /* fun main() {
     val keyPairGenerator = KeyPairGenerator.getInstance("RSA")
@@ -55,6 +58,8 @@ class SwiftSlayer {
   lateinit var tracker: Tracker private set
   private lateinit var lockTest: LockTest
   var removeLater: BlockPos? = null
+  lateinit var pathFinder: Pathfinder
+  lateinit var  pathExec: CodecPathexecutor
 
   @Mod.EventHandler
   fun init(event: FMLInitializationEvent) {
@@ -67,6 +72,8 @@ class SwiftSlayer {
     revenant = Revenant()
     tracker = Tracker()
     lockTest = LockTest()
+    pathFinder = Pathfinder()
+    pathExec = CodecPathexecutor()
     MinecraftForge.EVENT_BUS.register(this)
     MinecraftForge.EVENT_BUS.register(pathExecutor)
     MinecraftForge.EVENT_BUS.register(autoBatphone)
@@ -81,6 +88,7 @@ class SwiftSlayer {
     CommandManager.register(PathfindTest())
     CommandManager.register(SwiftSlayerCommand())
     CommandManager.register(DirectionTest())
+
 
     val cmd = TestCommand()
     CommandManager.register(cmd)

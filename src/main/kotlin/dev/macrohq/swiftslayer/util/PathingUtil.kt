@@ -22,6 +22,7 @@ object PathingUtil {
     val start = instance.playerContext.playerPosition
     val pathfinder = AStarPathFinder(start.x, start.y, start.z, goal, ctx)
     var path: Path? = null
+
     runAsync {
       RenderUtil.lines.clear()
       path = pathfinder.calculatePath()
