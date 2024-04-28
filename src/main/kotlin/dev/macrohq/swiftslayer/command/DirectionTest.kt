@@ -2,7 +2,7 @@ package dev.macrohq.swiftslayer.command
 
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
-import dev.macrohq.swiftslayer.macro.bossKiller.RevBossKiller
+import dev.macrohq.swiftslayer.feature.SupportItem
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
@@ -21,10 +21,7 @@ class DirectionTest {
     @SubCommand
     private fun direction(lock: Boolean) {
         //gameSettings.keyBindSneak.setPressed(true)
-        if(lock) RevBossKiller.getInstance().enable()
-        if(!lock) RevBossKiller.getInstance().disable()
-
-        enabled = lock
+        SupportItem.enable = lock
 
     }
 

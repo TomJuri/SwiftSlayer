@@ -4,7 +4,6 @@ import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.feature.helper.Angle
 import dev.macrohq.swiftslayer.feature.helper.Target
 import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
-import dev.macrohq.swiftslayer.feature.implementation.BossKillerMovement
 import dev.macrohq.swiftslayer.feature.implementation.LockType
 import dev.macrohq.swiftslayer.pathfinder.movement.CalculationContext
 import dev.macrohq.swiftslayer.util.*
@@ -45,7 +44,7 @@ class GenericBossKiller {
       tickCounter++
     }
     println(ticksSinceLastMovement)
-    if(BossKillerMovement.getInstance().getDistanceBetweenBlocks(playerLastPos, mc.thePlayer.position) > 0.8) {
+    if(BlockUtil.getXZDistance(playerLastPos, mc.thePlayer.position) > 0.8) {
       ticksSinceLastMovement = 0
     } else {
       ticksSinceLastMovement++

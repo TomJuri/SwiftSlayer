@@ -2,6 +2,7 @@ package dev.macrohq.swiftslayer.macro.bossKiller
 
 import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.feature.helper.Angle
+import dev.macrohq.swiftslayer.feature.helper.Target
 import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
 import dev.macrohq.swiftslayer.pathfinder.movement.CalculationContext
 import dev.macrohq.swiftslayer.util.*
@@ -116,6 +117,7 @@ class RevBossKiller:AbstractBossKiller() {
 
         if (!mc.gameSettings.keyBindSneak.isPressed) mc.gameSettings.keyBindSneak.setPressed(true)
         //rotation (and clicking)
+        Logger.info(rotState.name)
         when (rotState) {
             RotationState.LOOK_AT_TARGET -> {
                 if(!rotTimer.isDone && AutoRotation.getInstance().enabled) return
@@ -142,7 +144,9 @@ class RevBossKiller:AbstractBossKiller() {
                 }
 
                 if(mc.objectMouseOver.entityHit == currentTarget && abs(player.rotationPitch - angleForWeapon(currentTarget!!).pitch) > 11 && !AutoRotation.getInstance().enabled && player.onGround) {
-                    rotState = RotationState.LOOK_AT_TARGET
+                    lookAtAnle(Target(Angle(AngleUtil.yawTo360(player.rotationYaw), angleForWeapon(currentTarget!!).pitch)))
+
+                    Logger.info("huzzah")
                 }
             }
         }

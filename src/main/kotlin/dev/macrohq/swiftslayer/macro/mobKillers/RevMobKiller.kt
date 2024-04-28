@@ -7,7 +7,6 @@ import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.util.BlockPos
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.event.entity.living.LivingAttackEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
@@ -66,7 +65,7 @@ class RevMobKiller: AbstractMobKiller() {
         if(initialPos != null) {
             if(BlockUtil.getXZDistance(initialPos!!, currentTarget!!.getStandingOnCeil()) > 1.5) {
                 PathingUtil.stop()
-                state = State.GOTO_TARGET
+                state = State.CHOOSE_TARGET
             }
         }
         if(currentTarget != null) {
@@ -183,22 +182,7 @@ class RevMobKiller: AbstractMobKiller() {
         }
     }
 
-    @SubscribeEvent
-    fun onHit(event: LivingAttackEvent) {
-        if(event.source.entity == null) return
-        if((event.source.entity as EntityLiving).maxHealth <= 250) return
-        if(currentTarget != null) {
-            if(event.source.entity == currentTarget) {
-                return
-            }
-        }
 
-        if(player.getDistanceToEntity(event.source.entity) < attackDistance()) {
-            currentTarget = event.source.entity as EntityLiving
-            state = State.GOTO_TARGET
-            return
-        }
-    }
 
 
     override fun enable() {

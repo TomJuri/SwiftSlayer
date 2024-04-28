@@ -1,6 +1,7 @@
 package dev.macrohq.swiftslayer.feature
 
 import dev.macrohq.swiftslayer.macro.MacroManager
+import dev.macrohq.swiftslayer.macro.bossKiller.RevBossKiller
 import dev.macrohq.swiftslayer.util.*
 import net.minecraft.util.StringUtils
 import net.minecraftforge.client.event.ClientChatReceivedEvent
@@ -12,24 +13,52 @@ class SupportItem {
   private var maxHealth = -1
   private var health = -1
   private var  state: State = State.SHOULD_ENABLE
+  private var nextSlot: Int = -1
+  private var previousSlot: Int = -1
+  private var wait: Timer = Timer(150)
+
 
 
   @SubscribeEvent
   fun onTick(event: ClientTickEvent) {
-    return
+    if(!macroManager.enabled) return
+
 
     when(state) {
       State.SHOULD_ENABLE -> {
-        if(1 < config.useHealingAt / 100f) {
+        if(!wait.isDone) return
+        if(health.toFloat() / maxHealth.toFloat() < config.useHealingAt / 100f || enable) {
+          if(mobKiller.getInstance().enabled) mobKiller.getInstance().pause()
+          if(RevBossKiller.getInstance().enabled) RevBossKiller.getInstance().pause()
           state = State.SWITCH_ITEM
+          Logger.info("enabling")
+          previousSlot = player.inventory.currentItem
+          nextSlot = InventoryUtil.getHotbarSlotForItem("Wand of ")
+          wait = Timer(150)
+
         }
       }
 
       State.SWITCH_ITEM -> {
-
+        if(!wait.isDone) return
+      player.inventory.currentItem = nextSlot
+      state = State.CLICK_ITEM
+        wait = Timer(100)
       }
       State.CLICK_ITEM -> {
+        if(!wait.isDone) return
+        KeyBindUtil.rightClick()
+        state = State.SWITCH_BACK
+        wait = Timer(150)
+      }
 
+      State.SWITCH_BACK -> {
+        if(!wait.isDone) return
+        player.inventory.currentItem = previousSlot
+        state = State.SHOULD_ENABLE
+        wait = Timer(1500)
+        if(mobKiller.getInstance().paused) mobKiller.getInstance().paused = false
+        if(RevBossKiller.getInstance().paused) RevBossKiller.getInstance().paused = false
       }
     }
 
@@ -100,13 +129,13 @@ class SupportItem {
   }
 
   private enum class State {
-    SHOULD_ENABLE, SWITCH_ITEM, CLICK_ITEM
+    SHOULD_ENABLE, SWITCH_ITEM, CLICK_ITEM, SWITCH_BACK
   }
   companion object {
     private var healingTimer = Timer(0)
     private var tubaTimer = Timer(0)
     private var orbTimer = Timer(0)
-
+    var enable: Boolean = false
   }
 
 }

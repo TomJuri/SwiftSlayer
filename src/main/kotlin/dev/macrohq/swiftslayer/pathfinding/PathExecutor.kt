@@ -60,7 +60,6 @@ class PathExecutor {
             ), 400, LockType.NONE, false
           )
         } else {
-          
           AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(next!!.toVec3Top()).yaw, 20f)), 400, LockType.NONE, false)
         }
       }
