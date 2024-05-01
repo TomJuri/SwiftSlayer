@@ -86,19 +86,21 @@ class RevMobKiller: AbstractMobKiller() {
             }
 
             State.GOTO_TARGET -> {
-                PathingUtil.stop()
-                AutoRotation.getInstance().disable()
-                if(player.canEntityBeSeen(currentTarget!!)) {
-                    PathingUtil.goto(currentTarget!!.getStandingOnCeil(), currentTarget)
-                    looking = true
-                }
-                else {
-                    PathingUtil.goto(currentTarget!!.getStandingOnCeil())
-                    looking = false
+                Thread {
+                    PathingUtil.stop()
+                    AutoRotation.getInstance().disable()
+                    if (player.canEntityBeSeen(currentTarget!!)) {
+                        PathingUtil.goto(currentTarget!!.getStandingOnCeil(), currentTarget)
+                        looking = true
+                    } else {
+                        PathingUtil.goto(currentTarget!!.getStandingOnCeil())
+                        looking = false
+                    }
 
-                }
+                    state = State.VERIFY_PATHFINDING
+                }.start()
 
-                state = State.VERIFY_PATHFINDING
+                state = State.SUSPENDED
                 return
             }
 
@@ -121,6 +123,11 @@ class RevMobKiller: AbstractMobKiller() {
                     state = State.CHOOSE_TARGET
                 }
                 return
+            }
+
+            // TODO: Add timeout
+            State.SUSPENDED -> {
+
             }
 
              State.LOOK_AT_TARGET -> {
@@ -194,7 +201,7 @@ class RevMobKiller: AbstractMobKiller() {
     }
 
     private enum class State {
-        CHOOSE_TARGET, GOTO_TARGET, VERIFY_PATHFINDING, LOOK_AT_TARGET, VERIFY_LOOKING, KILL_TARGET,
+        CHOOSE_TARGET, GOTO_TARGET, VERIFY_PATHFINDING, LOOK_AT_TARGET, VERIFY_LOOKING, KILL_TARGET, SUSPENDED
     }
 
     companion object{
