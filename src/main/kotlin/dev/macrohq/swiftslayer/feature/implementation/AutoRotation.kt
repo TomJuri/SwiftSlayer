@@ -9,6 +9,7 @@ import dev.macrohq.swiftslayer.util.Logger
 import dev.macrohq.swiftslayer.util.player
 import me.kbrewster.eventbus.Subscribe
 import net.minecraftforge.client.event.RenderGameOverlayEvent
+import net.minecraftforge.client.event.RenderWorldLastEvent
 
 object AutoRotation: AbstractFeature() {
   override val featureName: String = "AutoRotation"
@@ -88,8 +89,7 @@ object AutoRotation: AbstractFeature() {
   }
 
   @Subscribe
-  fun onRenderOverlay(event: RenderGameOverlayEvent) {
-    Logger.info("rotation onRender")
+  fun onRenderOverlay(event: RenderWorldLastEvent) {
     if(!this.canEnable()) return
 
     if (this.endTime >= System.currentTimeMillis()) {

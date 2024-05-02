@@ -86,7 +86,7 @@ object SwiftSlayer {
 
 
     // New Structure
-    FeatureManager.getInstance().loadFeatures().forEach(SwiftEventBus::register)
+    //FeatureManager.getInstance().loadFeatures().forEach(SwiftEventBus::register)
     SwiftEventBus.register(AutoRotation)
     SwiftEventBus.register(GameEventHandler(this))
   }
