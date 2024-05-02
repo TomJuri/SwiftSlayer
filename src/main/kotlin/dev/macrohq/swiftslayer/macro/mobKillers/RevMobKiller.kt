@@ -1,10 +1,13 @@
 package dev.macrohq.swiftslayer.macro.mobKillers
 
+import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
 import dev.macrohq.swiftslayer.macro.AbstractMobKiller
 import dev.macrohq.swiftslayer.util.*
+import dev.macrohq.swiftslayer.util.InventoryUtil.getHotbarSlotForItem
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.monster.EntityZombie
+import net.minecraft.util.BlockPos
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
@@ -22,16 +25,25 @@ class RevMobKiller: AbstractMobKiller() {
     override var tickCounter: Int = 0
     override var ticksSinceLastClick: Int = 0
     override var ticksSinceLastMovement: Int = 0
+    var lastTargetPos: BlockPos? = null
 
     private var state: State = State.CHOOSE_TARGET
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
         if (!enabled) return
+        if(SwiftSlayer.instance.autoBatphone.enabled) return
+
         InventoryUtil.closeGUI()
         if (SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_ALIVE) {
             disable()
             return
         }
+        if(SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_DEAD && getHotbarSlotForItem("Maddox Batphone") != -1) {
+            SwiftSlayer.instance.autoBatphone.enable()
+            return
+        }
+
+
 
         if(tickCounter == 20) {
             tickCounter = 1
@@ -72,35 +84,38 @@ class RevMobKiller: AbstractMobKiller() {
             }
         }
 
-        Logger.log(state.name)
+       // Logger.log(state.name)
         when (state) {
             State.CHOOSE_TARGET -> {
                 RenderUtil.entites.clear()
                 val targetEntityList = EntityUtil.getMobs(targetEntityClass).toMutableList()
                 targetEntityList.removeAll(blacklist)
                 if(targetEntityList.isEmpty()) return
+                if(currentTarget != null) lastTargetPos = currentTarget!!.position
                 currentTarget = targetEntityList.first()
+                if(currentTarget!!.totalArmorValue == 11) {
+                    Logger.log("golden zombie! ignored")
+                    blacklist.add(currentTarget!!)
+                    return
+                }
                 RenderUtil.entites.add(currentTarget!!)
                 state = State.GOTO_TARGET
                 return
             }
 
             State.GOTO_TARGET -> {
-                Thread {
-                    PathingUtil.stop()
-                    AutoRotation.getInstance().disable()
-                    if (player.canEntityBeSeen(currentTarget!!)) {
-                        PathingUtil.goto(currentTarget!!.getStandingOnCeil(), currentTarget)
-                        looking = true
-                    } else {
-                        PathingUtil.goto(currentTarget!!.getStandingOnCeil())
-                        looking = false
-                    }
+                AutoRotation.getInstance().disable()
+                if(player.canEntityBeSeen(currentTarget!!)) {
+                    PathingUtil.goto(currentTarget!!.getStandingOnCeil(), currentTarget, true)
+                    looking = true
+                }
+                else {
+                    PathingUtil.goto(currentTarget!!.getStandingOnCeil(), null, true)
+                    looking = false
 
-                    state = State.VERIFY_PATHFINDING
-                }.start()
+                }
 
-                state = State.SUSPENDED
+                state = State.VERIFY_PATHFINDING
                 return
             }
 
@@ -115,6 +130,7 @@ class RevMobKiller: AbstractMobKiller() {
                 if (player.getDistanceToEntity(currentTarget) < attackDistance()) {
                     stopWalking()
                     state = State.LOOK_AT_TARGET
+                    return
                 }
 
                 if(PathingUtil.isDone && player.getDistanceToEntity(currentTarget) > attackDistance()) {
@@ -123,11 +139,6 @@ class RevMobKiller: AbstractMobKiller() {
                     state = State.CHOOSE_TARGET
                 }
                 return
-            }
-
-            // TODO: Add timeout
-            State.SUSPENDED -> {
-
             }
 
              State.LOOK_AT_TARGET -> {
@@ -145,19 +156,20 @@ class RevMobKiller: AbstractMobKiller() {
             }
 
             State.VERIFY_LOOKING -> {
-                if(AutoRotation.getInstance().enabled) return
+              //  if(AutoRotation.getInstance().enabled) return
                 if(mc.objectMouseOver.entityHit != null && player.getDistanceToEntity(currentTarget) <= attackDistance() && player.canEntityBeSeen(currentTarget)) {
                     holdWeapon()
                     state = State.KILL_TARGET
                     return
                 } else if(mc.objectMouseOver.entityHit == null && player.getDistanceToEntity(currentTarget) > attackDistance()) {
+                    if(!currentTarget!!.onGround) return
+                    
                     state = State.GOTO_TARGET
                     return
                 }
 
                 if(!AutoRotation.getInstance().enabled && mc.objectMouseOver.entityHit != currentTarget) {
                     state = State.LOOK_AT_TARGET
-                    Logger.info("third")
                     return
                 }
             }
@@ -201,8 +213,9 @@ class RevMobKiller: AbstractMobKiller() {
     }
 
     private enum class State {
-        CHOOSE_TARGET, GOTO_TARGET, VERIFY_PATHFINDING, LOOK_AT_TARGET, VERIFY_LOOKING, KILL_TARGET, SUSPENDED
+        CHOOSE_TARGET, GOTO_TARGET, VERIFY_PATHFINDING, LOOK_AT_TARGET, VERIFY_LOOKING, KILL_TARGET,
     }
+
 
     companion object{
         private var instance: RevMobKiller? = null
@@ -212,5 +225,9 @@ class RevMobKiller: AbstractMobKiller() {
             }
             return instance!!
         }
+
+
     }
+
+
 }
