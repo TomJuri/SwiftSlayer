@@ -30,6 +30,8 @@ class PathExecutor {
   fun onTick(event: ClientTickEvent) {
     if (!enabled) return
 
+
+
     if (!isOnPath()) {
       if (pathFailCounter >= 100) {
         Logger.error("Path execution failed, retrying.")
@@ -48,35 +50,13 @@ class PathExecutor {
 
     if (isOnPath()) {
       next = path[path.indexOf(getStandingOn()!!) + 1]
-
       // RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f), 500)
       if(rotate) {
         if (goal != null) {
-          var time = SwiftSlayer.instance.config.calculateRotationTime(
-            SwiftSlayer.instance.config.calculateDegreeDistance(
-              AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(),
-              mc.thePlayer.rotationPitch.toDouble(),
-              AngleUtil.yawTo360(Target(goal!!).getAngle().yaw).toDouble(),
-              Target(goal!!).getAngle().pitch.toDouble()
-            )
-          )
-          AutoRotation.getInstance().easeTo(
-            Target(
-              Angle(
-                AngleUtil.getAngle(goal!!.toVec3Top()).yaw,
-                AngleUtil.getAngle(goal!!.toVec3Top()).pitch
-              )
-            ), time, LockType.NONE, false
-          )
+          val time = SwiftSlayer.instance.config.calculateRotationTime(SwiftSlayer.instance.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(Target(goal!!).getAngle().yaw).toDouble(), Target(goal!!).getAngle().pitch.toDouble()))
+          AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(goal!!.toVec3Top()).yaw, AngleUtil.getAngle(goal!!.toVec3Top()).pitch)), time, LockType.NONE, false)
         } else {
-          var time = SwiftSlayer.instance.config.calculateRotationTime(
-            SwiftSlayer.instance.config.calculateDegreeDistance(
-              AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(),
-              mc.thePlayer.rotationPitch.toDouble(),
-              AngleUtil.yawTo360(Target(next!!).getAngle().yaw).toDouble(),
-              Target(next!!).getAngle().pitch.toDouble()
-            )
-          )
+          val time = SwiftSlayer.instance.config.calculateRotationTime(SwiftSlayer.instance.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(Target(next!!).getAngle().yaw).toDouble(), Target(next!!).getAngle().pitch.toDouble()))
           AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(next!!.toVec3Top()).yaw, 20f)), time, LockType.NONE, false)
         }
       }

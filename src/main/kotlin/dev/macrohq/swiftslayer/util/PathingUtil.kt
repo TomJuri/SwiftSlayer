@@ -1,6 +1,11 @@
 package dev.macrohq.swiftslayer.util
 
 import cc.polyfrost.oneconfig.utils.dsl.runAsync
+import dev.macrohq.swiftslayer.SwiftSlayer
+import dev.macrohq.swiftslayer.feature.helper.Angle
+import dev.macrohq.swiftslayer.feature.helper.Target
+import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
+import dev.macrohq.swiftslayer.feature.implementation.LockType
 import dev.macrohq.swiftslayer.pathfinding.AStarPathfinder
 import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
@@ -23,6 +28,11 @@ object PathingUtil {
           pathExecutor.enable(path, target, rotate)
         } else {
           pathExecutor.enable(path, null, rotate)
+        }
+        if(rotate) {
+          val next = path[1]
+          val time = SwiftSlayer.instance.config.calculateRotationTime(SwiftSlayer.instance.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(Target(next!!).getAngle().yaw).toDouble(), Target(next!!).getAngle().pitch.toDouble()))
+          AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(next.toVec3Top()).yaw, 20f)), time / 2, LockType.NONE, false)
         }
       }
 

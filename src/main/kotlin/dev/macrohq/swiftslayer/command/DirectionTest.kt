@@ -6,16 +6,15 @@ import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
 import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.codecPathfinder.Pathfinder.Pathfinder
 import dev.macrohq.swiftslayer.codecPathfinder.Pathfinder.dependencies.BlockNode
-import dev.macrohq.swiftslayer.feature.SupportItem
-import dev.macrohq.swiftslayer.util.BlockUtil
-import dev.macrohq.swiftslayer.util.Logger
-import dev.macrohq.swiftslayer.util.player
+import dev.macrohq.swiftslayer.util.*
+import dev.macrohq.swiftslayer.util.movement.CalculationContext
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
 import net.minecraft.util.Vec3
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import java.awt.Color
 import kotlin.math.abs
 import kotlin.math.atan2
 
@@ -28,7 +27,8 @@ class DirectionTest {
     @SubCommand
     private fun direction(lock: Boolean) {
         //gameSettings.keyBindSneak.setPressed(true)
-        SupportItem.enable = lock
+        enabled = lock
+        Logger.info(player.totalArmorValue)
 
     }
 
@@ -95,14 +95,20 @@ class DirectionTest {
 
                */
 
-      /*  GenericBossKiller.blockPoss = BlockUtil.getBlocks(dev.macrohq.swiftslayer.util.mc.thePlayer.position, 5, 5, 5) as ArrayList<BlockPos>
+            /*  GenericBossKiller.blockPoss = BlockUtil.getBlocks(dev.macrohq.swiftslayer.util.mc.thePlayer.position, 5, 5, 5) as ArrayList<BlockPos>
 
             for (blockk: BlockPos in GenericBossKiller.blockPoss) {
               //  if(BlockUtil.blocksBetweenValid(player.position.add(0, 0, 0), blockk.add(0, 0, 0))) {
                     RenderUtil.drawBox(event, blockk, Color.WHITE, true)
                 } */
-           // }
+            // }
 
+            for (block: BlockPos in BlockUtil.getBlocks(BlockPos(dev.macrohq.swiftslayer.util.mc.thePlayer.posX + dev.macrohq.swiftslayer.util.mc.thePlayer.getLookVec().xCoord * -25, player.getStandingOnCeil().y.toDouble(), dev.macrohq.swiftslayer.util.mc.thePlayer.posZ + dev.macrohq.swiftslayer.util.mc.thePlayer.getLookVec().zCoord * -25), 15, 5, 15)) {
+                if (BlockUtil.getXZDistance(player.getStandingOnCeil(), block) > 6 && BlockUtil.blocksBetweenValid(
+                        CalculationContext(SwiftSlayer.instance), player.getStandingOnCeil(), block) && !BlockUtil.isSingleCorner(block)) {
+                    RenderUtil.drawBox(event, block, Color.YELLOW, true)
+                }
+            }
 
         }
 

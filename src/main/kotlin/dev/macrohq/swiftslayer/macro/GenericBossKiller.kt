@@ -6,6 +6,7 @@ import dev.macrohq.swiftslayer.feature.helper.Target
 import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
 import dev.macrohq.swiftslayer.feature.implementation.LockType
 import dev.macrohq.swiftslayer.util.*
+import dev.macrohq.swiftslayer.util.movement.CalculationContext
 import net.minecraft.entity.EntityLiving
 import net.minecraft.init.Blocks
 import net.minecraft.util.AxisAlignedBB
@@ -161,7 +162,7 @@ class GenericBossKiller {
 
     for(block: BlockPos in BlockUtil.getBlocks(mc.thePlayer.position, 15, 5, 15)) {
       if(BlockUtil.isSingleCorner(block)) {
-        if(BlockUtil.blocksBetweenValid( block, mc.thePlayer.position.add(0, -1, 0))) {
+        if(BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer.instance), block, mc.thePlayer.position.add(0, -1, 0))) {
           if(abs(player.position.y - block.y) < 5) {
             blockPoss.add(block)
           }

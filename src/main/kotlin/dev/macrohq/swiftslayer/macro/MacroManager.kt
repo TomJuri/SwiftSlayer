@@ -15,8 +15,10 @@ class MacroManager {
 
   @SubscribeEvent
   fun onTick(event: ClientTickEvent) {
-    mc.gameSettings.fovSetting
     if (!enabled || mobKiller.getInstance().enabled || RevBossKiller.getInstance().enabled) return
+
+    if(!InventoryUtil.holdItem("Maddox Batphone")) state = State.KILL_MOBS
+
     when (state) {
       State.ACTIVATE_QUEST -> {
         if (SlayerUtil.getActive() == null ||

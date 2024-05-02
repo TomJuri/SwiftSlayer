@@ -110,6 +110,7 @@ object EntityUtil {
     }
 
     fun getMobs(entityClass: Class<out EntityLiving>): List<EntityLiving> {
+
         val entities = world.getLoadedEntityList().asSequence()
             .filterIsInstance(entityClass)
             .filter { it !is EntityCaveSpider }
@@ -122,7 +123,10 @@ object EntityUtil {
             .toMutableList()
         if (!config.ignoreMiniBosses && SlayerUtil.getMiniBoss() != null)
             entities.add(0, SlayerUtil.getMiniBoss()!!)
+
         return entities
     }
+
+
 
 }

@@ -1,10 +1,19 @@
 package dev.macrohq.swiftslayer.util
 
+import dev.macrohq.swiftslayer.SwiftSlayer
+import dev.macrohq.swiftslayer.feature.helper.Angle
+import dev.macrohq.swiftslayer.feature.helper.Target
+import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
+import dev.macrohq.swiftslayer.feature.implementation.LockType
+import dev.macrohq.swiftslayer.macro.bossKiller.RevBossKiller
+import dev.macrohq.swiftslayer.macro.mobKillers.RevMobKiller
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.entity.monster.*
 import net.minecraft.entity.passive.EntityWolf
 import net.minecraft.util.StringUtils
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
 object SlayerUtil {
 
@@ -144,5 +153,25 @@ object SlayerUtil {
   enum class SlayerState {
     BOSS_ALIVE,
     BOSS_DEAD,
+  }
+
+  @SubscribeEvent
+  fun onTick(event: ClientTickEvent) {
+    if(!macroManager.enabled || RevBossKiller.getInstance().enabled) return
+
+
+
+    if(getState() == SlayerState.BOSS_ALIVE) {
+      PathingUtil.stop()
+      if(RevMobKiller.getInstance().lastTargetPos != null) {
+        val target = RevMobKiller.getInstance().lastTargetPos!!.add(0, 1, 0)
+        val time = SwiftSlayer.instance.config.calculateRotationTime(
+          SwiftSlayer.instance.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(
+            Target(target).getAngle().yaw).toDouble(), Target(target).getAngle().pitch.toDouble()))
+        AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(target.toVec3Top()).yaw, 20f)), time, LockType.NONE, true) }
+
+      RevMobKiller.getInstance().disable()
+      RevBossKiller.getInstance().enable()
+    }
   }
 }

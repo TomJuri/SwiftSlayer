@@ -1,7 +1,9 @@
 package dev.macrohq.swiftslayer.pathfinding
 
+import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.util.AngleUtil
 import dev.macrohq.swiftslayer.util.BlockUtil
+import dev.macrohq.swiftslayer.util.movement.CalculationContext
 import dev.macrohq.swiftslayer.util.world
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
@@ -14,6 +16,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
     private var endNode: Node
     private val openNodes = mutableListOf<Node>()
     private val closedNodes = mutableListOf<Node>()
+    var smoothPath: MutableList<BlockPos> = mutableListOf()
 
     init {
         startNode = Node(startPos, null)
@@ -56,7 +59,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
                 var nextPos = currPoint + 1
 
                 for (i in (path.size - 1) downTo nextPos) {
-                    if (BlockUtil.blocksBetweenValid( path[currPoint], path[i])) {
+                    if (BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer.instance), path[currPoint], path[i])) {
                         nextPos = i
                         break
                     }
@@ -68,6 +71,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
         smooth.removeIf { world.getBlockState(it).block == Blocks.air }
         return smooth
     }
+
 
     class Node(val position: BlockPos, val parent: Node?) {
         private var gCost = Float.MAX_VALUE

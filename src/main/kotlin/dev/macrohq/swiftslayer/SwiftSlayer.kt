@@ -8,6 +8,7 @@ import dev.macrohq.swiftslayer.command.LockTest
 import dev.macrohq.swiftslayer.command.PathfindTest
 import dev.macrohq.swiftslayer.command.SwiftSlayerCommand
 import dev.macrohq.swiftslayer.config.SwiftSlayerConfig
+import dev.macrohq.swiftslayer.event.GameEventHandler
 import dev.macrohq.swiftslayer.feature.*
 import dev.macrohq.swiftslayer.macro.EndermanBossKiller
 import dev.macrohq.swiftslayer.macro.GenericBossKiller
@@ -17,6 +18,10 @@ import dev.macrohq.swiftslayer.pathfinding.PathExecutor
 import dev.macrohq.swiftslayer.util.KeyBindUtil
 import dev.macrohq.swiftslayer.util.RenderUtil
 import dev.macrohq.swiftslayer.util.RotationUtil
+import dev.macrohq.swiftslayer.util.SlayerUtil
+import dev.macrohq.swiftslayer.util.movement.helper.BlockStateAccessor
+import dev.macrohq.swiftslayer.util.movement.helper.player.IPlayerContext
+import dev.macrohq.swiftslayer.util.movement.helper.player.PlayerContext
 import net.minecraft.client.Minecraft
 import net.minecraft.util.BlockPos
 import net.minecraftforge.client.event.RenderWorldLastEvent
@@ -59,6 +64,7 @@ class SwiftSlayer {
   var removeLater: BlockPos? = null
   lateinit var pathFinder: Pathfinder
   lateinit var  pathExec: CodecPathexecutor
+  lateinit var  slayerUtil: SlayerUtil
 
   @Mod.EventHandler
   fun init(event: FMLInitializationEvent) {
@@ -73,6 +79,7 @@ class SwiftSlayer {
     lockTest = LockTest()
     pathFinder = Pathfinder()
     pathExec = CodecPathexecutor()
+    slayerUtil = SlayerUtil
     MinecraftForge.EVENT_BUS.register(this)
     MinecraftForge.EVENT_BUS.register(pathExecutor)
     MinecraftForge.EVENT_BUS.register(autoBatphone)
@@ -84,6 +91,7 @@ class SwiftSlayer {
     MinecraftForge.EVENT_BUS.register(lockTest)
     MinecraftForge.EVENT_BUS.register(DirectionTest())
     MinecraftForge.EVENT_BUS.register(SupportItem())
+    MinecraftForge.EVENT_BUS.register(slayerUtil)
     CommandManager.register(PathfindTest())
     CommandManager.register(SwiftSlayerCommand())
     CommandManager.register(DirectionTest())
@@ -92,7 +100,7 @@ class SwiftSlayer {
 
     // New Structure
     FeatureManager.getInstance().loadFeatures().forEach(MinecraftForge.EVENT_BUS::register)
-
+    MinecraftForge.EVENT_BUS.register(GameEventHandler(this))
   }
 
   fun isTrackerInitialized() = ::tracker.isInitialized
@@ -107,5 +115,6 @@ class SwiftSlayer {
 
   // Hellow
   val mc: Minecraft = Minecraft.getMinecraft()
-
+  val playerContext: IPlayerContext = PlayerContext(this, mc)
+  var bsa: BlockStateAccessor? = null
 }
