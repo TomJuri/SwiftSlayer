@@ -5,11 +5,11 @@ import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
 import dev.macrohq.swiftslayer.macro.AbstractMobKiller
 import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.InventoryUtil.getHotbarSlotForItem
+import me.kbrewster.eventbus.Subscribe
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.util.BlockPos
 import net.minecraftforge.common.MinecraftForge
-import me.kbrewster.eventbus.Subscribe
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
 class RevMobKiller: AbstractMobKiller() {
@@ -104,7 +104,7 @@ class RevMobKiller: AbstractMobKiller() {
             }
 
             State.GOTO_TARGET -> {
-                AutoRotation.getInstance().disable()
+                AutoRotation.disable()
                 if(player.canEntityBeSeen(currentTarget!!)) {
                     PathingUtil.goto(currentTarget!!.getStandingOnCeil(), currentTarget, true)
                     looking = true
@@ -142,7 +142,7 @@ class RevMobKiller: AbstractMobKiller() {
             }
 
              State.LOOK_AT_TARGET -> {
-                //AutoRotation.getInstance().disable()
+                //AutoRotation.disable()
                 if(currentTarget != null) {
                     lookAtEntity(currentTarget!!)
                     Logger.info("done")
@@ -156,7 +156,7 @@ class RevMobKiller: AbstractMobKiller() {
             }
 
             State.VERIFY_LOOKING -> {
-              //  if(AutoRotation.getInstance().enabled) return
+              //  if(AutoRotation.enabled) return
                 if(mc.objectMouseOver.entityHit != null && player.getDistanceToEntity(currentTarget) <= attackDistance() && player.canEntityBeSeen(currentTarget)) {
                     holdWeapon()
                     state = State.KILL_TARGET
@@ -168,7 +168,7 @@ class RevMobKiller: AbstractMobKiller() {
                     return
                 }
 
-                if(!AutoRotation.getInstance().enabled && mc.objectMouseOver.entityHit != currentTarget) {
+                if(!AutoRotation.enabled && mc.objectMouseOver.entityHit != currentTarget) {
                     state = State.LOOK_AT_TARGET
                     return
                 }

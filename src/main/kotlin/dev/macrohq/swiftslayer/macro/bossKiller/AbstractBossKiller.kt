@@ -21,7 +21,7 @@ abstract class AbstractBossKiller:IBossKiller {
 
     fun lookAtAnle(angle: Target) {
         val time = SwiftSlayer.config.calculateRotationTime(SwiftSlayer.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(angle.getAngle().yaw).toDouble(), angle.getAngle().pitch.toDouble()))
-        AutoRotation.getInstance().easeTo(angle, time, LockType.NONE, true)
+        AutoRotation.easeTo(angle, time, LockType.NONE, true)
     }
 
     override fun lookAtEntity(entity: EntityLiving) {
@@ -31,10 +31,10 @@ abstract class AbstractBossKiller:IBossKiller {
         if(time > 100) time = time else time = 100
         when (config.mobKillerWeapon) {
 
-            0 -> AutoRotation.getInstance().easeTo(angle, time, LockType.NONE, true)
-            1 -> AutoRotation.getInstance().easeTo(angle, time, LockType.NONE, true )
+            0 -> AutoRotation.easeTo(angle, time, LockType.NONE, true)
+            1 -> AutoRotation.easeTo(angle, time, LockType.NONE, true )
             2 -> {}
-            3 -> AutoRotation.getInstance().easeTo(angle,time, LockType.NONE, true)
+            3 -> AutoRotation.easeTo(angle,time, LockType.NONE, true)
         }
     }
 

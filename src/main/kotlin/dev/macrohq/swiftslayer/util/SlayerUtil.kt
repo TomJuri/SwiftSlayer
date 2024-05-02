@@ -168,7 +168,7 @@ object SlayerUtil {
         val time = SwiftSlayer.config.calculateRotationTime(
           SwiftSlayer.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(
             Target(target).getAngle().yaw).toDouble(), Target(target).getAngle().pitch.toDouble()))
-        AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(target.toVec3Top()).yaw, 20f)), time, LockType.NONE, true) }
+        AutoRotation.easeTo(Target(Angle(AngleUtil.getAngle(target.toVec3Top()).yaw, 20f)), time, LockType.NONE, true) }
 
       RevMobKiller.getInstance().disable()
       RevBossKiller.getInstance().enable()

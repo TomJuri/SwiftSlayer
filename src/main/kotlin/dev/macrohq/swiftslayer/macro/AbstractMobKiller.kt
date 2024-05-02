@@ -38,16 +38,16 @@ abstract class AbstractMobKiller:IMobKiller {
 
     override fun lookAtEntity(entity: EntityLiving) {
         var angle = Target(angleForWeapon(entity))
-        AutoRotation.getInstance().disable()
+        AutoRotation.disable()
         //  var time = SwiftSlayer.config.calculateRotationTime(abs(angle.getAngle().yaw - (mc.thePlayer.rotationYaw % 360)).toDouble())
         var time = SwiftSlayer.config.calculateRotationTime(SwiftSlayer.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(angle.getAngle().yaw).toDouble(), angle.getAngle().pitch.toDouble()))
         if(time > 50) time = time else time = 50
         when (config.mobKillerWeapon) {
 
-            0 -> AutoRotation.getInstance().easeTo(angle, time, LockType.NONE, true)
-            1 -> AutoRotation.getInstance().easeTo(angle, time, LockType.NONE, true, 200, easeFunction = EaseUtil::easeOutBack )
+            0 -> AutoRotation.easeTo(angle, time, LockType.NONE, true)
+            1 -> AutoRotation.easeTo(angle, time, LockType.NONE, true, 200, easeFunction = EaseUtil::easeOutBack )
             2 -> {}
-            3 -> AutoRotation.getInstance().easeTo(angle, time, LockType.NONE, true)
+            3 -> AutoRotation.easeTo(angle, time, LockType.NONE, true)
         }
       //  Logger.info(time)
     }

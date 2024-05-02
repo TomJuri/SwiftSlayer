@@ -73,8 +73,8 @@ class Revenant {
             }
             State.LOOKING -> {
                 info("looking")
-                if (config.bossKillerWeapon == 1) AutoRotation.getInstance().easeTo(Target(Angle(player.rotationYaw, 90f)), 300, LockType.NONE, true)
-                else AutoRotation.getInstance().easeTo(Target(AngleUtil.getAngle(mob!!)), 500, LockType.NONE, true)
+                if (config.bossKillerWeapon == 1) AutoRotation.easeTo(Target(Angle(player.rotationYaw, 90f)), 300, LockType.NONE, true)
+                else AutoRotation.easeTo(Target(AngleUtil.getAngle(mob!!)), 500, LockType.NONE, true)
                 state = State.KILLING
             }
             State.KILLING -> {

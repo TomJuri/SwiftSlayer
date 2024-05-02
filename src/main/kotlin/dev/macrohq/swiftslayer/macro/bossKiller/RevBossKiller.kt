@@ -6,10 +6,10 @@ import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
 import dev.macrohq.swiftslayer.macro.mobKillers.RevMobKiller
 import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.movement.CalculationContext
+import me.kbrewster.eventbus.Subscribe
 import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
 import net.minecraftforge.common.MinecraftForge
-import me.kbrewster.eventbus.Subscribe
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import kotlin.math.abs
 
@@ -86,7 +86,7 @@ class RevBossKiller:AbstractBossKiller() {
             }
 
             MovementState.GOTO_BLOCK -> {
-        //        AutoRotation.getInstance().disable()
+        //        AutoRotation.disable()
                 if(chosenBlock == null) {
                     movState = MovementState.FIND_BLOCK
                     Logger.info("null block")
@@ -192,12 +192,12 @@ class RevBossKiller:AbstractBossKiller() {
                     holdWeapon()
                     rotTimer = Timer(15)
                    // return
-                }  else if (mc.objectMouseOver.entityHit == null && !AutoRotation.getInstance().enabled && player.onGround) {
+                }  else if (mc.objectMouseOver.entityHit == null && !AutoRotation.enabled && player.onGround) {
                     rotState = RotationState.LOOK_AT_TARGET
                     return
                 }
 
-                if(mc.objectMouseOver.entityHit == currentTarget && abs(player.rotationPitch - angleForWeapon(currentTarget!!).pitch) > 11 && !AutoRotation.getInstance().enabled && player.onGround) {
+                if(mc.objectMouseOver.entityHit == currentTarget && abs(player.rotationPitch - angleForWeapon(currentTarget!!).pitch) > 11 && !AutoRotation.enabled && player.onGround) {
                   //  lookAtAnle(Target(Angle(AngleUtil.yawTo360(player.rotationYaw), angleForWeapon(currentTarget!!).pitch)))
                     rotState = RotationState.LOOK_AT_TARGET
                     Logger.info("huzzah")
@@ -234,7 +234,7 @@ class RevBossKiller:AbstractBossKiller() {
         currentTarget = null
         ticksSinceLastMovement = 0
         tickCounter = 0
-        AutoRotation.getInstance().disable()
+        AutoRotation.disable()
         PathingUtil.stop()
         KeyBindUtil.stopClicking()
         mc.gameSettings.keyBindSneak.setPressed(false)

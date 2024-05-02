@@ -10,6 +10,7 @@ import dev.macrohq.swiftslayer.command.SwiftSlayerCommand
 import dev.macrohq.swiftslayer.config.SwiftSlayerConfig
 import dev.macrohq.swiftslayer.event.GameEventHandler
 import dev.macrohq.swiftslayer.feature.*
+import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
 import dev.macrohq.swiftslayer.macro.EndermanBossKiller
 import dev.macrohq.swiftslayer.macro.GenericBossKiller
 import dev.macrohq.swiftslayer.macro.MacroManager
@@ -23,8 +24,6 @@ import me.kbrewster.eventbus.Subscribe
 import net.minecraft.client.Minecraft
 import net.minecraft.util.BlockPos
 import net.minecraftforge.client.event.RenderWorldLastEvent
-import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.fml.common.Mod
 
 /* fun main() {
     val keyPairGenerator = KeyPairGenerator.getInstance("RSA")
@@ -88,6 +87,7 @@ object SwiftSlayer {
 
     // New Structure
     FeatureManager.getInstance().loadFeatures().forEach(SwiftEventBus::register)
+    SwiftEventBus.register(AutoRotation)
     SwiftEventBus.register(GameEventHandler(this))
   }
 

@@ -1,7 +1,7 @@
 {
   "compatibilityLevel": "JAVA_8",
   "package": "dev.macrohq.swiftslayer.mixin",
-  "refmap": "mixins.nebula.refmap.json",
+  "refmap": "mixins.swiftslayer.refmap.json",
   "minVersion": "0.7.11",
   "client": [
     "FMLHandshakeMessageMixin",

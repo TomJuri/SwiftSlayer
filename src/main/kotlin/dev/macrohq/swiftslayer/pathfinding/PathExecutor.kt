@@ -54,10 +54,10 @@ class PathExecutor {
       if(rotate) {
         if (goal != null) {
           val time = SwiftSlayer.config.calculateRotationTime(SwiftSlayer.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(Target(goal!!).getAngle().yaw).toDouble(), Target(goal!!).getAngle().pitch.toDouble()))
-          AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(goal!!.toVec3Top()).yaw, AngleUtil.getAngle(goal!!.toVec3Top()).pitch)), time, LockType.NONE, false)
+          AutoRotation.easeTo(Target(Angle(AngleUtil.getAngle(goal!!.toVec3Top()).yaw, AngleUtil.getAngle(goal!!.toVec3Top()).pitch)), time, LockType.NONE, false)
         } else {
           val time = SwiftSlayer.config.calculateRotationTime(SwiftSlayer.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(Target(next!!).getAngle().yaw).toDouble(), Target(next!!).getAngle().pitch.toDouble()))
-          AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(next!!.toVec3Top()).yaw, 20f)), time, LockType.NONE, false)
+          AutoRotation.easeTo(Target(Angle(AngleUtil.getAngle(next!!.toVec3Top()).yaw, 20f)), time, LockType.NONE, false)
         }
       }
 

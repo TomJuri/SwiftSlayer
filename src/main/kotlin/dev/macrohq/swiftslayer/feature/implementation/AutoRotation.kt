@@ -5,11 +5,12 @@ import dev.macrohq.swiftslayer.feature.helper.Angle
 import dev.macrohq.swiftslayer.feature.helper.Target
 import dev.macrohq.swiftslayer.util.AngleUtil
 import dev.macrohq.swiftslayer.util.EaseUtil
+import dev.macrohq.swiftslayer.util.Logger
 import dev.macrohq.swiftslayer.util.player
-import net.minecraftforge.client.event.RenderGameOverlayEvent
 import me.kbrewster.eventbus.Subscribe
+import net.minecraftforge.client.event.RenderGameOverlayEvent
 
-class AutoRotation: AbstractFeature() {
+object AutoRotation: AbstractFeature() {
   override val featureName: String = "AutoRotation"
   override val isPassiveFeature: Boolean = false
 
@@ -25,19 +26,11 @@ class AutoRotation: AbstractFeature() {
   private var smoothLockTime = 0
   private var isOverriden = false
 
-  companion object{
-    private var instance: AutoRotation? = null
-    fun getInstance(): AutoRotation{
-      if(instance == null){
-        instance = AutoRotation()
-      }
-      return instance!!
-    }
-  }
+
 
   fun easeTo(target: Target, time: Int, lockType: LockType = LockType.NONE, override: Boolean, smoothLockTime: Int = 200, easeFunction: (Float) -> Float = EaseUtil.easingFunctions.random()){
-    if(getInstance().isOverriden) return
-      getInstance().isOverriden = override
+    if(this.isOverriden) return
+      this.isOverriden = override
       this.enabled = true
     this.forceEnable = true
     this.lockType = lockType
@@ -96,6 +89,7 @@ class AutoRotation: AbstractFeature() {
 
   @Subscribe
   fun onRenderOverlay(event: RenderGameOverlayEvent) {
+    Logger.info("rotation onRender")
     if(!this.canEnable()) return
 
     if (this.endTime >= System.currentTimeMillis()) {

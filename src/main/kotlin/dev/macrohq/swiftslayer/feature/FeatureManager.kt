@@ -17,7 +17,7 @@ class FeatureManager {
 
   fun loadFeatures(): List<IFeature> {
     val features = listOf(
-      AutoRotation.getInstance(),
+      AutoRotation,
     )
     this.features.addAll(features)
     return this.features
