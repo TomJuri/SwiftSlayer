@@ -6,7 +6,7 @@ import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.util.StringUtils
 import net.minecraft.util.Vec3
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import me.kbrewster.eventbus.Subscribe
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
 class EndermanBossKiller {
@@ -20,7 +20,7 @@ class EndermanBossKiller {
     var lastLaser = 0L
     private var timer = Timer(0)
 
-    @SubscribeEvent
+    @Subscribe
     fun onTick(event: ClientTickEvent) {
         if(!enabled) return
         if (determineState() != state) {

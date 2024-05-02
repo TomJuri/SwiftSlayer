@@ -10,8 +10,8 @@ public class MixinEntityPlayerSP extends MixinAbstractClientPlayer {
     @Override
     public void moveFlying(float strafe, float forward, final float friction) {
         final float yaw =
-                SwiftSlayer.Companion.getInstance().getPathExecutor().getEnabled() ?
-                SwiftSlayer.Companion.getInstance().getPathExecutor().getDirectionYaw() : rotationYaw;
+                SwiftSlayer.INSTANCE.getPathExecutor().getEnabled() ?
+                SwiftSlayer.INSTANCE.getPathExecutor().getDirectionYaw() : rotationYaw;
         float f = (strafe * strafe) + (forward * forward);
         if (1.0E-4f <= f) {
             if (1.0f > (f = MathHelper.sqrt_float(f))) {

@@ -7,7 +7,7 @@ import dev.macrohq.swiftslayer.util.AngleUtil
 import dev.macrohq.swiftslayer.util.EaseUtil
 import dev.macrohq.swiftslayer.util.player
 import net.minecraftforge.client.event.RenderGameOverlayEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import me.kbrewster.eventbus.Subscribe
 
 class AutoRotation: AbstractFeature() {
   override val featureName: String = "AutoRotation"
@@ -94,7 +94,7 @@ class AutoRotation: AbstractFeature() {
     return this.enabled
   }
 
-  @SubscribeEvent
+  @Subscribe
   fun onRenderOverlay(event: RenderGameOverlayEvent) {
     if(!this.canEnable()) return
 

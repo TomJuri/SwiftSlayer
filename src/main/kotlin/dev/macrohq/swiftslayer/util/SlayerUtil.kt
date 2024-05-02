@@ -12,7 +12,7 @@ import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.entity.monster.*
 import net.minecraft.entity.passive.EntityWolf
 import net.minecraft.util.StringUtils
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import me.kbrewster.eventbus.Subscribe
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
 object SlayerUtil {
@@ -155,7 +155,7 @@ object SlayerUtil {
     BOSS_DEAD,
   }
 
-  @SubscribeEvent
+  @Subscribe
   fun onTick(event: ClientTickEvent) {
     if(!macroManager.enabled || RevBossKiller.getInstance().enabled) return
 
@@ -165,8 +165,8 @@ object SlayerUtil {
       PathingUtil.stop()
       if(RevMobKiller.getInstance().lastTargetPos != null) {
         val target = RevMobKiller.getInstance().lastTargetPos!!.add(0, 1, 0)
-        val time = SwiftSlayer.instance.config.calculateRotationTime(
-          SwiftSlayer.instance.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(
+        val time = SwiftSlayer.config.calculateRotationTime(
+          SwiftSlayer.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(
             Target(target).getAngle().yaw).toDouble(), Target(target).getAngle().pitch.toDouble()))
         AutoRotation.getInstance().easeTo(Target(Angle(AngleUtil.getAngle(target.toVec3Top()).yaw, 20f)), time, LockType.NONE, true) }
 

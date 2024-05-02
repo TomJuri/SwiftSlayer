@@ -16,7 +16,6 @@ repositories {
     maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
 }
 
-
 val embed: Configuration by configurations.creating
 configurations.implementation.get().extendsFrom(embed)
 
@@ -29,12 +28,10 @@ dependencies {
     compileOnly("org.spongepowered:mixin:0.8.5-SNAPSHOT")
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
     modRuntimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.1.2")
-    embed("com.squareup.okhttp3:okhttp:3.14.9")
     embed("it.unimi.dsi:fastutil:8.2.1")
-}
-
-blossom {
-    replaceToken("%%VERSION%%", version)
+    embed("com.github.KevinPriv:keventbus:master") {
+        exclude("org.jetbrains.kotlin")
+    }
 }
 
 loom {

@@ -9,7 +9,7 @@ import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.util.BlockPos
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import me.kbrewster.eventbus.Subscribe
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
 class RevMobKiller: AbstractMobKiller() {
@@ -28,10 +28,10 @@ class RevMobKiller: AbstractMobKiller() {
     var lastTargetPos: BlockPos? = null
 
     private var state: State = State.CHOOSE_TARGET
-    @SubscribeEvent
+    @Subscribe
     fun onTick(event: ClientTickEvent) {
         if (!enabled) return
-        if(SwiftSlayer.instance.autoBatphone.enabled) return
+        if(SwiftSlayer.autoBatphone.enabled) return
 
         InventoryUtil.closeGUI()
         if (SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_ALIVE) {
@@ -39,7 +39,7 @@ class RevMobKiller: AbstractMobKiller() {
             return
         }
         if(SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_DEAD && getHotbarSlotForItem("Maddox Batphone") != -1) {
-            SwiftSlayer.instance.autoBatphone.enable()
+            SwiftSlayer.autoBatphone.enable()
             return
         }
 
@@ -197,7 +197,7 @@ class RevMobKiller: AbstractMobKiller() {
 
     override fun enable() {
         if(!enabled)
-        MinecraftForge.EVENT_BUS.register(this)
+        SwiftEventBus.register(this)
         enabled = true
     }
 

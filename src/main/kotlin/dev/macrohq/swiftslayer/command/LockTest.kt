@@ -5,7 +5,7 @@ import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
 import dev.macrohq.swiftslayer.util.SlayerUtil
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.EntityLiving
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import me.kbrewster.eventbus.Subscribe
 import net.minecraftforge.fml.common.gameevent.TickEvent
 
 
@@ -21,7 +21,7 @@ class LockTest {
         println(enabled)
     }
 
-    @SubscribeEvent
+    @Subscribe
     fun onTick(event: TickEvent.ClientTickEvent) {
 
 

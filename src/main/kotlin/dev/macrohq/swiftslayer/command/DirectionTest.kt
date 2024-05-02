@@ -13,7 +13,7 @@ import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
 import net.minecraft.util.Vec3
 import net.minecraftforge.client.event.RenderWorldLastEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import me.kbrewster.eventbus.Subscribe
 import java.awt.Color
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -54,16 +54,16 @@ class DirectionTest {
     private fun path(x: Int, y: Int, z: Int) {
         Logger.info(BlockUtil.isNotWalkable(player.position))
         Thread {
-            var pathFinder: Pathfinder = SwiftSlayer.instance.pathFinder
+            var pathFinder: Pathfinder = SwiftSlayer.pathFinder
             var path = pathFinder.calculatePath(BlockNode((Minecraft.getMinecraft().thePlayer.position.add(0.0, 0.5, 0.0))), BlockNode(BlockPos(x, y, z)))
 
             if (path != null && path.size > 1) {
-                SwiftSlayer.instance.pathExecutor.enable(path)
+                SwiftSlayer.pathExecutor.enable(path)
             }
         }.start()
     }
 
-    @SubscribeEvent
+    @Subscribe
     fun onWorldRender(event: RenderWorldLastEvent) {
         if(enabled) {
             // RenderUtil.drawBox(event, BlockUtil.getCornerBlocks(SlayerUtil.getFakeBoss()!!.position, 2, 1, 2).first, Color.GREEN, true)
@@ -105,7 +105,7 @@ class DirectionTest {
 
             for (block: BlockPos in BlockUtil.getBlocks(BlockPos(dev.macrohq.swiftslayer.util.mc.thePlayer.posX + dev.macrohq.swiftslayer.util.mc.thePlayer.getLookVec().xCoord * -25, player.getStandingOnCeil().y.toDouble(), dev.macrohq.swiftslayer.util.mc.thePlayer.posZ + dev.macrohq.swiftslayer.util.mc.thePlayer.getLookVec().zCoord * -25), 15, 5, 15)) {
                 if (BlockUtil.getXZDistance(player.getStandingOnCeil(), block) > 6 && BlockUtil.blocksBetweenValid(
-                        CalculationContext(SwiftSlayer.instance), player.getStandingOnCeil(), block) && !BlockUtil.isSingleCorner(block)) {
+                        CalculationContext(SwiftSlayer), player.getStandingOnCeil(), block) && !BlockUtil.isSingleCorner(block)) {
                     RenderUtil.drawBox(event, block, Color.YELLOW, true)
                 }
             }

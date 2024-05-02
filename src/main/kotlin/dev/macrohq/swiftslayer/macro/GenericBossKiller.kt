@@ -12,7 +12,7 @@ import net.minecraft.init.Blocks
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.util.BlockPos
 import net.minecraftforge.client.event.RenderWorldLastEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import me.kbrewster.eventbus.Subscribe
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import kotlin.math.abs
 
@@ -27,7 +27,7 @@ class GenericBossKiller {
   private var target: EntityLiving? = null
   private var waitTimer = Timer(50)
 
-  @SubscribeEvent
+  @Subscribe
   fun onTick(event: ClientTickEvent) {
     if (!enabled) return
     //target = SlayerUtil.getBoss()?.first
@@ -51,7 +51,7 @@ class GenericBossKiller {
     }
     val boundingBox: AxisAlignedBB = target!!.entityBoundingBox
     var angle = Target(target!!)
-    var time = SwiftSlayer.instance.config.calculateRotationTime(SwiftSlayer.instance.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(angle.getAngle().yaw).toDouble(), angle.getAngle().pitch.toDouble()))
+    var time = SwiftSlayer.config.calculateRotationTime(SwiftSlayer.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(angle.getAngle().yaw).toDouble(), angle.getAngle().pitch.toDouble()))
     var randomPositionOnBoundingBox = target!!.position.add(0, (target!!.height*0.75).toInt(), 0)
     if(mc.objectMouseOver.entityHit != target!! && waitTimer.isDone) {
       AutoRotation.getInstance().easeTo(Target(randomPositionOnBoundingBox), time, LockType.NONE, true)
@@ -65,7 +65,7 @@ class GenericBossKiller {
       y--
     }
 
-    if(SwiftSlayer.instance.config.movementType == 0 && !inCorner && chosenCorner == null && PathingUtil.isDone) {
+    if(SwiftSlayer.config.movementType == 0 && !inCorner && chosenCorner == null && PathingUtil.isDone) {
      if(blockPoss.isEmpty()) return
       chosenCorner = blockPoss[0]
       PathingUtil.goto(chosenCorner!!)
@@ -81,7 +81,7 @@ class GenericBossKiller {
     }
 
 
-    if(SwiftSlayer.instance.config.movementType == 1 && timeout.isDone) {
+    if(SwiftSlayer.config.movementType == 1 && timeout.isDone) {
       gameSettings.keyBindForward.setPressed(false)
 
       if(ticksSinceLastMovement > 100) {
@@ -101,7 +101,7 @@ class GenericBossKiller {
       }
 
 
-    } else if(SwiftSlayer.instance.config.movementType == 1 && !timeout.isDone){
+    } else if(SwiftSlayer.config.movementType == 1 && !timeout.isDone){
       gameSettings.keyBindForward.setPressed(true)
       if(AutoRotation.getInstance().enabled) AutoRotation.getInstance().disable()
     }
@@ -153,7 +153,7 @@ class GenericBossKiller {
     playerLastPos = mc.thePlayer.position
   }
 
-  @SubscribeEvent
+  @Subscribe
   fun onWorld(event: RenderWorldLastEvent) {
     if(!enabled) return
 
@@ -162,7 +162,7 @@ class GenericBossKiller {
 
     for(block: BlockPos in BlockUtil.getBlocks(mc.thePlayer.position, 15, 5, 15)) {
       if(BlockUtil.isSingleCorner(block)) {
-        if(BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer.instance), block, mc.thePlayer.position.add(0, -1, 0))) {
+        if(BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer), block, mc.thePlayer.position.add(0, -1, 0))) {
           if(abs(player.position.y - block.y) < 5) {
             blockPoss.add(block)
           }

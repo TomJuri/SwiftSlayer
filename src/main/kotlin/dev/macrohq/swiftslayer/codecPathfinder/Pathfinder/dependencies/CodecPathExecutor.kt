@@ -3,11 +3,12 @@ package dev.macrohq.swiftslayer.codecPathfinder.Pathfinder.dependencies
 import dev.macrohq.swiftslayer.util.BlockUtil
 import dev.macrohq.swiftslayer.util.Logger
 import dev.macrohq.swiftslayer.util.RotationUtil
+import dev.macrohq.swiftslayer.util.SwiftEventBus
 import net.minecraft.client.Minecraft
 import net.minecraft.client.settings.KeyBinding
 import net.minecraft.util.BlockPos
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import me.kbrewster.eventbus.Subscribe
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import kotlin.math.abs
 
@@ -21,7 +22,7 @@ class CodecPathexecutor {
         currentPoint = 0
         DataAccessor.shouldWalk = true
         KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindForward.keyCode, true)
-        MinecraftForge.EVENT_BUS.register(this)
+        SwiftEventBus.register(this)
 
     }
 
@@ -31,7 +32,7 @@ class CodecPathexecutor {
         MinecraftForge.EVENT_BUS.unregister(this)
     }
 
-    @SubscribeEvent
+    @Subscribe
     fun clientTick(event: ClientTickEvent?) {
         if (currentPoint >= wayPoints!!.size) {
             stop()

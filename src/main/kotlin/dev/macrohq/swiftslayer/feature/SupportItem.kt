@@ -5,7 +5,7 @@ import dev.macrohq.swiftslayer.macro.bossKiller.RevBossKiller
 import dev.macrohq.swiftslayer.util.*
 import net.minecraft.util.StringUtils
 import net.minecraftforge.client.event.ClientChatReceivedEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import me.kbrewster.eventbus.Subscribe
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import java.util.regex.Pattern
 
@@ -19,7 +19,7 @@ class SupportItem {
 
 
 
-  @SubscribeEvent
+  @Subscribe
   fun onTick(event: ClientTickEvent) {
     if(!macroManager.enabled) return
 
@@ -111,7 +111,7 @@ class SupportItem {
     }
   }
 
-  @SubscribeEvent
+  @Subscribe
   fun onChatReceive(event: ClientChatReceivedEvent) {
     if (event.type.toInt() != 2) return
     val message = StringUtils.stripControlCodes(event.message.unformattedText)

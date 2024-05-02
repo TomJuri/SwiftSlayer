@@ -9,7 +9,7 @@ import io.netty.util.internal.ConcurrentSet
 import net.minecraft.entity.Entity
 import net.minecraft.util.BlockPos
 import net.minecraftforge.client.event.RenderWorldLastEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import me.kbrewster.eventbus.Subscribe
 import java.util.concurrent.ConcurrentSkipListSet
 
 class Pathfinder {
@@ -34,8 +34,8 @@ class Pathfinder {
     }
 
     fun calculatePath(start: BlockNode, goal: BlockNode): List<BlockPos>? {
-        //Logger.info(BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer.instance), start.position, goal.position)
-       // if(BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer.instance), start.position, goal.position)) return null
+        //Logger.info(BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer), start.position, goal.position)
+       // if(BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer), start.position, goal.position)) return null
         openSet.clear()
         closedSet.clear()
 
@@ -71,7 +71,7 @@ class Pathfinder {
         return null
     }
 
-    @SubscribeEvent
+    @Subscribe
     fun renderWorld(event: RenderWorldLastEvent?) {
         /*for (BlockNode node : openSet) {
             RenderUtil.drawOutlinedFilledBoundingBox(node.position, Color.CYAN, event.partialTicks);

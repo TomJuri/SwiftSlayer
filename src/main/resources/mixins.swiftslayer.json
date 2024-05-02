@@ -1,6 +1,8 @@
 {
   "compatibilityLevel": "JAVA_8",
   "package": "dev.macrohq.swiftslayer.mixin",
+  "refmap": "mixins.nebula.refmap.json",
+  "minVersion": "0.7.11",
   "client": [
     "FMLHandshakeMessageMixin",
     "MinecraftInvoker",
@@ -8,13 +10,15 @@
   ],
   "verbose": true,
   "mixins": [
+    "EventBusMixin",
+    "LoadControllerMixin",
+    "MinecraftInvoker",
     "NetworkManagerMixin",
     "RenderGuardianMixin",
     "entity.MixinEntity",
     "entity.MixinEntityLivingBase",
     "entity.MixinEntityPlayer",
     "entity.MixinEntityPlayerSP",
-    "MinecraftInvoker",
     "world.MixinChunkProviderClient"
   ]
 }

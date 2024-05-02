@@ -145,7 +145,7 @@ object BlockUtil {
                 world.getBlockState(block).block is BlockSlab
     }
 
-    fun blocksBetweenValid(ctx: CalculationContext = CalculationContext(SwiftSlayer.instance), startPoss: BlockPos, endPoss: BlockPos): Boolean {
+    fun blocksBetweenValid(ctx: CalculationContext = CalculationContext(SwiftSlayer), startPoss: BlockPos, endPoss: BlockPos): Boolean {
         val blocksBetween = bresenham(ctx, startPoss.toVec3(), endPoss.toVec3())
         if(blocksBetween.isEmpty()){
             return false

@@ -59,7 +59,7 @@ class AStarPathfinder(startPos: BlockPos, endPos: BlockPos) {
                 var nextPos = currPoint + 1
 
                 for (i in (path.size - 1) downTo nextPos) {
-                    if (BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer.instance), path[currPoint], path[i])) {
+                    if (BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer), path[currPoint], path[i])) {
                         nextPos = i
                         break
                     }

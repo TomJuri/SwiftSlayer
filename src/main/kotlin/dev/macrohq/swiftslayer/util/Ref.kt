@@ -14,7 +14,7 @@ val world
 val tessellator
     get() = Tessellator.getInstance()
 val swiftSlayer
-    get() = SwiftSlayer.instance
+    get() = SwiftSlayer
 val gameSettings
     get() = mc.gameSettings
 val config
@@ -22,7 +22,7 @@ val config
 val pathExecutor
     get() = swiftSlayer.pathExecutor
 val mobKiller
-    get() = when(SwiftSlayer.instance.config.slayer) {
+    get() = when(SwiftSlayer.config.slayer) {
             0 -> {
                 RevMobKiller
             }

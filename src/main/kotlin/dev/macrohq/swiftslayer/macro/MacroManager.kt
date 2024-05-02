@@ -3,7 +3,7 @@ package dev.macrohq.swiftslayer.macro
 import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
 import dev.macrohq.swiftslayer.macro.bossKiller.RevBossKiller
 import dev.macrohq.swiftslayer.util.*
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import me.kbrewster.eventbus.Subscribe
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
 class MacroManager {
@@ -13,7 +13,7 @@ class MacroManager {
   var state = State.ACTIVATE_QUEST
     private set
 
-  @SubscribeEvent
+  @Subscribe
   fun onTick(event: ClientTickEvent) {
     if (!enabled || mobKiller.getInstance().enabled || RevBossKiller.getInstance().enabled) return
 

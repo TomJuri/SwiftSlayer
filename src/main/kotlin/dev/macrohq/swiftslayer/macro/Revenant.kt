@@ -10,7 +10,7 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.entity.monster.EntityZombie
 import net.minecraftforge.client.event.RenderLivingEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import me.kbrewster.eventbus.Subscribe
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
 class Revenant {
@@ -30,7 +30,7 @@ class Revenant {
         KILLING
     }
 
-    @SubscribeEvent
+    @Subscribe
     fun onTick(event: ClientTickEvent){
         if(!enabled) return
         if(mob!=null){
@@ -98,7 +98,7 @@ class Revenant {
         }
     }
 
-    @SubscribeEvent
+    @Subscribe
     fun onEntityRender(event: RenderLivingEvent.Pre<EntityLivingBase>){
         if(!enabled) return
         if(state != State.CHECKING) return

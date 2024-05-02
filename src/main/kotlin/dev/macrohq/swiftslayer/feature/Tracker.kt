@@ -2,7 +2,7 @@ package dev.macrohq.swiftslayer.feature
 
 import net.minecraft.util.StringUtils
 import net.minecraftforge.client.event.ClientChatReceivedEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import me.kbrewster.eventbus.Subscribe
 
 class Tracker {
 
@@ -43,7 +43,7 @@ class Tracker {
     totalXp = 0
   }
 
-  @SubscribeEvent
+  @Subscribe
   fun onChatReceive(event: ClientChatReceivedEvent) {
     val message = StringUtils.stripControlCodes(event.message.unformattedText).replace(",", "")
     val regex = Regex("Next LVL in (\\d+) XP!")

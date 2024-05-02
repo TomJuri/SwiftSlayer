@@ -11,12 +11,12 @@ import net.minecraft.init.Blocks
 import net.minecraft.network.play.server.S09PacketHeldItemChange
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.event.world.WorldEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import me.kbrewster.eventbus.Subscribe
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
 
 class Failsafe {
-    @SubscribeEvent
+    @Subscribe
     fun onWorldUnload(event: WorldEvent.Unload) {
         if (!macroManager.enabled) return
         Logger.error("The server you were on probably restarted. Disabling.")
@@ -24,7 +24,7 @@ class Failsafe {
         macroManager.disable()
     }
 
-    @SubscribeEvent
+    @Subscribe
     fun onItemChange(event: ReceivePacketEvent) {
         if (!macroManager.enabled) return
         if (event.packet !is S09PacketHeldItemChange) return
@@ -33,7 +33,7 @@ class Failsafe {
         macroManager.disable()
     }
 
-    @SubscribeEvent
+    @Subscribe
     fun onTick(event: ClientTickEvent) {
         if (!macroManager.enabled) return
         var count = 0
@@ -48,7 +48,7 @@ class Failsafe {
         macroManager.disable()
     }
 
-    @SubscribeEvent
+    @Subscribe
     fun onChatReceive(event: ClientChatReceivedEvent) {
         if (!macroManager.enabled) return
         if (event.message.unformattedText.contains("You were killed by")) {

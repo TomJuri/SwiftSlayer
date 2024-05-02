@@ -9,7 +9,7 @@ import dev.macrohq.swiftslayer.util.movement.CalculationContext
 import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import me.kbrewster.eventbus.Subscribe
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import kotlin.math.abs
 
@@ -30,7 +30,7 @@ class RevBossKiller:AbstractBossKiller() {
 
     private var currentAngle: Angle = Angle(AngleUtil.yawTo360(player.rotationYaw), player.rotationPitch)
 
-    @SubscribeEvent
+    @Subscribe
     fun movement(event: ClientTickEvent) {
         if(!enabled || paused || currentTarget == null) return
 
@@ -53,12 +53,12 @@ class RevBossKiller:AbstractBossKiller() {
      //movement (crazy)
         when(movState) {
             MovementState.FIND_BLOCK -> {
-                when(SwiftSlayer.instance.config.movementType) {
+                when(SwiftSlayer.config.movementType) {
                     0 -> { // find corner
                         if(chosenBlock == null || findNewBlock) {
                             findCorner@
                             for (block: BlockPos in BlockUtil.getBlocks(player.position, 15, 5, 15)) {
-                                if (BlockUtil.isSingleCorner(block) && BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer.instance), player.getStandingOnCeil(), block)) {
+                                if (BlockUtil.isSingleCorner(block) && BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer), player.getStandingOnCeil(), block)) {
                                     chosenBlock = block
                                     break@findCorner
                                 }
@@ -72,7 +72,7 @@ class RevBossKiller:AbstractBossKiller() {
                         if(chosenBlock == null || findNewBlock) {
                             findBlock@
                             for (block: BlockPos in BlockUtil.getBlocks(BlockPos(mc.thePlayer.posX + mc.thePlayer.getLookVec().xCoord * -25, mc.thePlayer.posY, mc.thePlayer.posZ + mc.thePlayer.getLookVec().zCoord * -25), 15, 5, 15)) {
-                                if (BlockUtil.getXZDistance(player.getStandingOnCeil(), block) > 6 && BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer.instance), player.getStandingOnCeil(), block) && !BlockUtil.isSingleCorner(block)) {
+                                if (BlockUtil.getXZDistance(player.getStandingOnCeil(), block) > 6 && BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer), player.getStandingOnCeil(), block) && !BlockUtil.isSingleCorner(block)) {
                                     chosenBlock = block
                                     break@findBlock
                                 }
@@ -126,7 +126,7 @@ class RevBossKiller:AbstractBossKiller() {
                     movState = MovementState.FIND_BLOCK
                     return
                 }
-                if(BlockUtil.getXZDistance(player.getStandingOnCeil(), chosenBlock!!) < 1 && SwiftSlayer.instance.config.movementType == 1 ) {
+                if(BlockUtil.getXZDistance(player.getStandingOnCeil(), chosenBlock!!) < 1 && SwiftSlayer.config.movementType == 1 ) {
                     findNewBlock = true
                     Logger.info("in need of new block!")
                     movState = MovementState.FIND_BLOCK
@@ -135,8 +135,8 @@ class RevBossKiller:AbstractBossKiller() {
                 }
 
                 //movement type = find corner
-                if(BlockUtil.getXZDistance(player.getStandingOnCeil(), chosenBlock!!) < 1 && SwiftSlayer.instance.config.movementType == 0) {
-                    if(BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer.instance), player.getStandingOnCeil(), chosenBlock!!)) {
+                if(BlockUtil.getXZDistance(player.getStandingOnCeil(), chosenBlock!!) < 1 && SwiftSlayer.config.movementType == 0) {
+                    if(BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer), player.getStandingOnCeil(), chosenBlock!!)) {
                         movState = MovementState.GOTO_BLOCK
                     } else {
                         findNewBlock = true
@@ -151,7 +151,7 @@ class RevBossKiller:AbstractBossKiller() {
 
     }
 
-    @SubscribeEvent
+    @Subscribe
     fun rotation(event: ClientTickEvent) {
         if (!enabled || paused || currentTarget == null) return
 
@@ -219,12 +219,12 @@ class RevBossKiller:AbstractBossKiller() {
             Logger.info("null entity!?")
             return
         }
-        if(!enabled) MinecraftForge.EVENT_BUS.register(this)
+        if(!enabled) SwiftEventBus.register(this)
         enabled = true
         movState = MovementState.FIND_BLOCK
         rotState = RotationState.LOOK_AT_TARGET
         chosenBlock = null
-        player.inventory.currentItem = SwiftSlayer.instance.config.meleeWeaponSlot - 1
+        player.inventory.currentItem = SwiftSlayer.config.meleeWeaponSlot - 1
     }
 
     override fun disable() {

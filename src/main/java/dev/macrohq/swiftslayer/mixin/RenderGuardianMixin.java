@@ -20,7 +20,7 @@ public abstract class RenderGuardianMixin {
     private void renderGuardianBeamMixin(final EntityGuardian entity, final double x, final double y, final double z, final float entityYaw, final float partialTicks, final CallbackInfo ci) {
         final Vec3 start = this.func_177110_a(entity.getTargetedEntity(), entity.getTargetedEntity().height * 0.5D, partialTicks);
         final Vec3 end = this.func_177110_a(entity, entity.getEyeHeight(), partialTicks);
-        SwiftSlayer.Companion.getInstance().getEndermanBossKiller().lasers = new Pair<>(start, end);
-        SwiftSlayer.Companion.getInstance().getEndermanBossKiller().setLastLaser(System.currentTimeMillis());
+        SwiftSlayer.INSTANCE.getEndermanBossKiller().lasers = new Pair<>(start, end);
+        SwiftSlayer.INSTANCE.getEndermanBossKiller().setLastLaser(System.currentTimeMillis());
     }
 }
