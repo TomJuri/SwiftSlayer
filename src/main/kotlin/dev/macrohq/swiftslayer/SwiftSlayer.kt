@@ -9,7 +9,10 @@ import dev.macrohq.swiftslayer.command.PathfindTest
 import dev.macrohq.swiftslayer.command.SwiftSlayerCommand
 import dev.macrohq.swiftslayer.config.SwiftSlayerConfig
 import dev.macrohq.swiftslayer.event.GameEventHandler
-import dev.macrohq.swiftslayer.feature.*
+import dev.macrohq.swiftslayer.feature.AutoBatphone
+import dev.macrohq.swiftslayer.feature.Failsafe
+import dev.macrohq.swiftslayer.feature.SupportItem
+import dev.macrohq.swiftslayer.feature.Tracker
 import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
 import dev.macrohq.swiftslayer.macro.EndermanBossKiller
 import dev.macrohq.swiftslayer.macro.GenericBossKiller
@@ -20,10 +23,14 @@ import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.movement.helper.BlockStateAccessor
 import dev.macrohq.swiftslayer.util.movement.helper.player.IPlayerContext
 import dev.macrohq.swiftslayer.util.movement.helper.player.PlayerContext
+import dev.macrohq.swiftslayer.util.rotation.RotationManager
 import me.kbrewster.eventbus.Subscribe
 import net.minecraft.client.Minecraft
+import net.minecraft.client.settings.GameSettings
 import net.minecraft.util.BlockPos
 import net.minecraftforge.client.event.RenderWorldLastEvent
+import net.minecraftforge.fml.common.gameevent.TickEvent
+
 
 /* fun main() {
     val keyPairGenerator = KeyPairGenerator.getInstance("RSA")
@@ -99,6 +106,11 @@ object SwiftSlayer {
     RotationUtil.onRenderWorldLast()
     RenderUtil.onRenderWorldLast(event)
     KeyBindUtil.onRenderWorldLast()
+  }
+
+  @Subscribe
+  fun onChat(event: TickEvent.ClientTickEvent) {
+    if (GameSettings.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindSneak)) RotationManager.getInstance().rotateTo(BlockPos(44, 3, 245))
   }
 
   // Hellow
