@@ -1,0 +1,8 @@
+v1	named	intermediary
+FIELD	dev/macrohq/swiftslayer/mixin/entity/MixinEntity	D	motionZ	field_70179_y
+FIELD	dev/macrohq/swiftslayer/mixin/entity/MixinEntity	D	motionX	field_70159_w
+FIELD	dev/macrohq/swiftslayer/mixin/entity/MixinEntity	F	rotationYaw	field_70177_z
+FIELD	dev/macrohq/swiftslayer/mixin/world/MixinChunkProviderClient	Lnet/minecraft/util/LongHashMap;	chunkMapping	field_73236_b
+FIELD	dev/macrohq/swiftslayer/mixin/world/MixinChunkProviderClient	Ljava/util/List;	chunkListing	field_73237_c
+METHOD	dev/macrohq/swiftslayer/mixin/entity/MixinEntity	(FFF)V	moveFlying	func_70060_a
+METHOD	dev/macrohq/swiftslayer/mixin/RenderGuardianMixin	(Lnet/minecraft/entity/EntityLivingBase;DF)Lnet/minecraft/util/Vec3;	func_177110_a	func_177110_a

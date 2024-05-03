@@ -1,0 +1,73 @@
+---- Minecraft Crash Report ----
+// Shall we play a game?
+
+Time: 5/2/24 7:55 PM
+Description: There was a severe problem during mod loading that has caused the game to fail
+
+net.minecraftforge.fml.common.LoaderException: java.lang.IllegalAccessException: Class net.minecraftforge.fml.common.ILanguageAdapter$JavaAdapter can not access a member of class dev.macrohq.swiftslayer.SwiftSlayer with modifiers "private"
+	at net.minecraftforge.fml.common.LoadController.transition(LoadController.java:162)
+	at net.minecraftforge.fml.common.Loader.loadMods(Loader.java:543)
+	at net.minecraftforge.fml.client.FMLClientHandler.beginMinecraftLoading(FMLClientHandler.java:208)
+	at net.minecraft.client.Minecraft.startGame(Minecraft.java:417)
+	at net.minecraft.client.Minecraft.run(Minecraft.java:329)
+	at net.minecraft.client.main.Main.main(Main.java:124)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at net.minecraft.launchwrapper.Launch.launch(Launch.java:135)
+	at net.minecraft.launchwrapper.Launch.main(Launch.java:28)
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86)
+Caused by: java.lang.IllegalAccessException: Class net.minecraftforge.fml.common.ILanguageAdapter$JavaAdapter can not access a member of class dev.macrohq.swiftslayer.SwiftSlayer with modifiers "private"
+	at sun.reflect.Reflection.ensureMemberAccess(Reflection.java:102)
+	at java.lang.Class.newInstance(Class.java:436)
+	at net.minecraftforge.fml.common.ILanguageAdapter$JavaAdapter.getNewInstance(ILanguageAdapter.java:174)
+	at net.minecraftforge.fml.common.FMLModContainer.constructMod(FMLModContainer.java:534)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at com.google.common.eventbus.EventSubscriber.handleEvent(EventSubscriber.java:74)
+	at com.google.common.eventbus.SynchronizedEventSubscriber.handleEvent(SynchronizedEventSubscriber.java:47)
+	at com.google.common.eventbus.EventBus.dispatch(EventBus.java:322)
+	at com.google.common.eventbus.EventBus.dispatchQueuedEvents(EventBus.java:304)
+	at com.google.common.eventbus.EventBus.post(EventBus.java:275)
+	at net.minecraftforge.fml.common.LoadController.sendEventToModContainer(LoadController.java:211)
+	at net.minecraftforge.fml.common.LoadController.propogateStateMessage(LoadController.java:189)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at com.google.common.eventbus.EventSubscriber.handleEvent(EventSubscriber.java:74)
+	at com.google.common.eventbus.SynchronizedEventSubscriber.handleEvent(SynchronizedEventSubscriber.java:47)
+	at com.google.common.eventbus.EventBus.dispatch(EventBus.java:322)
+	at com.google.common.eventbus.EventBus.dispatchQueuedEvents(EventBus.java:304)
+	at com.google.common.eventbus.EventBus.post(EventBus.java:275)
+	at net.minecraftforge.fml.common.LoadController.distributeStateMessage(LoadController.java:118)
+	at net.minecraftforge.fml.common.Loader.loadMods(Loader.java:512)
+	... 11 more
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- System Details --
+Details:
+	Minecraft Version: 1.8.9
+	Operating System: Linux (amd64) version 6.6.28
+	Java Version: 1.8.0_402, Azul Systems, Inc.
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode), Azul Systems, Inc.
+	Memory: 605639616 bytes (577 MB) / 1171259392 bytes (1117 MB) up to 7462191104 bytes (7116 MB)
+	JVM Flags: 0 total; 
+	IntCache: cache: 0, tcache: 0, allocated: 0, tallocated: 0
+	FML: MCP 9.19 Powered by Forge 11.15.1.2318 5 mods loaded, 5 mods active
+	States: 'U' = Unloaded 'L' = Loaded 'C' = Constructed 'H' = Pre-initialized 'I' = Initialized 'J' = Post-initialized 'A' = Available 'D' = Disabled 'E' = Errored
+	UC	mcp{9.19} [Minecraft Coder Pack] (minecraft.jar) 
+	UC	FML{8.0.99.99} [Forge Mod Loader] (forge-mapped.jar) 
+	UC	Forge{11.15.1.2318} [Minecraft Forge] (forge-mapped.jar) 
+	UE	swiftslayer{1.0} [swiftslayer] (main) 
+	UC	oneconfig{0.2.2-alpha196} [OneConfig] (OneConfig (1.8.9-forge).jar) 
+	Loaded coremods (and transformers): 
+DevAuthLoadingPlugin (DevAuth-forge-legacy-1.1.2.jar)
+  me.djtheredstoner.devauth.forge.legacy.ClassTransformer
+	GL info: ' Vendor: 'AMD' Version: '4.6 (Compatibility Profile) Mesa 24.0.5' Renderer: 'AMD Radeon RX 6800 XT (radeonsi, navi21, LLVM 17.0.6, DRM 3.54, 6.6.28)'

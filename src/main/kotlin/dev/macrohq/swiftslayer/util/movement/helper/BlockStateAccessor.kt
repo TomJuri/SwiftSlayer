@@ -2,8 +2,6 @@ package dev.macrohq.swiftslayer.util.movement.helper
 
 import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.util.accessor.IChunkProviderClient
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import net.minecraft.block.state.IBlockState
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
@@ -12,7 +10,7 @@ import net.minecraft.world.chunk.Chunk
 
 class BlockStateAccessor(private val ss: SwiftSlayer) {
   private val world: World = this.ss.playerContext.world
-  private val loadedChunks: Long2ObjectMap<Chunk> = Long2ObjectOpenHashMap()
+  private val loadedChunks: HashMap<Long, Chunk> = HashMap()
   private var cached: Chunk? = null
 
   init {

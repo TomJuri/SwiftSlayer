@@ -1,0 +1,30 @@
+{
+  "mappings": {
+    "dev/macrohq/swiftslayer/mixin/MinecraftInvoker": {
+      "clickMouse": "func_147116_af()V",
+      "rightClickMouse": "func_147121_ag()V"
+    },
+    "dev/macrohq/swiftslayer/mixin/RenderGuardianMixin": {
+      "doRender(Lnet/minecraft/entity/monster/EntityGuardian;DDDFF)V": "Lnet/minecraft/client/renderer/entity/RenderGuardian;func_76986_a(Lnet/minecraft/entity/monster/EntityGuardian;DDDFF)V",
+      "Lnet/minecraft/util/Vec3;subtract(Lnet/minecraft/util/Vec3;)Lnet/minecraft/util/Vec3;": "Lnet/minecraft/util/Vec3;func_178788_d(Lnet/minecraft/util/Vec3;)Lnet/minecraft/util/Vec3;"
+    },
+    "dev/macrohq/swiftslayer/mixin/NetworkManagerMixin": {
+      "channelRead0*": "Lnet/minecraft/network/NetworkManager;channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;)V"
+    }
+  },
+  "data": {
+    "named:intermediary": {
+      "dev/macrohq/swiftslayer/mixin/MinecraftInvoker": {
+        "clickMouse": "func_147116_af()V",
+        "rightClickMouse": "func_147121_ag()V"
+      },
+      "dev/macrohq/swiftslayer/mixin/RenderGuardianMixin": {
+        "doRender(Lnet/minecraft/entity/monster/EntityGuardian;DDDFF)V": "Lnet/minecraft/client/renderer/entity/RenderGuardian;func_76986_a(Lnet/minecraft/entity/monster/EntityGuardian;DDDFF)V",
+        "Lnet/minecraft/util/Vec3;subtract(Lnet/minecraft/util/Vec3;)Lnet/minecraft/util/Vec3;": "Lnet/minecraft/util/Vec3;func_178788_d(Lnet/minecraft/util/Vec3;)Lnet/minecraft/util/Vec3;"
+      },
+      "dev/macrohq/swiftslayer/mixin/NetworkManagerMixin": {
+        "channelRead0*": "Lnet/minecraft/network/NetworkManager;channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;)V"
+      }
+    }
+  }
+}
