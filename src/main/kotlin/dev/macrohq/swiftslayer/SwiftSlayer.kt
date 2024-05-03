@@ -110,7 +110,11 @@ object SwiftSlayer {
 
   @Subscribe
   fun onChat(event: TickEvent.ClientTickEvent) {
-    if (GameSettings.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindSneak)) RotationManager.getInstance().rotateTo(BlockPos(44, 3, 245))
+    if (GameSettings.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindDrop)) {
+      RotationManager.getInstance().rotateTo(BlockPos(44, 4, 245))
+
+
+    }
   }
 
   // Hellow

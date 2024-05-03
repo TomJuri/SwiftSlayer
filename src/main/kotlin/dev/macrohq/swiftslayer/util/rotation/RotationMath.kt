@@ -47,11 +47,7 @@ class RotationMath {
     private fun calculateBezierT(controlPoints: List<Float>, t: Float): Float {
         val n = controlPoints.size
         var y = 0f
-        for (i in 0 until n) {
-            y += (binomialCoefficient(
-                n,
-                (i + 1)
-            ) * (1 - t).pow((n - (i + 1)).toFloat()) * t.pow((i + 1).toFloat()) * controlPoints[i]).toFloat()
+        for (i in 0 until n) { y += (binomialCoefficient(n, (i + 1)) * (1 - t).pow((n - (i + 1)).toFloat()) * t.pow((i + 1).toFloat()) * controlPoints[i])
         }
 
         return y

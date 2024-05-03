@@ -221,6 +221,60 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
         return degreeDistance
     }
 
+    @Slider(
+        name = "yaw controlpoint 1",
+        category = "General",
+        subcategory = "Miscellaneous",
+        min = 0f,
+        max = 100f,
+    )
+    var yCp1 = 100
+
+    @Slider(
+        name = "yaw controlpoint 2",
+        category = "General",
+        subcategory = "Miscellaneous",
+        min = 0f,
+        max = 100f,
+    )
+    var yCp2 = 100
+
+    @Slider(
+        name = "yaw controlpoint 3",
+        category = "General",
+        subcategory = "Miscellaneous",
+        min = 0f,
+        max = 100f,
+    )
+    var yCp3 = 100
+
+    @Slider(
+        name = "pitch controlpoint 1",
+        category = "General",
+        subcategory = "Miscellaneous",
+        min = 0f,
+        max = 100f,
+    )
+    var pCp1 = 100
+
+    @Slider(
+        name = "pitch controlpoint 2",
+        category = "General",
+        subcategory = "Miscellaneous",
+        min = 0f,
+        max = 100f,
+    )
+    var pCp2 = 100
+
+    @Slider(
+        name = "pitch controlpoint 3",
+        category = "General",
+        subcategory = "Miscellaneous",
+        min = 0f,
+        max = 100f,
+    )
+    var pCp3 = 100
+
     init {
         initialize()
         registerKeyBind(toggleMacro) { macroManager.toggle() }

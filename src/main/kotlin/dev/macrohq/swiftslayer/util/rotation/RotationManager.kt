@@ -2,10 +2,10 @@ package dev.macrohq.swiftslayer.util.rotation
 
 
 
-import dev.macrohq.swiftslayer.util.Logger
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.Entity
 import net.minecraft.util.BlockPos
+import java.util.*
 import kotlin.math.abs
 
 
@@ -29,9 +29,9 @@ class RotationManager {
         val current = Rotation(player.rotationYaw, player.rotationPitch)
 
         // Do not forget to change this to something better!
-        val msPD = 4f
-        val yawControlPoints: List<Float> = listOf(0f, .3f, 1f)
-        val pitchControlPoints: List<Float> = listOf(0f, .3f, 1f)
+        val msPD = 1f
+        val yawControlPoints: List<Float> = Arrays.asList(0f, 1f)
+        val pitchControlPoints: List<Float> = Arrays.asList(0f, 1f)
 
         val totalTime: Float = (abs(target.yaw - current.yaw) + abs(target.pitch - current.pitch)) * msPD
         val rotationPath: MutableList<Rotation> = ArrayList()
@@ -41,13 +41,15 @@ class RotationManager {
             t += 1 / totalTime
         }
         currentThread = Thread {
-            Logger.info(rotationPath.size)
             for (rotation in rotationPath) {
-                Logger.info("here")
-                Minecraft.getMinecraft().thePlayer.rotationYaw =
-                    current.yaw + (target.yaw - current.yaw) * rotation.yaw
-                Minecraft.getMinecraft().thePlayer.rotationPitch =
-                    current.pitch + (target.pitch - current.pitch) * rotation.pitch
+                val difference = Rotation((target.yaw - current.yaw), (target.pitch - current.pitch)
+                )
+
+                difference.yaw = (difference.yaw + 180) % 360 - 180
+                difference.pitch = (difference.pitch + 180) % 360 - 180
+
+                Minecraft.getMinecraft().thePlayer.rotationYaw = current.yaw + difference.yaw * rotation.yaw
+                Minecraft.getMinecraft().thePlayer.rotationPitch = current.pitch + difference.pitch * rotation.pitch
 
                 try {
                     Thread.sleep((totalTime / rotationPath.size).toLong())
@@ -62,7 +64,7 @@ class RotationManager {
     fun rotateTo(entity: Entity) {
         val rotation: Rotation = RotationMath.getInstance().calculateNeededRotation(
             Minecraft.getMinecraft().thePlayer.position,
-            entity.position.add(0.0, entity.height - 0.5, 0.0)
+            entity.position.add(0.5, entity.height.toDouble() - 1.75, 0.5)
         )
         rotateTo(rotation)
     }
