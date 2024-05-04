@@ -1,11 +1,9 @@
 package dev.macrohq.swiftslayer.macro
 
-import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.feature.helper.Angle
 import dev.macrohq.swiftslayer.feature.helper.Target
-import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
-import dev.macrohq.swiftslayer.feature.implementation.LockType
 import dev.macrohq.swiftslayer.util.*
+import dev.macrohq.swiftslayer.util.rotation.RotationManager
 import net.minecraft.entity.EntityLiving
 import kotlin.math.abs
 
@@ -37,17 +35,12 @@ abstract class AbstractMobKiller:IMobKiller {
     }
 
     override fun lookAtEntity(entity: EntityLiving) {
-        var angle = Target(angleForWeapon(entity))
-        AutoRotation.disable()
-        //  var time = SwiftSlayer.config.calculateRotationTime(abs(angle.getAngle().yaw - (mc.thePlayer.rotationYaw % 360)).toDouble())
-        var time = SwiftSlayer.config.calculateRotationTime(SwiftSlayer.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(angle.getAngle().yaw).toDouble(), angle.getAngle().pitch.toDouble()))
-        if(time > 50) time = time else time = 50
         when (config.mobKillerWeapon) {
 
-            0 -> AutoRotation.easeTo(angle, time, LockType.NONE, true)
-            1 -> AutoRotation.easeTo(angle, time, LockType.NONE, true, 200, easeFunction = EaseUtil::easeOutBack )
+            0 -> RotationManager.getInstance().rotateTo(entity)
+            1 -> RotationManager.getInstance().rotateTo(entity)
             2 -> {}
-            3 -> AutoRotation.easeTo(angle, time, LockType.NONE, true)
+            3 -> RotationManager.getInstance().rotateTo(entity, 1f)
         }
       //  Logger.info(time)
     }

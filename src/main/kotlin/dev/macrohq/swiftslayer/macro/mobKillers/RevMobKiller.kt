@@ -1,10 +1,10 @@
 package dev.macrohq.swiftslayer.macro.mobKillers
 
 import dev.macrohq.swiftslayer.SwiftSlayer
-import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
 import dev.macrohq.swiftslayer.macro.AbstractMobKiller
 import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.InventoryUtil.getHotbarSlotForItem
+import dev.macrohq.swiftslayer.util.rotation.RotationManager
 import me.kbrewster.eventbus.Subscribe
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.monster.EntityZombie
@@ -33,7 +33,6 @@ class RevMobKiller: AbstractMobKiller() {
         if (!enabled) return
         if(SwiftSlayer.autoBatphone.enabled) return
 
-        InventoryUtil.closeGUI()
         if (SlayerUtil.getState() == SlayerUtil.SlayerState.BOSS_ALIVE) {
             disable()
             return
@@ -53,7 +52,7 @@ class RevMobKiller: AbstractMobKiller() {
 
         ticksSinceLastClick++
 
-        if(BlockUtil.getXZDistance(player.lastTickPositionCeil(), player.getStandingOnCeil()) < 0.5) {
+        if(BlockUtil.getXZDistance(player.lastTickPositionCeil(), player.getStandingOnCeil()) < 0.2) {
             ticksSinceLastMovement++
         } else {
             ticksSinceLastMovement = 0
@@ -64,6 +63,7 @@ class RevMobKiller: AbstractMobKiller() {
             blacklist.add(currentTarget!!)
             state = State.CHOOSE_TARGET
             Logger.info("stuck for 3 seconds!")
+            PathingUtil.stop()
             return
         }
 
@@ -77,10 +77,6 @@ class RevMobKiller: AbstractMobKiller() {
                 blacklist.add(currentTarget!!)
                 state = State.CHOOSE_TARGET
 
-            }
-
-            if(player.canEntityBeSeen(currentTarget!!) && !looking) {
-                state = State.GOTO_TARGET
             }
         }
 
@@ -104,12 +100,12 @@ class RevMobKiller: AbstractMobKiller() {
             }
 
             State.GOTO_TARGET -> {
-                AutoRotation.disable()
+                //AutoRotation.disable()
                 Thread {
                     PathingUtil.stop()
-                    AutoRotation.disable()
+                    //AutoRotation.disable()
                     if (player.canEntityBeSeen(currentTarget!!)) {
-                        PathingUtil.goto(currentTarget!!.getStandingOnCeil(), currentTarget)
+                        PathingUtil.goto(currentTarget!!.getStandingOnCeil())
                         looking = true
                     } else {
                         PathingUtil.goto(currentTarget!!.getStandingOnCeil())
@@ -124,32 +120,30 @@ class RevMobKiller: AbstractMobKiller() {
             }
 
             State.VERIFY_PATHFINDING -> {
-                if (PathingUtil.hasFailed || currentTarget!!.isDead) {
-                    PathingUtil.stop()
-                    blacklist.add(currentTarget!!)
-                    state = State.CHOOSE_TARGET
-                    return
-
-                }
                 if (player.getDistanceToEntity(currentTarget) < attackDistance()) {
                     stopWalking()
                     state = State.LOOK_AT_TARGET
                     return
                 }
 
-                if(PathingUtil.isDone && player.getDistanceToEntity(currentTarget) > attackDistance()) {
+                if(PathingUtil.hasFailed) {
                     Logger.info("Failed pathfinding :( finding next target")
                     blacklist.add(currentTarget!!)
                     state = State.CHOOSE_TARGET
+                    return
                 }
-                return
+
+                if(PathingUtil.isDone && player.getDistanceToEntity(currentTarget!!) > attackDistance()) {
+                    state = State.GOTO_TARGET
+                    return
+                }
+
             }
 
              State.LOOK_AT_TARGET -> {
                 //AutoRotation.disable()
                 if(currentTarget != null) {
                     lookAtEntity(currentTarget!!)
-                    Logger.info("done")
                 } else {
                     Logger.info("failed to look at target!")
                     state = State.CHOOSE_TARGET
@@ -160,19 +154,17 @@ class RevMobKiller: AbstractMobKiller() {
             }
 
             State.VERIFY_LOOKING -> {
-              //  if(AutoRotation.enabled) return
                 if(mc.objectMouseOver.entityHit != null && player.getDistanceToEntity(currentTarget) <= attackDistance() && player.canEntityBeSeen(currentTarget)) {
                     holdWeapon()
                     state = State.KILL_TARGET
                     return
-                } else if(mc.objectMouseOver.entityHit == null && player.getDistanceToEntity(currentTarget) > attackDistance()) {
+                } else if(mc.objectMouseOver.entityHit == null && player.getDistanceToEntity(currentTarget) < attackDistance()) {
                     if(!currentTarget!!.onGround) return
-                    
-                    state = State.GOTO_TARGET
+                    state = State.LOOK_AT_TARGET
                     return
                 }
 
-                if(!AutoRotation.enabled && mc.objectMouseOver.entityHit != currentTarget) {
+                if(mc.objectMouseOver == null && !RotationManager.getInstance().currentThread.isAlive) {
                     state = State.LOOK_AT_TARGET
                     return
                 }

@@ -1,6 +1,5 @@
 package dev.macrohq.swiftslayer.util
 
-import dev.macrohq.swiftslayer.feature.helper.Target
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.monster.EntityCaveSpider
 import net.minecraft.init.Blocks
@@ -99,14 +98,21 @@ object EntityUtil {
     private fun getMobCost(entity: EntityLiving): Double {
 
 
-        val normalizedYaw: Double = abs(AngleUtil.yawTo360(mc.thePlayer.rotationYaw) - AngleUtil.yawTo360(Target(entity).getAngle().yaw)).toDouble() /  rotationNormalizationFactor
+   /*     val normalizedYaw: Double = abs(AngleUtil.yawTo360(mc.thePlayer.rotationYaw) - AngleUtil.yawTo360(Target(entity).getAngle().yaw)).toDouble() /  rotationNormalizationFactor
         val normalizedDistance: Double = BlockUtil.getXZDistance(player.position, entity.position) / distanceNormalizationFactor
         var normalizedYChange: Double = 0.0
         if(abs(player.posY - entity.posY) > 3) {
             normalizedYChange = (abs(player.posY - entity.posY) - 3) / yDistanceNormalizationFactor
-        }
+        } */
 
-        return (normalizedYaw * rotationWeight) + (normalizedDistance * distanceWeight) + (normalizedYChange * yChangeWeight)
+        /* return (normalizedYaw * rotationWeight) + (normalizedDistance * distanceWeight) + (normalizedYChange * yChangeWeight) */
+        var distanceCost = BlockUtil.getXZDistance(player.position, entity.position)
+
+        if(abs(player.position.y - entity.posY) > 3) {
+            distanceCost *= 5
+        }
+        if(!player.canEntityBeSeen(entity)) distanceCost *= 5
+        return distanceCost.toDouble()
     }
 
     fun getMobs(entityClass: Class<out EntityLiving>): List<EntityLiving> {

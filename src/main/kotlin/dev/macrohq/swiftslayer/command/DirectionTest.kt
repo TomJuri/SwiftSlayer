@@ -1,19 +1,16 @@
 package dev.macrohq.swiftslayer.command
 
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command
-import cc.polyfrost.oneconfig.utils.commands.annotations.Main
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
 import dev.macrohq.swiftslayer.SwiftSlayer
-import dev.macrohq.swiftslayer.codecPathfinder.Pathfinder.Pathfinder
-import dev.macrohq.swiftslayer.codecPathfinder.Pathfinder.dependencies.BlockNode
 import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.movement.CalculationContext
+import me.kbrewster.eventbus.Subscribe
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
 import net.minecraft.util.Vec3
 import net.minecraftforge.client.event.RenderWorldLastEvent
-import me.kbrewster.eventbus.Subscribe
 import java.awt.Color
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -50,18 +47,6 @@ class DirectionTest {
         return (angle <= mc.gameSettings.fovSetting / 2 && mc.thePlayer.canEntityBeSeen(entity))
     }
 
-    @Main
-    private fun path(x: Int, y: Int, z: Int) {
-        Logger.info(BlockUtil.isNotWalkable(player.position))
-        Thread {
-            var pathFinder: Pathfinder = SwiftSlayer.pathFinder
-            var path = pathFinder.calculatePath(BlockNode((Minecraft.getMinecraft().thePlayer.position.add(0.0, 0.5, 0.0))), BlockNode(BlockPos(x, y, z)))
-
-            if (path != null && path.size > 1) {
-                SwiftSlayer.pathExecutor.enable(path)
-            }
-        }.start()
-    }
 
     @Subscribe
     fun onWorldRender(event: RenderWorldLastEvent) {

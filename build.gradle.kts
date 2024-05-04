@@ -27,6 +27,7 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
     modRuntimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.1.2")
 
+    runtimeOnly("cc.polyfrost:oneconfig-wrapper-launchwrapper:1.0.0-beta+")
     embed("com.github.KevinPriv:keventbus:master") {
         exclude("org.jetbrains.kotlin")
     }

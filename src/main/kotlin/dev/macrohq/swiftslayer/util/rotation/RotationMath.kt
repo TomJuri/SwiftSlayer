@@ -1,6 +1,6 @@
 package dev.macrohq.swiftslayer.util.rotation
 
-import net.minecraft.util.BlockPos
+import net.minecraft.util.Vec3
 import java.lang.Math.toDegrees
 import kotlin.math.atan2
 import kotlin.math.pow
@@ -18,10 +18,10 @@ class RotationMath {
             return instance!!
         }
     }
-    fun calculateNeededRotation(source: BlockPos, target: BlockPos): Rotation {
-        val deltaX = (target.x - source.x).toFloat()
-        val deltaY = (target.y - source.y).toFloat()
-        val deltaZ = (target.z - source.z).toFloat()
+    fun calculateNeededRotation(source: Vec3, target: Vec3): Rotation {
+        val deltaX = (target.xCoord - source.xCoord).toFloat()
+        val deltaY = (target.yCoord - source.yCoord).toFloat()
+        val deltaZ = (target.zCoord - source.zCoord).toFloat()
 
         return Rotation(
             toDegrees(atan2(-deltaX, deltaZ).toDouble()).toFloat(),

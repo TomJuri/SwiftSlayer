@@ -1,16 +1,12 @@
 package dev.macrohq.swiftslayer.macro
 
-import dev.macrohq.swiftslayer.feature.helper.Angle
-import dev.macrohq.swiftslayer.feature.helper.Target
-import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
-import dev.macrohq.swiftslayer.feature.implementation.LockType
 import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.Logger.info
+import me.kbrewster.eventbus.Subscribe
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.entity.monster.EntityZombie
 import net.minecraftforge.client.event.RenderLivingEvent
-import me.kbrewster.eventbus.Subscribe
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
 class Revenant {
@@ -73,8 +69,8 @@ class Revenant {
             }
             State.LOOKING -> {
                 info("looking")
-                if (config.bossKillerWeapon == 1) AutoRotation.easeTo(Target(Angle(player.rotationYaw, 90f)), 300, LockType.NONE, true)
-                else AutoRotation.easeTo(Target(AngleUtil.getAngle(mob!!)), 500, LockType.NONE, true)
+               // if (config.bossKillerWeapon == 1) AutoRotation.easeTo(Target(Angle(player.rotationYaw, 90f)), 300, LockType.NONE, true)
+            //    else AutoRotation.easeTo(Target(AngleUtil.getAngle(mob!!)), 500, LockType.NONE, true)
                 state = State.KILLING
             }
             State.KILLING -> {

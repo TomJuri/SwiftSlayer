@@ -36,7 +36,7 @@ val autoBatphone
 val macroManager
     get() = swiftSlayer.macroManager
 val genericBossKiller
-    get() = swiftSlayer.genericBossKiller
+    get() = RevMobKiller.getInstance()
 val endermanBossKiller
     get() = swiftSlayer.endermanBossKiller
 val revenant

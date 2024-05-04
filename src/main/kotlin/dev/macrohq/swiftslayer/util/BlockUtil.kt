@@ -1,7 +1,7 @@
 package dev.macrohq.swiftslayer.util
 
 import dev.macrohq.swiftslayer.SwiftSlayer
-import dev.macrohq.swiftslayer.codecPathfinder.Pathfinder.dependencies.BlockNode
+
 import dev.macrohq.swiftslayer.util.movement.CalculationContext
 import dev.macrohq.swiftslayer.util.movement.MovementHelper
 import net.minecraft.block.BlockSlab
@@ -38,15 +38,6 @@ object BlockUtil {
         return Vec3(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble())
     }
 
-    fun isNotWalkable(pos: BlockPos): Boolean {
-        val node1 = BlockNode(pos.add(0, -1, 0))
-        val node2 = BlockNode(pos)
-        val node3 = BlockNode(pos.add(0, 1, 0))
-
-       if(!world.getBlockState(node1.position).block.material.isSolid) return true
-        if(!world.isAirBlock(node2.position) || !world.isAirBlock(node3.position)) return true
-        return false
-    }
 
 
     fun getBlocksBetweenCorners(topLeft: BlockPos, bottomRight: BlockPos): List<BlockPos> {

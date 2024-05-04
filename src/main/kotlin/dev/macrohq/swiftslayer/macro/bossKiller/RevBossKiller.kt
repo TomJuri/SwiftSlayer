@@ -2,7 +2,6 @@ package dev.macrohq.swiftslayer.macro.bossKiller
 
 import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.feature.helper.Angle
-import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
 import dev.macrohq.swiftslayer.macro.mobKillers.RevMobKiller
 import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.movement.CalculationContext
@@ -11,7 +10,6 @@ import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
-import kotlin.math.abs
 
 class RevBossKiller:AbstractBossKiller() {
 
@@ -24,6 +22,7 @@ class RevBossKiller:AbstractBossKiller() {
     private var rotTimer: Timer = Timer(0)
     private var blockTimer: Timer = Timer(0)
     private var pausedPathExec: Boolean = false
+
 
     private var rotState: RotationState = RotationState.LOOK_AT_TARGET
     private var movState: MovementState = MovementState.FIND_BLOCK
@@ -162,7 +161,13 @@ class RevBossKiller:AbstractBossKiller() {
 
             return
         }
+        if(!player.onGround) return
 
+        if(tickCounter < 20) {
+            tickCounter++
+        } else {
+            tickCounter = 0
+        }
         if(player.getDistanceToEntity(currentTarget) < attackDistance() && player.canEntityBeSeen(currentTarget)) {
             KeyBindUtil.leftClick(8)
         } else {
@@ -175,14 +180,8 @@ class RevBossKiller:AbstractBossKiller() {
         when (rotState) {
             RotationState.LOOK_AT_TARGET -> {
                 if(!currentTarget!!.onGround) return
-                if(!rotTimer.isDone) return
-                if (currentTarget != null) {
-                    lookAtEntity(currentTarget!!)
-                } else {
-                    Logger.info("failed to look at target!")
-                }
-                rotState = RotationState.VERIFY_LOOKING
-                return
+
+                lookAtEntity(currentTarget!!)
 
             }
 
@@ -192,16 +191,8 @@ class RevBossKiller:AbstractBossKiller() {
                     holdWeapon()
                     rotTimer = Timer(15)
                    // return
-                }  else if (mc.objectMouseOver.entityHit == null && !AutoRotation.enabled && player.onGround) {
-                    rotState = RotationState.LOOK_AT_TARGET
-                    return
                 }
 
-                if(mc.objectMouseOver.entityHit == currentTarget && abs(player.rotationPitch - angleForWeapon(currentTarget!!).pitch) > 11 && !AutoRotation.enabled && player.onGround) {
-                  //  lookAtAnle(Target(Angle(AngleUtil.yawTo360(player.rotationYaw), angleForWeapon(currentTarget!!).pitch)))
-                    rotState = RotationState.LOOK_AT_TARGET
-                    Logger.info("huzzah")
-                }
             }
         }
 
@@ -210,10 +201,10 @@ class RevBossKiller:AbstractBossKiller() {
     }
 
     override fun enable() {
-        if(SlayerUtil.getBoss() != null) {
-            currentTarget = SlayerUtil.getBoss()!!.first
+        if(SlayerUtil.getFakeBoss() != null) {
+            currentTarget = SlayerUtil.getFakeBoss()
         }
-        if(SlayerUtil.getBoss() == null) return
+        if(SlayerUtil.getFakeBoss() == null) return
 
         if(currentTarget == null) {
             Logger.info("null entity!?")
@@ -234,7 +225,6 @@ class RevBossKiller:AbstractBossKiller() {
         currentTarget = null
         ticksSinceLastMovement = 0
         tickCounter = 0
-        AutoRotation.disable()
         PathingUtil.stop()
         KeyBindUtil.stopClicking()
         mc.gameSettings.keyBindSneak.setPressed(false)

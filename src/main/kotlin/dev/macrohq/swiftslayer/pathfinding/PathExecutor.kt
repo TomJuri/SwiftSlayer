@@ -1,14 +1,11 @@
 package dev.macrohq.swiftslayer.pathfinding
 
-import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.feature.helper.Angle
-import dev.macrohq.swiftslayer.feature.helper.Target
-import dev.macrohq.swiftslayer.feature.implementation.AutoRotation
-import dev.macrohq.swiftslayer.feature.implementation.LockType
 import dev.macrohq.swiftslayer.util.*
+import dev.macrohq.swiftslayer.util.rotation.RotationManager
+import me.kbrewster.eventbus.Subscribe
 import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
-import me.kbrewster.eventbus.Subscribe
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import kotlin.math.abs
 import kotlin.math.pow
@@ -29,7 +26,12 @@ class PathExecutor {
   @Subscribe
   fun onTick(event: ClientTickEvent) {
     if (!enabled) return
-
+    if(RotationManager.getInstance().currentThread.isAlive) {
+      gameSettings.keyBindSprint.setPressed(false)
+      gameSettings.keyBindForward.setPressed(false)
+      gameSettings.keyBindJump.setPressed(false)
+      return
+    }
 
 
     if (!isOnPath()) {
@@ -50,14 +52,11 @@ class PathExecutor {
 
     if (isOnPath()) {
       next = path[path.indexOf(getStandingOn()!!) + 1]
-      // RotationUtil.ease(RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f), 500)
       if(rotate) {
         if (goal != null) {
-          val time = SwiftSlayer.config.calculateRotationTime(SwiftSlayer.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(Target(goal!!).getAngle().yaw).toDouble(), Target(goal!!).getAngle().pitch.toDouble()))
-          AutoRotation.easeTo(Target(Angle(AngleUtil.getAngle(goal!!.toVec3Top()).yaw, AngleUtil.getAngle(goal!!.toVec3Top()).pitch)), time, LockType.NONE, false)
+        RotationManager.getInstance().rotateTo(goal!!.toVec3Top(), 2f)
         } else {
-          val time = SwiftSlayer.config.calculateRotationTime(SwiftSlayer.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(Target(next!!).getAngle().yaw).toDouble(), Target(next!!).getAngle().pitch.toDouble()))
-          AutoRotation.easeTo(Target(Angle(AngleUtil.getAngle(next!!.toVec3Top()).yaw, 20f)), time, LockType.NONE, false)
+          RotationManager.getInstance().rotateTo(next!!.toVec3Top(), 2f)
         }
       }
 
@@ -85,7 +84,7 @@ class PathExecutor {
    // val rotation = RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f)
     val rotation = Angle(AngleUtil.getAngle(next!!.toVec3Top()).yaw, 20f)
     directionYaw = rotation.yaw
-    gameSettings.keyBindSprint.setPressed(AngleUtil.yawTo360(player.rotationYaw) in AngleUtil.yawTo360(player.rotationYaw) - 45..AngleUtil.yawTo360(player.rotationYaw) + 45)
+   gameSettings.keyBindSprint.setPressed(AngleUtil.yawTo360(player.rotationYaw) in AngleUtil.yawTo360(player.rotationYaw) - 45..AngleUtil.yawTo360(player.rotationYaw) + 45)
     gameSettings.keyBindForward.setPressed(true)
     gameSettings.keyBindJump.setPressed(shouldJump())
 
