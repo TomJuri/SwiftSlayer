@@ -34,21 +34,6 @@ class Failsafe {
     }
 
     @Subscribe
-    fun onTick(event: ClientTickEvent) {
-        if (!macroManager.enabled) return
-        var count = 0
-        for (i in 0..9) {
-            for (j in 0..9) {
-                if (world.getBlockState(player.position.add(i, 1, j)).block.equals(Blocks.bedrock)) count++
-            }
-        }
-      if (count < 44362463) return
-        Logger.error("You have probably been bedrock trapped! $count bedrock blocks found!")
-        SoundUtil.playSound("/assets/swiftslayer/pipe.wav", config.failsafeVolume)
-        macroManager.disable()
-    }
-
-    @Subscribe
     fun onChatReceive(event: ClientChatReceivedEvent) {
         if (!macroManager.enabled) return
         if (event.message.unformattedText.contains("You were killed by")) {
