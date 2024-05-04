@@ -201,10 +201,10 @@ class RevBossKiller:AbstractBossKiller() {
     }
 
     override fun enable() {
-        if(SlayerUtil.getFakeBoss() != null) {
-            currentTarget = SlayerUtil.getFakeBoss()
+        if(SlayerUtil.getBoss() != null) {
+            currentTarget = SlayerUtil.getBoss()!!.first
         }
-        if(SlayerUtil.getFakeBoss() == null) return
+        if(SlayerUtil.getBoss() == null) return
 
         if(currentTarget == null) {
             Logger.info("null entity!?")
