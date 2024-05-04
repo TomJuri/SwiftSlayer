@@ -4,12 +4,10 @@ import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.macro.AbstractMobKiller
 import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.InventoryUtil.getHotbarSlotForItem
-import dev.macrohq.swiftslayer.util.rotation.RotationManager
 import me.kbrewster.eventbus.Subscribe
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.util.BlockPos
-import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
 class RevMobKiller: AbstractMobKiller() {
@@ -101,7 +99,7 @@ class RevMobKiller: AbstractMobKiller() {
 
             State.GOTO_TARGET -> {
                 //AutoRotation.disable()
-                Thread {
+                thread = Thread {
                     PathingUtil.stop()
                     //AutoRotation.disable()
                     if (player.canEntityBeSeen(currentTarget!!)) {
@@ -113,7 +111,8 @@ class RevMobKiller: AbstractMobKiller() {
                     }
 
                     state = State.VERIFY_PATHFINDING
-                }.start()
+                }
+                thread!!.start()
 
                 state = State.SUSPENDED
                 return
@@ -154,17 +153,13 @@ class RevMobKiller: AbstractMobKiller() {
             }
 
             State.VERIFY_LOOKING -> {
+              //  if(AutoRotation.enabled) return
                 if(mc.objectMouseOver.entityHit != null && player.getDistanceToEntity(currentTarget) <= attackDistance() && player.canEntityBeSeen(currentTarget)) {
                     holdWeapon()
                     state = State.KILL_TARGET
                     return
                 } else if(mc.objectMouseOver.entityHit == null && player.getDistanceToEntity(currentTarget) < attackDistance()) {
                     if(!currentTarget!!.onGround) return
-                    state = State.LOOK_AT_TARGET
-                    return
-                }
-
-                if(mc.objectMouseOver == null && !RotationManager.getInstance().currentThread.isAlive) {
                     state = State.LOOK_AT_TARGET
                     return
                 }
@@ -201,7 +196,7 @@ class RevMobKiller: AbstractMobKiller() {
     }
 
     override fun disable() {
-        if(enabled) MinecraftForge.EVENT_BUS.unregister(this)
+        if(enabled) SwiftEventBus.unregister(this)
         enabled = false
 
 
@@ -225,7 +220,7 @@ class RevMobKiller: AbstractMobKiller() {
             return instance!!
         }
 
-
+        var thread: Thread? = null
     }
 
 

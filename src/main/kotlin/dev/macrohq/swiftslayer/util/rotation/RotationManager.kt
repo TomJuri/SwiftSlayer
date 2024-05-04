@@ -2,7 +2,6 @@ package dev.macrohq.swiftslayer.util.rotation
 
 
 
-import dev.macrohq.swiftslayer.util.Logger
 import net.minecraft.client.Minecraft
 import net.minecraft.client.entity.EntityPlayerSP
 import net.minecraft.entity.Entity
@@ -29,7 +28,7 @@ class RotationManager {
         if (currentThread.isAlive) return
         val stack = Thread.currentThread().stackTrace[3]
 
-        Logger.error(stack.className + "." + stack.methodName)
+        //Logger.error(stack.className + "." + stack.methodName)
         val player = Minecraft.getMinecraft().thePlayer
         val current = Rotation(player.rotationYaw, player.rotationPitch)
 
