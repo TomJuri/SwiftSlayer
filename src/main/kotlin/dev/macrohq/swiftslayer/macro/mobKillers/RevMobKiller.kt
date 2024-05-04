@@ -4,6 +4,7 @@ import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.macro.AbstractMobKiller
 import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.InventoryUtil.getHotbarSlotForItem
+import dev.macrohq.swiftslayer.util.rotation.RotationManager
 import me.kbrewster.eventbus.Subscribe
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.monster.EntityZombie
@@ -158,11 +159,18 @@ class RevMobKiller: AbstractMobKiller() {
                     holdWeapon()
                     state = State.KILL_TARGET
                     return
-                } else if(mc.objectMouseOver.entityHit == null && player.getDistanceToEntity(currentTarget) < attackDistance()) {
+                }
+
+                if(mc.objectMouseOver.entityHit == null && player.getDistanceToEntity(currentTarget) < attackDistance() && !RotationManager.getInstance().currentThread.isAlive) {
                     if(!currentTarget!!.onGround) return
                     state = State.LOOK_AT_TARGET
                     return
                 }
+            if(player.getDistanceToEntity(currentTarget) > attackDistance()) {
+                state = State.GOTO_TARGET
+                return
+            }
+
             }
 
             State.KILL_TARGET -> {
@@ -193,6 +201,10 @@ class RevMobKiller: AbstractMobKiller() {
         if(!enabled)
         SwiftEventBus.register(this)
         enabled = true
+        if(currentTarget != null) {
+            state = State.CHOOSE_TARGET
+            return
+        }
     }
 
     override fun disable() {

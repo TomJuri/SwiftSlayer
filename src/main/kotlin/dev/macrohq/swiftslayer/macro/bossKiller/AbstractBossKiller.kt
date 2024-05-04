@@ -40,7 +40,6 @@ abstract class AbstractBossKiller:IBossKiller {
             0 -> KeyBindUtil.rightClick()
             1 -> KeyBindUtil.leftClick()
             2 -> {
-                Logger.info("suck my nuts")
             }
             3 -> KeyBindUtil.rightClick()
 

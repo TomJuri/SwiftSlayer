@@ -34,6 +34,8 @@ class PathExecutor {
     }
 
 
+
+
     if (!isOnPath()) {
       if (pathFailCounter >= 100) {
         Logger.error("Path execution failed, retrying.")
@@ -52,7 +54,7 @@ class PathExecutor {
 
     if (isOnPath()) {
       next = path[path.indexOf(getStandingOn()!!) + 1]
-      if(rotate) {
+      if(rotate && !shouldJump()) {
         if (goal != null) {
         RotationManager.getInstance().rotateTo(goal!!.toVec3Top(), 2f)
         } else {

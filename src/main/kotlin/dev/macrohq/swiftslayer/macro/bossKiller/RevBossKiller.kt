@@ -100,10 +100,9 @@ class RevBossKiller:AbstractBossKiller() {
 
             MovementState.VERIFY_PATHFINDIG -> {
 
-
                 if(blockTimer.isDone) {
                     movState = MovementState.FIND_BLOCK
-                    Logger.info("ahahrh")
+
                     return
                 }
                 //movement type = walking back

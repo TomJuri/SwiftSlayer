@@ -3,7 +3,6 @@ package dev.macrohq.swiftslayer.util
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.monster.EntityCaveSpider
 import net.minecraft.init.Blocks
-import kotlin.math.abs
 
 object EntityUtil {
 
@@ -106,13 +105,12 @@ object EntityUtil {
         } */
 
         /* return (normalizedYaw * rotationWeight) + (normalizedDistance * distanceWeight) + (normalizedYChange * yChangeWeight) */
-        var distanceCost = BlockUtil.getXZDistance(player.position, entity.position)
 
-        if(abs(player.position.y - entity.posY) > 3) {
-            distanceCost *= 5
-        }
+        var distanceCost = player.getDistanceToEntity(entity)
+
+
         if(!player.canEntityBeSeen(entity)) distanceCost *= 5
-        return distanceCost.toDouble()
+        return player.getDistanceToEntity(entity).toDouble()
     }
 
     fun getMobs(entityClass: Class<out EntityLiving>): List<EntityLiving> {
