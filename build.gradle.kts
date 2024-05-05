@@ -43,7 +43,8 @@ loom {
     launchConfigs {
         getByName("client") {
             arg("--tweakClass", "cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker")
-            property("devauth.enabled", "true")
+            property("devauth.enabled", "false")
+            property("fml.coreMods.load", "dev.macrohq.swiftslayer.DevMixinLoader")
         }
     }
 
