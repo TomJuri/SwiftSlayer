@@ -30,6 +30,9 @@ object InventoryUtil {
     }
 
     fun holdItem(name: String): Boolean {
+
+        val stack = Thread.currentThread().stackTrace[3]
+        Logger.error(stack.className + "." + stack.methodName)
         if (getHotbarSlotForItem(name) != -1) {
             player.inventory.currentItem = getHotbarSlotForItem(name)
             return true

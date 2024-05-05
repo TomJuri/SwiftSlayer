@@ -1,10 +1,10 @@
 package dev.macrohq.swiftslayer.feature
 
-import dev.macrohq.swiftslayer.util.*
-import net.minecraftforge.client.event.ClientChatReceivedEvent
-import me.kbrewster.eventbus.Subscribe
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import dev.macrohq.swiftslayer.SwiftSlayer
+import dev.macrohq.swiftslayer.util.*
+import me.kbrewster.eventbus.Subscribe
+import net.minecraftforge.client.event.ClientChatReceivedEvent
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
 class AutoBatphone {
 

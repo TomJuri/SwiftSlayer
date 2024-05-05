@@ -26,9 +26,6 @@ class RotationManager {
 
     fun rotateTo(target: Rotation, msPD: Float = defaultMSPD) {
         if (currentThread.isAlive) return
-        val stack = Thread.currentThread().stackTrace[3]
-
-        //Logger.error(stack.className + "." + stack.methodName)
         val player = Minecraft.getMinecraft().thePlayer
         val current = Rotation(player.rotationYaw, player.rotationPitch)
 
