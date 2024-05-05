@@ -87,7 +87,6 @@ object SwiftSlayer {
 
   @Subscribe
   fun onRenderWorldLast(event: RenderWorldLastEvent) {
-    // this is here because im not sure if objects can have events cuz they are kinda static
     RotationUtil.onRenderWorldLast()
     RenderUtil.onRenderWorldLast(event)
     KeyBindUtil.onRenderWorldLast()

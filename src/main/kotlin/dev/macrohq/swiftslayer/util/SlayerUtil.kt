@@ -1,16 +1,10 @@
 package dev.macrohq.swiftslayer.util
 
-import dev.macrohq.swiftslayer.SwiftSlayer
-import dev.macrohq.swiftslayer.feature.helper.Target
-import dev.macrohq.swiftslayer.macro.bossKiller.RevBossKiller
-import dev.macrohq.swiftslayer.macro.mobKillers.RevMobKiller
-import me.kbrewster.eventbus.Subscribe
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.entity.monster.*
 import net.minecraft.entity.passive.EntityWolf
 import net.minecraft.util.StringUtils
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
 object SlayerUtil {
 
@@ -151,24 +145,5 @@ object SlayerUtil {
     BOSS_ALIVE,
     BOSS_DEAD,
   }
-
-  @Subscribe
-  fun onTick(event: ClientTickEvent) {
-    if(!macroManager.enabled || RevBossKiller.getInstance().enabled) return
-
-
-
-    if(getState() == SlayerState.BOSS_ALIVE) {
-      PathingUtil.stop()
-      if(RevMobKiller.getInstance().lastTargetPos != null) {
-        val target = RevMobKiller.getInstance().lastTargetPos!!.add(0, 1, 0)
-        val time = SwiftSlayer.config.calculateRotationTime(
-          SwiftSlayer.config.calculateDegreeDistance(AngleUtil.yawTo360(mc.thePlayer.rotationYaw).toDouble(), mc.thePlayer.rotationPitch.toDouble(), AngleUtil.yawTo360(
-            Target(target).getAngle().yaw).toDouble(), Target(target).getAngle().pitch.toDouble()))
-        }
-
-      RevMobKiller.getInstance().disable()
-      RevBossKiller.getInstance().enable()
-    }
-  }
+  
 }

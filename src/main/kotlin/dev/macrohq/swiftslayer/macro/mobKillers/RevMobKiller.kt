@@ -4,7 +4,6 @@ import dev.macrohq.swiftslayer.SwiftSlayer
 import dev.macrohq.swiftslayer.macro.AbstractMobKiller
 import dev.macrohq.swiftslayer.util.*
 import dev.macrohq.swiftslayer.util.InventoryUtil.getHotbarSlotForItem
-import dev.macrohq.swiftslayer.util.rotation.RotationManager
 import me.kbrewster.eventbus.Subscribe
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.monster.EntityZombie
@@ -21,6 +20,7 @@ class RevMobKiller: AbstractMobKiller() {
     override val targetEntityClass: Class<out EntityLiving> = EntityZombie::class.java
     override var blacklist = mutableListOf<EntityLiving>()
     var waitTimer: Timer = Timer(0)
+    var rotTimer: Timer = Timer(0)
     override var tickCounter: Int = 0
     override var ticksSinceLastClick: Int = 0
     override var ticksSinceLastMovement: Int = 0
@@ -79,7 +79,12 @@ class RevMobKiller: AbstractMobKiller() {
             }
         }
 
-       // Logger.log(state.name)
+
+        if(state != State.KILL_TARGET) {
+            KeyBindUtil.stopClicking()
+        }
+
+        Logger.info(state.name)
         when (state) {
             State.CHOOSE_TARGET -> {
                 RenderUtil.entites.clear()
@@ -100,11 +105,12 @@ class RevMobKiller: AbstractMobKiller() {
 
             State.GOTO_TARGET -> {
                 //AutoRotation.disable()
+                if(!currentTarget!!.onGround || !player.onGround) return
                 thread = Thread {
                     PathingUtil.stop()
                     //AutoRotation.disable()
                     if (player.canEntityBeSeen(currentTarget!!)) {
-                        PathingUtil.goto(currentTarget!!.getStandingOnCeil())
+                        PathingUtil.goto(currentTarget!!.getStandingOnCeil(), currentTarget!!)
                         looking = true
                     } else {
                         PathingUtil.goto(currentTarget!!.getStandingOnCeil())
@@ -120,7 +126,7 @@ class RevMobKiller: AbstractMobKiller() {
             }
 
             State.VERIFY_PATHFINDING -> {
-                if (player.getDistanceToEntity(currentTarget) < attackDistance()) {
+                if (player.getDistanceToEntity(currentTarget) < attackDistance() && player.canEntityBeSeen(currentTarget)) {
                     stopWalking()
                     state = State.LOOK_AT_TARGET
                     return
@@ -141,9 +147,11 @@ class RevMobKiller: AbstractMobKiller() {
             }
 
              State.LOOK_AT_TARGET -> {
-                //AutoRotation.disable()
+                 if(!rotTimer.isDone) return
+                 PathingUtil.stop()
                 if(currentTarget != null) {
                     lookAtEntity(currentTarget!!)
+                    rotTimer = Timer(100)
                 } else {
                     Logger.info("failed to look at target!")
                     state = State.CHOOSE_TARGET
@@ -154,37 +162,79 @@ class RevMobKiller: AbstractMobKiller() {
             }
 
             State.VERIFY_LOOKING -> {
-              //  if(AutoRotation.enabled) return
-                if(mc.objectMouseOver.entityHit != null && player.getDistanceToEntity(currentTarget) <= attackDistance() && player.canEntityBeSeen(currentTarget)) {
-                    holdWeapon()
-                    state = State.KILL_TARGET
-                    return
+
+               if(player.getDistanceToEntity(currentTarget) > attackDistance() || !player.canEntityBeSeen(currentTarget)) {
+                   state = State.GOTO_TARGET
+                   return
+               }
+                when(config.mobKillerWeapon) {
+                    0 -> {
+                        state = State.KILL_TARGET
+                    }
+
+                    1 -> {
+                        state = if(lookDone()) {
+                            State.KILL_TARGET
+
+                        } else {
+                            State.LOOK_AT_TARGET
+                        }
+                    }
+
+                    2 -> {
+                        if(mc.objectMouseOver.entityHit != null) {
+                            state = State.KILL_TARGET
+                        } else {
+                            state = State.LOOK_AT_TARGET
+                            return
+                        }
+                    }
                 }
 
-                if(mc.objectMouseOver.entityHit == null && player.getDistanceToEntity(currentTarget) < attackDistance() && !RotationManager.getInstance().currentThread.isAlive) {
-                    if(!currentTarget!!.onGround) return
-                    state = State.LOOK_AT_TARGET
-                    return
-                }
-            if(player.getDistanceToEntity(currentTarget) > attackDistance()) {
-                state = State.GOTO_TARGET
-                return
-            }
+
 
             }
 
             State.KILL_TARGET -> {
-                if(ticksSinceLastClick > 3) {
-                    useWeapon()
-                    ticksSinceLastClick = 0
-                }
 
+
+                when(config.mobKillerWeapon) {
+                    //hyperion
+                    0 -> {
+                        if(ticksSinceLastClick > 4)
+                        KeyBindUtil.rightClick(1)
+                    }
+
+                    //ranged
+                    1 -> {
+                        if(ticksSinceLastClick > 4 && lookDone() && waitTimer.isDone) {
+                            KeyBindUtil.rightClick(1)
+                            waitTimer = Timer((config.rangedCooldown * 1000).toLong()) }
+                        else if(!lookDone()) {
+                            state = State.LOOK_AT_TARGET
+                            return
+                        }
+
+                    }
+
+                    //melee
+                    2 -> {
+
+                        if(mc.objectMouseOver.entityHit != null && lookDone()) {
+                        KeyBindUtil.leftClick(5) }
+                        else if(mc.objectMouseOver.entityHit == null || !lookDone()){
+                            state = State.LOOK_AT_TARGET
+                            return
+                        }
+
+                    }
+                }
+                ticksSinceLastClick = 0
                 if (currentTarget!!.isDead || currentTarget!!.health < 1) {
                     blacklist.add(currentTarget!!)
                     state = State.CHOOSE_TARGET
                     return
                 }
-                state = State.VERIFY_LOOKING
                 return
             }
 
@@ -198,6 +248,15 @@ class RevMobKiller: AbstractMobKiller() {
 
 
     override fun enable() {
+        var scoreBoard = ScoreboardUtil
+      /*  if(!scoreBoard.getScoreboardLines().contains("Coal Mine")) {
+            Logger.info("You must enter the crypt ghoul cave to activate this macro.")
+            macroManager.toggle()
+            return
+        } */
+
+
+
         if(!enabled)
         SwiftEventBus.register(this)
         enabled = true

@@ -16,7 +16,7 @@ class MacroManager {
   fun onTick(event: ClientTickEvent) {
     if (!enabled || mobKiller.getInstance().enabled || RevBossKiller.getInstance().enabled) return
 
-    if(!InventoryUtil.holdItem("Maddox Batphone")) state = State.KILL_MOBS
+    //if(!InventoryUtil.holdItem("Maddox Batphone")) state = State.KILL_MOBS
 
     when (state) {
       State.ACTIVATE_QUEST -> {
@@ -30,9 +30,7 @@ class MacroManager {
         }
       }
       State.KILL_MOBS -> mobKiller.getInstance().enable()
-      State.KILL_BOSS -> {
-        //if (config.slayer == 3) endermanBossKiller.enable()
-        /* else*/ RevBossKiller.getInstance().enable()
+      State.KILL_BOSS -> { RevBossKiller.getInstance().enable()
       }
     }
     state = State.entries[(state.ordinal + 1) % State.entries.size] // tf is this for?

@@ -7,7 +7,6 @@ import cc.polyfrost.oneconfig.config.data.Mod
 import cc.polyfrost.oneconfig.config.data.ModType
 import cc.polyfrost.oneconfig.libs.universal.UKeyboard
 import dev.macrohq.swiftslayer.util.macroManager
-import kotlin.math.*
 
 
 class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftslayer.json") {
@@ -32,9 +31,29 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
         name = "Weapon type for mobs",
         category = "General",
         subcategory = "Slayer",
-        options = ["Spirit Sceptre", "Melee", "Fire Veil Wand", "Right click Melee"]
+        options = ["Hyperion", "Ranged", "Melee"]
     )
     var mobKillerWeapon = 0
+
+    @Slider(
+        name = "'Ranged' range",
+        category = "General",
+        subcategory = "Slayer",
+        min = 1f,
+        max = 15f,
+        step = 1
+    )
+    var rangedRange = 1
+
+    @Slider(
+        name = "'Ranged' cooldown (in seconds)",
+        category = "General",
+        subcategory = "Slayer",
+        min = 0f,
+        max = 25f,
+        step = 1
+    )
+    var rangedCooldown = 1
 
     @Dropdown(
         name = "Weapon type for boss",
@@ -116,7 +135,6 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     var useHealingAt = 70
 
 
-
     @Slider(
         name = "Gui delay",
         category = "General",
@@ -138,36 +156,7 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
         return (macroGuiDelay + Math.random().toFloat() * macroGuiDelayRandomness).toLong()
     }
 
-    @Slider(
-        name = "Rotation time",
-        category = "General",
-        subcategory = "Advanced",
-        min = 100f,
-        max = 500f,
-    )
-    var macroRotationTime: Float = 250f
 
-    @Slider(
-        name = "Rotation time randomness",
-        category = "General",
-        subcategory = "Advanced",
-        min = 100f,
-        max = 1000f,
-    )
-    var macroRotationTimeRandomness: Float = 300f
-    fun getRandomRotationTime(): Long {
-        val ran = (macroRotationTime + Math.random().toFloat() * macroRotationTimeRandomness).toLong()
-        return ran
-    }
-
-    @Slider(
-        name = "Lock rotation smoothness",
-        category = "General",
-        subcategory = "Advanced",
-        min = 2f,
-        max = 10f,
-    )
-    var macroLockSmoothness: Float = 4f
 
     @Dropdown(
         name = "Boss killer movement",
@@ -187,41 +176,6 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
     @HUD(name = "HUD", category = "HUD")
     var hud = SwiftSlayerHud()
 
-    fun calculateRotationTime(degrees: Double): Int {
-        val proportion = degrees / 180.0
-        return (getRandomRotationTime() * proportion).toInt()
-    }
-
-    fun calculateDegreeDistance(
-        initialYaw: Double,
-        initialPitch: Double,
-        targetYaw: Double,
-        targetPitch: Double
-    ): Double {
-        // Calculate angular difference in yaw
-        val deltaYaw = Math.toDegrees(
-            atan2(
-                sin(Math.toRadians(targetYaw - initialYaw)), cos(
-                    Math.toRadians(targetYaw - initialYaw)
-                )
-            )
-        )
-
-
-        val deltaPitch = Math.toDegrees(
-            atan2(
-                sin(Math.toRadians(targetPitch - initialPitch)), cos(
-                    Math.toRadians(targetPitch - initialPitch)
-                )
-            )
-        )
-
-        val degreeDistance = sqrt(deltaYaw.pow(2.0) + deltaPitch.pow(2.0))
-
-        return degreeDistance
-    }
-
-
 
     init {
         initialize()
@@ -232,10 +186,10 @@ class SwiftSlayerConfig : Config(Mod("SwiftSlayer", ModType.SKYBLOCK), "swiftsla
         hideIf("useHealingAt") { !showAdvanced }
         hideIf("macroGuiDelay") { !showAdvanced }
         hideIf("macroGuiDelayRandomness") { !showAdvanced }
-        hideIf("macroRotationTime") { !showAdvanced }
-        hideIf("macroRotationTimeRandomness") { !showAdvanced }
-        hideIf("macroLockSmoothness") { !showAdvanced }
         hideIf("movementType") { !showAdvanced }
         hideIf("debugMode") { !showAdvanced }
+
+        hideIf("rangedRange") { mobKillerWeapon != 1}
+        hideIf("rangedCooldown") { mobKillerWeapon != 1}
     }
 }

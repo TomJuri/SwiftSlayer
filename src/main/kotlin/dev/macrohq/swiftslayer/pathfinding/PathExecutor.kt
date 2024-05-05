@@ -28,13 +28,7 @@ class PathExecutor {
     if (!enabled) return
     if(RotationManager.getInstance().currentThread.isAlive) {
       gameSettings.keyBindSprint.setPressed(false)
-      gameSettings.keyBindForward.setPressed(false)
-      gameSettings.keyBindJump.setPressed(false)
-      return
     }
-
-
-
 
     if (!isOnPath()) {
       if (pathFailCounter >= 100) {
@@ -54,7 +48,7 @@ class PathExecutor {
 
     if (isOnPath()) {
       next = path[path.indexOf(getStandingOn()!!) + 1]
-      if(rotate && !shouldJump()) {
+      if(rotate) {
         if (goal != null) {
         RotationManager.getInstance().rotateTo(goal!!.toVec3Top(), 2f)
         } else {
@@ -84,7 +78,7 @@ class PathExecutor {
     }
 
    // val rotation = RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f)
-    val rotation = Angle(AngleUtil.getAngle(next!!.toVec3Top()).yaw, 20f)
+    val rotation = Angle(AngleUtil.getAngle(next!!).yaw,AngleUtil.getAngle(next!!).pitch )
     directionYaw = rotation.yaw
    gameSettings.keyBindSprint.setPressed(AngleUtil.yawTo360(player.rotationYaw) in AngleUtil.yawTo360(player.rotationYaw) - 45..AngleUtil.yawTo360(player.rotationYaw) + 45)
     gameSettings.keyBindForward.setPressed(true)

@@ -70,7 +70,7 @@ class RevBossKiller:AbstractBossKiller() {
                     1 -> { // move back
                         if(chosenBlock == null || findNewBlock) {
                             findBlock@
-                            for (block: BlockPos in BlockUtil.getBlocks(BlockPos(mc.thePlayer.posX + mc.thePlayer.getLookVec().xCoord * -25, mc.thePlayer.posY, mc.thePlayer.posZ + mc.thePlayer.getLookVec().zCoord * -25), 15, 5, 15)) {
+                            for (block: BlockPos in BlockUtil.getBlocks(BlockPos(mc.thePlayer.posX + mc.thePlayer.getLookVec().xCoord * -10, mc.thePlayer.posY, mc.thePlayer.posZ + mc.thePlayer.getLookVec().zCoord * -10), 6, 4, 6)) {
                                 if (BlockUtil.getXZDistance(player.getStandingOnCeil(), block) > 6 && BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer), player.getStandingOnCeil(), block) && !BlockUtil.isSingleCorner(block)) {
                                     chosenBlock = block
                                     break@findBlock
@@ -85,7 +85,6 @@ class RevBossKiller:AbstractBossKiller() {
             }
 
             MovementState.GOTO_BLOCK -> {
-        //        AutoRotation.disable()
                 if(chosenBlock == null) {
                     movState = MovementState.FIND_BLOCK
                     Logger.info("null block")
@@ -100,9 +99,8 @@ class RevBossKiller:AbstractBossKiller() {
 
             MovementState.VERIFY_PATHFINDIG -> {
 
-                if(blockTimer.isDone) {
+                if(blockTimer.isDone && SwiftSlayer.config.movementType == 1) {
                     movState = MovementState.FIND_BLOCK
-
                     return
                 }
                 //movement type = walking back
@@ -134,13 +132,8 @@ class RevBossKiller:AbstractBossKiller() {
 
                 //movement type = find corner
                 if(BlockUtil.getXZDistance(player.getStandingOnCeil(), chosenBlock!!) < 1 && SwiftSlayer.config.movementType == 0) {
-                    if(BlockUtil.blocksBetweenValid(CalculationContext(SwiftSlayer), player.getStandingOnCeil(), chosenBlock!!)) {
                         movState = MovementState.GOTO_BLOCK
-                    } else {
-                        findNewBlock = true
-                        movState = MovementState.FIND_BLOCK
-                        chosenBlock = null
-                    }
+
                     return
                 }
             }
@@ -179,9 +172,14 @@ class RevBossKiller:AbstractBossKiller() {
         when (rotState) {
             RotationState.LOOK_AT_TARGET -> {
                 if(!currentTarget!!.onGround) return
+                if(mc.objectMouseOver.entityHit == null && !rotTimer.isDone) return
+
 
                 lookAtEntity(currentTarget!!)
 
+                if(mc.objectMouseOver.entityHit != null) {
+                    rotTimer = Timer(50)
+                }
             }
 
             RotationState.VERIFY_LOOKING -> {
@@ -200,10 +198,10 @@ class RevBossKiller:AbstractBossKiller() {
     }
 
     override fun enable() {
-        if(SlayerUtil.getBoss() != null) {
-            currentTarget = SlayerUtil.getBoss()!!.first
+        if(SlayerUtil.getFakeBoss() != null) {
+            currentTarget = SlayerUtil.getFakeBoss()
         }
-        if(SlayerUtil.getBoss() == null) return
+        if(SlayerUtil.getFakeBoss() == null) return
 
         if(currentTarget == null) {
             Logger.info("null entity!?")

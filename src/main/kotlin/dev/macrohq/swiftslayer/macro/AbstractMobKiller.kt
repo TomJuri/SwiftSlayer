@@ -3,11 +3,12 @@ package dev.macrohq.swiftslayer.macro
 import dev.macrohq.swiftslayer.feature.helper.Angle
 import dev.macrohq.swiftslayer.feature.helper.Target
 import dev.macrohq.swiftslayer.util.*
+import dev.macrohq.swiftslayer.util.rotation.Rotation
 import dev.macrohq.swiftslayer.util.rotation.RotationManager
 import net.minecraft.entity.EntityLiving
 import kotlin.math.abs
 
-abstract class AbstractMobKiller:IMobKiller {
+abstract class AbstractMobKiller: IMobKiller {
 
     override var enabled: Boolean = false
     override var paused: Boolean = false
@@ -36,22 +37,16 @@ abstract class AbstractMobKiller:IMobKiller {
 
     override fun lookAtEntity(entity: EntityLiving) {
         when (config.mobKillerWeapon) {
-
-            0 -> RotationManager.getInstance().rotateTo(entity)
-            1 -> RotationManager.getInstance().rotateTo(entity)
-            2 -> {}
-            3 -> RotationManager.getInstance().rotateTo(entity, 1f)
+            0 -> RotationManager.getInstance().rotateTo(Rotation(AngleUtil.getAngles(entity).pitch, 90f), 1f)
+            else -> {
+                RotationManager.getInstance().rotateTo(entity)
+            }
         }
-      //  Logger.info(time)
+
     }
 
     override fun angleForWeapon(entity: EntityLiving): Angle {
-        return when (config.mobKillerWeapon) {
-            0 -> AngleUtil.getAngle(entity.position.add(0, (entity.height*0.6).toInt(), 0))
-            1 -> AngleUtil.getAngle(entity.position.add(0, (entity.height*0.6).toInt(), 0))
-            3 -> AngleUtil.getAngle(entity.position.add(0, (entity.height*0.6).toInt(), 0))
-            else -> Angle(0f,0f)
-        }
+        return Angle(0f, 0f)
     }
     override fun useWeapon() {
         when (config.mobKillerWeapon) {
@@ -71,11 +66,12 @@ abstract class AbstractMobKiller:IMobKiller {
 
     override fun attackDistance(): Int {
         return when (config.mobKillerWeapon) {
-            0 -> 6
-            1 -> 3
+            0 -> 3
+            1 -> config.rangedRange
             2 -> 4
-            3 -> 3
-            else -> 6
+            else -> {
+                4
+            }
         }
     }
 
@@ -100,12 +96,16 @@ abstract class AbstractMobKiller:IMobKiller {
     override fun lookDone(): Boolean {
         val yawDiff = abs(AngleUtil.yawTo360(player.rotationYaw) - AngleUtil.yawTo360(Target(currentTarget!!).getAngle().yaw))
         val pitchDiff = abs(mc.thePlayer.rotationPitch - Target(currentTarget!!).getAngle().pitch)
-        return when (config.mobKillerWeapon) {
-            0 -> pitchDiff < 2
-            1 -> yawDiff < 10 && pitchDiff < 5
-            2 -> true
-            3 -> yawDiff < 10 && pitchDiff < 5
-            else -> true
+        when(config.mobKillerWeapon) {
+            1 -> {
+                return pitchDiff < 2 &&   yawDiff < 5
+            }
+            2 -> {
+                return pitchDiff < 4 && yawDiff < 10
+            }
+            else -> {
+                return true
+            }
         }
     }
 
