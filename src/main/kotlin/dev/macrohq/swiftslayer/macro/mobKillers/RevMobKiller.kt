@@ -264,7 +264,7 @@ class RevMobKiller: AbstractMobKiller() {
             state = State.CHOOSE_TARGET
             return
         }
-        //mc.thePlayer.inventory.currentItem = config.meleeWeaponSlot - 1
+        //aaamc.thePlayer.inventory.currentItem = config.meleeWeaponSlot - 1
     }
 
     override fun disable() {
