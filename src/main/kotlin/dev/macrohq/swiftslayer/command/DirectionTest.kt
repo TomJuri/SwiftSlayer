@@ -2,16 +2,14 @@ package dev.macrohq.swiftslayer.command
 
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
-import dev.macrohq.swiftslayer.SwiftSlayer
-import dev.macrohq.swiftslayer.util.*
-import dev.macrohq.swiftslayer.util.movement.CalculationContext
+import dev.macrohq.swiftslayer.util.Logger
+import dev.macrohq.swiftslayer.util.player
 import me.kbrewster.eventbus.Subscribe
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
 import net.minecraft.util.Vec3
 import net.minecraftforge.client.event.RenderWorldLastEvent
-import java.awt.Color
 import kotlin.math.abs
 import kotlin.math.atan2
 
@@ -51,6 +49,7 @@ class DirectionTest {
     @Subscribe
     fun onWorldRender(event: RenderWorldLastEvent) {
         if(enabled) {
+
             // RenderUtil.drawBox(event, BlockUtil.getCornerBlocks(SlayerUtil.getFakeBoss()!!.position, 2, 1, 2).first, Color.GREEN, true)
             //    RenderUtil.drawBox(event, BlockUtil.getCornerBlocks(SlayerUtil.getFakeBoss()!!.position, 2, 1, 2).second, Color.GREEN, true)
 
@@ -88,17 +87,12 @@ class DirectionTest {
                 } */
             // }
 
-            for (block: BlockPos in BlockUtil.getBlocks(BlockPos(dev.macrohq.swiftslayer.util.mc.thePlayer.posX + dev.macrohq.swiftslayer.util.mc.thePlayer.getLookVec().xCoord * -25, player.getStandingOnCeil().y.toDouble(), dev.macrohq.swiftslayer.util.mc.thePlayer.posZ + dev.macrohq.swiftslayer.util.mc.thePlayer.getLookVec().zCoord * -25), 15, 5, 15)) {
-                if (BlockUtil.getXZDistance(player.getStandingOnCeil(), block) > 6 && BlockUtil.blocksBetweenValid(
-                        CalculationContext(SwiftSlayer), player.getStandingOnCeil(), block) && !BlockUtil.isSingleCorner(block)) {
-                    RenderUtil.drawBox(event, block, Color.YELLOW, true)
-                }
-            }
 
         }
 
 
     }
+
 
     companion object {
         var enabled: Boolean = false

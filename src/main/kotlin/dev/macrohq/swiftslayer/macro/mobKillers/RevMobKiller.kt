@@ -220,9 +220,9 @@ class RevMobKiller: AbstractMobKiller() {
                     //melee
                     2 -> {
 
-                        if(mc.objectMouseOver.entityHit != null && lookDone()) {
+                        if(mc.objectMouseOver.entityHit != null) {
                         KeyBindUtil.leftClick(5) }
-                        else if(mc.objectMouseOver.entityHit == null || !lookDone()){
+                        else if(mc.objectMouseOver.entityHit == null){
                             state = State.LOOK_AT_TARGET
                             return
                         }
@@ -249,11 +249,11 @@ class RevMobKiller: AbstractMobKiller() {
 
     override fun enable() {
         var scoreBoard = ScoreboardUtil
-      /*  if(!scoreBoard.getScoreboardLines().contains("Coal Mine")) {
+        if(!scoreBoard.getScoreboardLines().contains("Coal Mine")) {
             Logger.info("You must enter the crypt ghoul cave to activate this macro.")
             macroManager.toggle()
             return
-        } */
+        }
 
 
 
@@ -264,6 +264,7 @@ class RevMobKiller: AbstractMobKiller() {
             state = State.CHOOSE_TARGET
             return
         }
+        //mc.thePlayer.inventory.currentItem = config.meleeWeaponSlot - 1
     }
 
     override fun disable() {

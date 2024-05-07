@@ -19,6 +19,7 @@
     "entity.MixinEntityLivingBase",
     "entity.MixinEntityPlayer",
     "entity.MixinEntityPlayerSP",
-    "world.MixinChunkProviderClient"
+    "world.MixinChunkProviderClient",
+    "EffectRendererMixin"
   ]
 }

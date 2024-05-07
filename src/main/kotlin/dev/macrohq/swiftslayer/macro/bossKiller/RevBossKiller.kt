@@ -8,7 +8,6 @@ import dev.macrohq.swiftslayer.util.movement.CalculationContext
 import me.kbrewster.eventbus.Subscribe
 import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
-import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
 class RevBossKiller:AbstractBossKiller() {
@@ -174,7 +173,6 @@ class RevBossKiller:AbstractBossKiller() {
                 if(!currentTarget!!.onGround) return
                 if(mc.objectMouseOver.entityHit == null && !rotTimer.isDone) return
 
-
                 lookAtEntity(currentTarget!!)
 
                 if(mc.objectMouseOver.entityHit != null) {
@@ -188,6 +186,8 @@ class RevBossKiller:AbstractBossKiller() {
                     holdWeapon()
                     rotTimer = Timer(15)
                    // return
+
+
                 }
 
             }
@@ -198,10 +198,10 @@ class RevBossKiller:AbstractBossKiller() {
     }
 
     override fun enable() {
-        if(SlayerUtil.getFakeBoss() != null) {
-            currentTarget = SlayerUtil.getFakeBoss()
+        if(SlayerUtil.getBoss() != null) {
+            currentTarget = SlayerUtil.getBoss()!!.first
         }
-        if(SlayerUtil.getFakeBoss() == null) return
+        if(SlayerUtil.getBoss() == null) return
 
         if(currentTarget == null) {
             Logger.info("null entity!?")
@@ -216,7 +216,7 @@ class RevBossKiller:AbstractBossKiller() {
     }
 
     override fun disable() {
-        if(enabled) MinecraftForge.EVENT_BUS.unregister(this)
+        if(enabled) SwiftEventBus.unregister(this)
         enabled = false
         chosenBlock = null
         currentTarget = null
