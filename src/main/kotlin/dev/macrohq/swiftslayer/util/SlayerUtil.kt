@@ -1,10 +1,16 @@
 package dev.macrohq.swiftslayer.util
 
+import dev.macrohq.swiftslayer.event.ParticleSpawnEvent
+import dev.macrohq.swiftslayer.macro.mobKillers.RevMobKiller
+import dev.macrohq.swiftslayer.util.rotation.RotationManager
+import me.kbrewster.eventbus.Subscribe
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.entity.monster.*
 import net.minecraft.entity.passive.EntityWolf
+import net.minecraft.util.EnumParticleTypes
 import net.minecraft.util.StringUtils
+import net.minecraft.util.Vec3
 
 object SlayerUtil {
 
@@ -141,6 +147,15 @@ object SlayerUtil {
     V
   }
 
+  @Subscribe
+  fun onParticle(event: ParticleSpawnEvent) {
+    if(!RevMobKiller.getInstance().enabled) return
+    if(EnumParticleTypes.getParticleFromId(event.particleId)!= EnumParticleTypes.SPELL) return
+    PathingUtil.stop()
+    Logger.info("Boss spawning")
+    RevMobKiller.getInstance().disable()
+    RotationManager.getInstance().rotateTo(Vec3(event.xCoord, event.yCoord, event.zCoord))
+  }
   enum class SlayerState {
     BOSS_ALIVE,
     BOSS_DEAD,

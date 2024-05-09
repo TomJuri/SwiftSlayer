@@ -3,6 +3,7 @@ package dev.macrohq.swiftslayer.macro.bossKiller
 import dev.macrohq.swiftslayer.feature.helper.Angle
 import dev.macrohq.swiftslayer.feature.helper.Target
 import dev.macrohq.swiftslayer.util.*
+import dev.macrohq.swiftslayer.util.rotation.Rotation
 import dev.macrohq.swiftslayer.util.rotation.RotationManager
 import net.minecraft.entity.EntityLiving
 import kotlin.math.abs
@@ -17,14 +18,13 @@ abstract class AbstractBossKiller:IBossKiller {
 
 
     override fun lookAtEntity(entity: EntityLiving) {
-        val angle = Target(angleForWeapon(entity))
         when (config.mobKillerWeapon) {
-
-            0 -> RotationManager.getInstance().rotateTo(entity, 3f)
-            1 -> RotationManager.getInstance().rotateTo(entity, 3f)
-            2 -> {}
-            3 -> RotationManager.getInstance().rotateTo(entity, 3f)
+            0 -> RotationManager.getInstance().rotateTo(Rotation(AngleUtil.getAngles(entity).pitch, 90f), 1f)
+            else -> {
+                RotationManager.getInstance().rotateTo(entity, 2f)
+            }
         }
+
     }
 
     override fun angleForWeapon(entity: EntityLiving): Angle {

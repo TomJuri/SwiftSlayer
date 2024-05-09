@@ -80,7 +80,7 @@ class PathExecutor {
    // val rotation = RotationUtil.Rotation(AngleUtil.getAngles(next!!.toVec3Top()).yaw, 20f)
     val rotation = Angle(AngleUtil.getAngle(next!!).yaw,AngleUtil.getAngle(next!!).pitch )
     directionYaw = rotation.yaw
-   gameSettings.keyBindSprint.setPressed(AngleUtil.yawTo360(player.rotationYaw) in AngleUtil.yawTo360(player.rotationYaw) - 45..AngleUtil.yawTo360(player.rotationYaw) + 45)
+    gameSettings.keyBindSprint.setPressed(AngleUtil.yawTo360(player.rotationYaw) in AngleUtil.yawTo360(player.rotationYaw) - 45..AngleUtil.yawTo360(player.rotationYaw) + 45 && !RotationManager.getInstance().currentThread.isAlive)
     gameSettings.keyBindForward.setPressed(true)
     gameSettings.keyBindJump.setPressed(shouldJump())
 

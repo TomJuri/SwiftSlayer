@@ -2,12 +2,16 @@ package dev.macrohq.swiftslayer.command
 
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.SubCommand
+import dev.macrohq.swiftslayer.event.ParticleSpawnEvent
+import dev.macrohq.swiftslayer.macro.bossKiller.RevBossKiller
 import dev.macrohq.swiftslayer.util.Logger
+import dev.macrohq.swiftslayer.util.SlayerUtil
 import dev.macrohq.swiftslayer.util.player
 import me.kbrewster.eventbus.Subscribe
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.EntityLiving
 import net.minecraft.util.BlockPos
+import net.minecraft.util.EnumParticleTypes
 import net.minecraft.util.Vec3
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import kotlin.math.abs
@@ -86,10 +90,26 @@ class DirectionTest {
                     RenderUtil.drawBox(event, blockk, Color.WHITE, true)
                 } */
             // }
-
+            if(SlayerUtil.getFakeBoss() != null) {
+                RevBossKiller.getInstance().lookAtEntity(SlayerUtil.getFakeBoss()!!)
+            }
 
         }
 
+
+    }
+
+    @Subscribe
+    fun onParticle(event: ParticleSpawnEvent) {
+        if(EnumParticleTypes.getParticleFromId(event.particleId) == EnumParticleTypes.SPELL) {
+            Logger.info(EnumParticleTypes.getParticleFromId(event.particleId).particleName)
+            Logger.info("Boss spawning")
+        }
+
+        if(EnumParticleTypes.getParticleFromId(event.particleId) == EnumParticleTypes.EXPLOSION_LARGE) {
+            Logger.info(EnumParticleTypes.getParticleFromId(event.particleId).particleName)
+            Logger.info("miniboss spawning")
+        }
 
     }
 

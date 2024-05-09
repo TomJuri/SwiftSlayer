@@ -197,9 +197,10 @@ class RevMobKiller: AbstractMobKiller() {
 
             State.KILL_TARGET -> {
 
-
+                if(mc.thePlayer.inventory.currentItem != config.meleeWeaponSlot - 1) mc.thePlayer.inventory.currentItem = config.meleeWeaponSlot - 1
                 when(config.mobKillerWeapon) {
                     //hyperion
+
                     0 -> {
                         if(ticksSinceLastClick > 4)
                         KeyBindUtil.rightClick(1)
@@ -207,6 +208,7 @@ class RevMobKiller: AbstractMobKiller() {
 
                     //ranged
                     1 -> {
+
                         if(ticksSinceLastClick > 4 && lookDone() && waitTimer.isDone) {
                             KeyBindUtil.rightClick(1)
                             waitTimer = Timer((config.rangedCooldown * 1000).toLong()) }
@@ -249,22 +251,24 @@ class RevMobKiller: AbstractMobKiller() {
 
     override fun enable() {
         var scoreBoard = ScoreboardUtil
-        if(!scoreBoard.getScoreboardLines().contains("Coal Mine")) {
+      /*  if(!scoreBoard.getScoreboardLines().contains("Coal Mine")) {
             Logger.info("You must enter the crypt ghoul cave to activate this macro.")
             macroManager.toggle()
             return
-        }
+        }*/
 
 
 
         if(!enabled)
         SwiftEventBus.register(this)
         enabled = true
+        mc.thePlayer.inventory.currentItem = config.meleeWeaponSlot - 1
         if(currentTarget != null) {
             state = State.CHOOSE_TARGET
             return
         }
-        //aaamc.thePlayer.inventory.currentItem = config.meleeWeaponSlot - 1
+
+
     }
 
     override fun disable() {
